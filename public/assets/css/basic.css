@@ -1,0 +1,261 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap');
+
+:root{
+    --heading-font: "DM Serif Display", serif;
+    --body-font:'Outfit', sans-serif;
+    --cursive-font: "Bodoni Moda", serif;
+}
+
+:root{
+--primary: #922B21;       /* The deep, rich flagship heritage color */
+    --primary-800: #641E16;   /* Deep shadow / ultra-dark text contrast */
+    --primary-700: #78281F;   /* Dark accents / borders */
+    --primary-600: #922B21;   /* Primary solid buttons and headers */
+    --primary-500: #A93226;   /* Vibrant accent / hover state */
+    --primary-400: #C0392B;   /* Mid-tone decorative elements */
+    --primary-300: #CD6155;   /* Soft background borders */
+    --primary-200: #D98880;   /* Muted container accents */
+    --primary-100: #F2D7D5;   /* Soft blush/terracotta highlight tint */
+    --primary-50: #FDEDEC;    /* Warm-tinted white for subtle alerts */
+
+    /* SECONDARY: Earthy Sand, Wood & Warm Clay */
+    --secondary: #5C4033;     /* Rich deep wood for heavy typography */
+    --secondary-800: #4A3329; /* Darkest grounding shade */
+    --secondary-700: #5C4033; /* Standard dark neutral text */
+    --secondary-600: #735243; /* Medium text / subtle icons */
+    --secondary-500: #8C6754; /* Balanced secondary layout color */
+    --secondary-400: #A6806B; /* Border dividers / disabled elements */
+    --secondary-300: #C29D89; /* Soft structure framing */
+    --secondary-200: #DEC0AF; /* Muted warmth for cards */
+    --secondary-100: #F0E2D8; /* Soft clay background contrast */
+    --secondary-50: #FAF6F0;  /* Premium, ivory-like canvas background */
+
+    --bg:#F8F3EE;
+    --white:#ffffff;
+
+    --text:#38271e;
+    --text-light:#6b6b6b;
+
+    --border:#E7DDD4;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:var(--body-font);
+    font-size: 14px;
+    height: 100%;
+    background-repeat: repeat-x;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+    font-family:var(--heading-font);
+}
+
+img{
+    display:block;
+    width:100%;
+}
+
+.container{
+    max-width:1600px;
+    margin:auto;
+    padding: 0 20px;
+}
+
+.py-10 { padding-top: 8rem; padding-bottom: 8rem;}
+
+.section-title { font-size: clamp(22px, 4rem, 4.4rem); font-weight: 700; color: var(--text); text-align: center; margin-bottom: 3rem;}
+.text-decoration-none { text-decoration: none;}
+
+html { font-size: 62.5%; height: 100%;}
+
+/* PRIMARY BUTTON--------------------------- */
+.btn_primary{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+
+    padding:14px 32px;
+
+    background:var(--primary);
+    color:var(--white);
+
+    border:1px solid var(--primary);
+    border-radius:50px;
+
+    font-size:16px;
+    font-weight:600;
+    letter-spacing:.5px;
+
+    transition:.3s ease;
+    cursor:pointer;
+
+    text-decoration: none;
+}
+
+.btn_primary:hover{
+    background:var(--primary-800);
+    border-color:var(--primary-800);
+
+    transform:translateY(-2px);
+    box-shadow:0 12px 24px rgba(161,10,37,.18);
+}
+
+
+/* SECONDARY BUTTON--------------------------- */
+.btn_secondary{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+
+    padding:14px 32px;
+
+    background:transparent;
+    color:var(--primary);
+
+    border:1px solid var(--primary-300);
+    border-radius:50px;
+
+    font-size:16px;
+    font-weight:600;
+    letter-spacing:.5px;
+
+    transition:.3s ease;
+    cursor:pointer;
+
+    text-decoration: none;
+
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.btn_secondary:hover{
+    background:var(--primary);
+    color:var(--white);
+    border-color:var(--primary);
+}
+.btn_secondary:hover span { transition: all 0.4 ease-in-out;}
+.btn_secondary:hover span { transform: translateX(10px);}
+
+
+.d-flex { display: flex;}
+.gap-10 { gap: 10px;}
+.align-items-center { align-items: center;}
+.justify-content-center { justify-content: center;}
+.justify-content-between { justify-content: space-between;}
+
+.text-center { text-align: center;}
+
+
+/* Margin and Padding----------------- */
+
+.mx-auro {margin-left: auto; margin-right: auto;}
+
+.mt-10 { margin-top: 10px;}
+.mt-20 { margin-top: 20px;}
+.mt-30 { margin-top: 3rem;}
+.mt-40 { margin-top: 4rem;}
+.mt-50 { margin-top: 5rem;}
+.mt-60 { margin-top: 6rem;}
+.mt-70 { margin-top: 7rem;}
+.mt-80 { margin-top: 8rem;}
+.mt-90 { margin-top: 9rem;}
+.mt-100 { margin-top: 10rem;}
+
+.mb-10 { margin-bottom: 10px;}
+.mb-20 { margin-bottom: 20px;}
+.mb-30 { margin-bottom: 3rem;}
+.mb-40 { margin-bottom: 4rem;}
+.mb-50 { margin-bottom: 5rem;}
+.mb-60 { margin-bottom: 6rem;}
+.mb-70 { margin-bottom: 7rem;}
+.mb-80 { margin-bottom: 8rem;}
+.mb-90 { margin-bottom: 9rem;}
+.mb-100 { margin-bottom: 10rem;}
+
+.my-10 { margin-top: 10px; margin-bottom: 10px;}
+.my-20 { margin-top: 20px; margin-bottom: 20px;}
+.my-30 { margin-top: 3rem; margin-bottom: 3rem;}
+.my-40 { margin-top: 4rem; margin-bottom: 4rem;}
+.my-50 { margin-top: 5rem; margin-bottom: 5rem;}
+.my-60 { margin-top: 6rem; margin-bottom: 6rem;}
+.my-70 { margin-top: 7rem; margin-bottom: 7rem;}
+.my-80 { margin-top: 8rem; margin-bottom: 8rem;}
+.my-90 { margin-top: 9rem; margin-bottom: 9rem;}
+.my-100 { margin-top: 10rem; margin-bottom: 10rem;}
+
+
+
+.pt-10 { padding-top: 10px;}
+.pt-20 { padding-top: 20px;}
+.pt-30 { padding-top: 3rem;}
+.pt-40 { padding-top: 4rem;}
+.pt-50 { padding-top: 5rem;}
+.pt-60 { padding-top: 6rem;}
+.pt-70 { padding-top: 7rem;}
+.pt-80 { padding-top: 8rem;}
+.pt-90 { padding-top: 9rem;}
+.pt-100 { padding-top: 10rem;}
+
+.pb-10 { padding-bottom: 10px;}
+.pb-20 { padding-bottom: 20px;}
+.pb-30 { padding-bottom: 3rem;}
+.pb-40 { padding-bottom: 4rem;}
+.pb-50 { padding-bottom: 5rem;}
+.pb-60 { padding-bottom: 6rem;}
+.pb-70 { padding-bottom: 7rem;}
+.pb-80 { padding-bottom: 8rem;}
+.pb-90 { padding-bottom: 9rem;}
+.pb-100 { padding-bottom: 10rem;}
+
+
+/* slider arrow */
+.slider-nav{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    margin-top:30px;
+}
+
+.insta-prev,
+.insta-next,
+.slider-nav .prev-btn,
+.slider-nav .next-btn{
+    width:4rem !important;
+    height:4rem !important;
+    border:none;
+    border-radius:2rem 0rem 2rem;
+    background:var(--primary-400);
+    color: var(--secondary-100);
+    cursor:pointer;
+    transition:.3s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.slider-nav .prev-btn:hover,
+.slider-nav .next-btn:hover{
+    background:var(--secondary);
+    transform:translateY(-3px);
+    color: var(--secondary-200);
+}
+
+.slider-nav .prev-btn span,
+.slider-nav .next-btn span{
+    font-size:22px;
+}
