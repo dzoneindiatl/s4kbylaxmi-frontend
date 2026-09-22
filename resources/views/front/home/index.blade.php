@@ -164,7 +164,7 @@
 
                 <div class="feature-category-item">
                     <div class="feature-cat-img">
-                        <img src="images/category_image_01.png" alt="Short Kurtis">
+                        <img src="{{ asset('assets/images/category_image_01.png') }}" alt="Short Kurtis">
                         <div class="collection-brd"></div>
                     </div>
                     <div class="feature-category-overlay">
@@ -174,7 +174,7 @@
 
                 <div class="feature-category-item">
                     <div class="feature-cat-img">
-                        <img src="images/category_image_02.png" alt="New Arrivals">
+                        <img src="{{ asset('assets/images/category_image_02.png') }}" alt="New Arrivals">
                         <div class="collection-brd"></div>
                     </div>
                     <div class="feature-category-overlay">
@@ -184,7 +184,7 @@
 
                 <div class="feature-category-item">
                     <div class="feature-cat-img">
-                        <img src="images/category_image_03.png" alt="Best Sellers">
+                        <img src="{{ asset('assets/images/category_image_03.png') }}" alt="Best Sellers">
                         <div class="collection-brd"></div>
                     </div>
                     <div class="feature-category-overlay">
@@ -194,7 +194,7 @@
 
                 <div class="feature-category-item">
                     <div class="feature-cat-img">
-                        <img src="images/category_image_04.png" alt="Kurtas">
+                        <img src="{{ asset('assets/images/category_image_04.png') }}" alt="Kurtas">
                         <div class="collection-brd"></div>
                     </div>
                     <div class="feature-category-overlay">
@@ -204,7 +204,7 @@
 
                 <div class="feature-category-item">
                     <div class="feature-cat-img">
-                        <img src="images/category_image_05.png" alt="Co-ords">
+                        <img src="{{ asset('assets/images/category_image_05.png') }}" alt="Co-ords">
                         <div class="collection-brd"></div>
                     </div>
                     <div class="feature-category-overlay">
@@ -214,7 +214,7 @@
 
                 <div class="feature-category-item">
                     <div class="feature-cat-img">
-                        <img src="images/category_image_06.png" alt="Dresses">
+                        <img src="{{ asset('assets/images/category_image_06.png') }}" alt="Dresses">
                         <div class="collection-brd"></div>
                     </div>
                     <div class="feature-category-overlay">
@@ -224,7 +224,7 @@
 
                 <div class="feature-category-item">
                     <div class="feature-cat-img">
-                        <img src="images/category_image_07.png" alt="Maternity Wear">
+                        <img src="{{ asset('assets/images/category_image_07.png') }}" alt="Maternity Wear">
                         <div class="collection-brd"></div>
                     </div>
                     <div class="feature-category-overlay">
@@ -234,7 +234,7 @@
 
                 <div class="feature-category-item">
                     <div class="feature-cat-img">
-                        <img src="images/category_image_08.png" alt="Kurta Set">
+                        <img src="{{ asset('assets/images/category_image_08.png') }}" alt="Kurta Set">
                         <div class="collection-brd"></div>
                     </div>
                     <div class="feature-category-overlay">
@@ -251,29 +251,29 @@
             <div class="make-it-sec-main-inner1">
                 <div class="make-it-sec-main-left">
                     <div class="make-it-img-left">
-                        <img src="images/category_image_08.png" alt="Kurta Set">
+                        <img src="{{ asset('assets/images/category_image_08.png') }}" alt="Kurta Set">
                     </div>
                     <div class="make-it-img-left">
-                        <img src="images/category_image_01.png" alt="Kurta Set">
+                        <img src="{{ asset('assets/images/category_image_01.png') }}" alt="Kurta Set">
                     </div>
                     <div class="make-it-img-left">
-                        <img src="images/category_image_02.png" alt="Kurta Set">
+                        <img src="{{ asset('assets/images/category_image_02.png') }}" alt="Kurta Set">
                     </div>
                 </div>
                 <div class="make-it-sec-main-right">
                     <div class="make-it-img-right">
-                        <img src="images/category_image_03.png" alt="Kurta Set">
+                        <img src="{{ asset('assets/images/category_image_03.png') }}" alt="Kurta Set">
                     </div>
                     <div class="make-it-img-right-inner">
                         <div class="make-it-img-center">
-                            <img src="images/category_image_04.png" alt="Kurta Set">
+                            <img src="{{ asset('assets/images/category_image_04.png') }}" alt="Kurta Set">
                         </div>
                         <div class="make-it-img-center">
-                            <img src="images/category_image_05.png" alt="Kurta Set">
+                            <img src="{{ asset('assets/images/category_image_05.png') }}" alt="Kurta Set">
                         </div>
                     </div>
                     <div class="make-it-img-right">
-                        <img src="images/category_image_06.png" alt="Kurta Set">
+                        <img src="{{ asset('assets/images/category_image_06.png') }}" alt="Kurta Set">
                     </div>
                 </div>
             </div>

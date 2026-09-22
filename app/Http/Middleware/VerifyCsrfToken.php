@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
+use Closure,Session;
 
 class VerifyCsrfToken extends Middleware
 {
@@ -13,5 +14,21 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         //
+        'variant-combination/prices',
+        'base/uploder',
+        'checkout-callback'
     ];
+
+    public function handle($request, Closure $next)
+    {
+        if ($request->wantsJson()) {
+            return $next($request);
+        }
+
+        if(!Session::has('currency')){
+            Session::put('currency', 'INR');
+        }
+
+        return parent::handle($request, $next);
+    }
 }

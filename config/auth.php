@@ -35,12 +35,17 @@ return [
     |
     */
 
-    'guards' => [
+     'guards' => [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'customer' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
     ],
+
 
     /*
     |--------------------------------------------------------------------------
