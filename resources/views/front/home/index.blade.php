@@ -291,7 +291,7 @@
                     <!-- One Item -->
                     <div class="product_item">
                         <div class="product_image">
-                            <img src="images/collection_image_01.jpg" alt="">
+                            <img src="{{ asset('assets/images/collection_image_01.jpg') }}" alt="">
 
                             <div class="product_hover">
                                 <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
@@ -411,7 +411,7 @@
                     <!-- One Item -->
                     <div class="product_item">
                         <div class="product_image">
-                            <img src="images/collection_image_03.jpg" alt="">
+                            <img src="{{ asset('assets/images/collection_image_03.jpg') }}" alt="">
 
                             <div class="product_hover">
                                 <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
@@ -471,7 +471,7 @@
                     <!-- One Item -->
                     <div class="product_item">
                         <div class="product_image">
-                            <img src="images/collection_image_04.jpg" alt="">
+                            <img src="{{ asset('assets/images/collection_image_04.jpg') }}" alt="">
 
                             <div class="product_hover">
                                 <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
@@ -531,7 +531,7 @@
                     <!-- One Item -->
                     <div class="product_item">
                         <div class="product_image">
-                            <img src="images/collection_image_03.jpg" alt="">
+                            <img src="{{ asset('assets/images/collection_image_03.jpg') }}" alt="">
 
                             <div class="product_hover">
                                 <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
@@ -608,7 +608,7 @@
                 <div class="ethnic_gallery">
                     <div class="column-one">
                         <div class="galler-img-list">
-                            <img src="images/large_cat1.jpg" alt="">
+                            <img src="{{ asset('assets/images/large_cat1.jpg') }}">
                         </div>
                         <div class="ehtinic_content">
                             <h2>Anarkali Gown Set</h2>
@@ -618,7 +618,7 @@
 
                     <div class="column-one">
                         <div class="galler-img-list">
-                            <img src="images/large_cat2.jpeg" alt="">
+                            <img src="{{ asset('assets/images/large_cat2.jpeg') }}" alt="">
                         </div>
                         <div class="ehtinic_content">
                             <h2>Ethnic Set</h2>
@@ -626,9 +626,9 @@
                         </div>
                     </div>
 
-                    <div class="column-one">
+                    <div class="column-one"> asset
                         <div class="galler-img-list">
-                            <img src="images/large_cat3.jpeg" alt="">
+                            <img src="{{ asset('assets/images/large_cat3.jpeg') }}" alt="">
                         </div>
                         <div class="ehtinic_content">
                             <h2>Kurta Pant dupatta</h2>
@@ -638,7 +638,7 @@
 
                     <div class="column-one">
                         <div class="galler-img-list">
-                            <img src="images/category_image_02.png" alt="">
+                            <img src="{{ asset('assets/images/category_image_02.png') }}" alt="">
                         </div>
                         <div class="ehtinic_content">
                             <h2>Ethnic Set</h2>
@@ -648,7 +648,7 @@
 
                     <div class="column-one">
                         <div class="galler-img-list">
-                            <img src="images/category_image_05.png" alt="">
+                            <img src="{{ asset('assets/images/category_image_05.png') }}" alt="">
                         </div>
                         <div class="ehtinic_content">
                             <h2>Kurta Pant dupatta</h2>
@@ -658,7 +658,7 @@
 
                     <div class="column-one">
                         <div class="galler-img-list">
-                            <img src="images/large_cat1.jpg" alt="">
+                            <img src="{{ asset('assets/images/large_cat1.jpg') }}">
                         </div>
                         <div class="ehtinic_content">
                             <h2>Anarkali Gown Set</h2>
@@ -668,17 +668,17 @@
 
                     <div class="column-one">
                         <div class="galler-img-list">
-                            <img src="images/large_cat2.jpeg" alt="">
+                            <img src="{{ asset('assets/images/large_cat2.jpeg')}}" alt="">
                         </div>
                         <div class="ehtinic_content">
                             <h2>Ethnic Set</h2>
-                            <p>Gracefully crafted silhouettes with timeless ethnic charm.</p>
-                        </div>
+                            <p>Gracefully crafted silhouettes with asset('assets/imeless ethnic charm.</p>
+                    </div>
                     </div>
 
                     <div class="column-one">
                         <div class="galler-img-list">
-                            <img src="images/large_cat3.jpeg" alt="">
+                            <img src="{{ asset('assets/images/large_cat3.jpeg')}}" alt="">
                         </div>
                         <div class="ehtinic_content">
                             <h2>Kurta Pant dupatta</h2>
@@ -707,61 +707,61 @@
             
             <a href="#" class="jewellery-card">
                 <div class="jewellery-image">
-                    <img src="images/s4k-3.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
                 </div>
                 <h3>Fabtax 1</h3>
             </a>
             <a href="#" class="jewellery-card">
                 <div class="jewellery-image">
-                    <img src="images/s4k-2.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
                 </div>
                 <h3>Fabtax 2</h3>
             </a>
             <a href="#" class="jewellery-card">
                 <div class="jewellery-image">
-                    <img src="images/s4k-3.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
                 </div>
                 <h3>Fabtax 3</h3>
             </a>
             <a href="#" class="jewellery-card">
                 <div class="jewellery-image">
-                    <img src="images/s4k-2.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
                 </div>
                 <h3>Fabtax 4</h3>
             </a>
             <a href="#" class="jewellery-card">
                 <div class="jewellery-image">
-                    <img src="images/s4k-3.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
                 </div>
                 <h3>Fabtax 5</h3>
             </a>
             <a href="#" class="jewellery-card">
                 <div class="jewellery-image">
-                    <img src="images/s4k-2.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
                 </div>
                 <h3>Fabtax 6</h3>
             </a>
             <a href="#" class="jewellery-card">
                 <div class="jewellery-image">
-                    <img src="images/s4k-3.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
                 </div>
                 <h3>Fabtax 7</h3>
             </a>
             <a href="#" class="jewellery-card">
                 <div class="jewellery-image">
-                    <img src="images/s4k-2.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
                 </div>
                 <h3>Fabtax 8</h3>
             </a>
             <a href="#" class="jewellery-card">
                 <div class="jewellery-image">
-                    <img src="images/s4k-3.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
                 </div>
                 <h3>Fabtax 9</h3>
             </a>
             <a href="#" class="jewellery-card">
                 <div class="jewellery-image">
-                    <img src="images/s4k-2.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
                 </div>
                 <h3>Fabtax 10</h3>
             </a>
@@ -775,37 +775,37 @@
             <div class="occasion-grid">
                 <a href="#" class="occasion-card">
                     <div class="occasion-img">
-                        <img src="images/s4k-3.jpeg" alt="img">
+                        <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
                     </div>
                     <div class="occasion-name">Below 200</div>
                 </a>
                 <a href="#" class="occasion-card">
                     <div class="occasion-img">
-                        <img src="images/s4k-2.jpeg" alt="img">
+                        <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
                     </div>
                     <div class="occasion-name">Below 599</div>
                 </a>
                 <a href="#" class="occasion-card">
                     <div class="occasion-img">
-                        <img src="images/s4k-3.jpeg" alt="img">
+                        <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
                     </div>
                     <div class="occasion-name">Below 459</div>
                 </a>
                 <a href="#" class="occasion-card">
                     <div class="occasion-img">
-                        <img src="images/s4k-2.jpeg" alt="img">
+                        <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
                     </div>
                     <div class="occasion-name">Below 325</div>
                 </a>
                 <a href="#" class="occasion-card">
                     <div class="occasion-img">
-                        <img src="images/s4k-3.jpeg" alt="img">
+                        <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
                     </div>
                     <div class="occasion-name">Below 999</div>
                 </a>
                 <a href="#" class="occasion-card">
                     <div class="occasion-img">
-                        <img src="images/s4k-2.jpeg" alt="img">
+                        <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
                     </div>
                     <div class="occasion-name">Below 2000</div>
                 </a>
@@ -845,7 +845,7 @@
             </div> -->
 
             <div class="hex-img">
-                <img src="images/large_cat1.jpg" alt="image1">
+                <img src="{{ asset('assets/images/large_cat1.jpg') }}" alt="image1">
 
                 <!-- Outer border -->
                 <svg class="hex-border" viewBox="0 0 240 240">
@@ -883,7 +883,7 @@
             </div> -->
 
             <div class="hex-img">
-                <img src="images/large_cat2.jpeg" alt="image2">
+                <img src="{{ asset('assets/images/large_cat2.jpeg') }}" alt="image2">
 
                 <!-- Outer border -->
                 <svg class="hex-border" viewBox="0 0 240 240">
@@ -921,7 +921,7 @@
             </div> -->
 
             <div class="hex-img">
-                <img src="images/large_cat3.jpeg" alt="image3">
+                <img src="{{ asset('assets/images/large_cat3.jpeg') }}" alt="image3">
 
                 <!-- Outer border -->
                 <svg class="hex-border" viewBox="0 0 240 240">
@@ -959,7 +959,7 @@
             </div> -->
 
             <div class="hex-img">
-                <img src="images/category_image_02.png" alt="image4">
+                <img src="{{ asset('assets/images/category_image_02.png') }}" alt="image4">
 
                 <!-- Outer border -->
                 <svg class="hex-border" viewBox="0 0 240 240">
@@ -997,7 +997,7 @@
             </div> -->
 
             <div class="hex-img">
-                <img src="images/category_image_05.png" alt="image5">
+                <img src="{{ asset('assets/images/category_image_05.png') }}" alt="image5">
 
                 <!-- Outer border -->
                 <svg class="hex-border" viewBox="0 0 240 240">
@@ -1034,7 +1034,7 @@
             </div> -->
 
             <div class="hex-img">
-                <img src="images/collection_image_02.jpg" alt="image6">
+                <img src="{{ asset('assets/images/collection_image_02.jpg') }}" alt="image6">
 
                 <!-- Outer border -->
                 <svg class="hex-border" viewBox="0 0 240 240">
@@ -1084,7 +1084,7 @@
     <!-- BIG IMAGE SECTION -->
     <section class="big-image-section">
         <div class="left-card">
-            <img src="images/left-image.png" alt="">
+            <img src="{{ asset('assets/images/left-image.png') }}" alt="">
             <div class="content">
                 <h2>LUXE EDIT</h2>
                 <p>Timeless silhouettes, crafted to leave a lasting impression.</p>
@@ -1096,21 +1096,21 @@
         <div class="right-card">
             <div class="column">
                 <a href="" class="image-card">
-                    <img src="images/category_image_02.png" alt="">
+                    <img src="{{asset('assets/images/category_image_02.png')}}" alt="">
                     <div class="title">Ethnic Set</div>
                 </a>
                 <a href="" class="image-card">
-                    <img src="images/category_image_03.png" alt="">
+                    <img src="{{asset('assets/images/category_image_03.png')}}" alt="">
                     <div class="title">Ethnic Set</div>
                 </a>
             </div>
             <div class="column">
                 <a href="" class="image-card">
-                    <img src="images/category_image_04.png" alt="">
+                    <img src="{{asset('assets/images/category_image_04.png')}}" alt="">
                     <div class="title">Ethnic Set</div>
                 </a>
                 <a href="" class="image-card">
-                    <img src="images/category_image_05.png" alt="">
+                    <img src="{{asset('assets/images/category_image_05.png')}}" alt="">
                     <div class="title">Ethnic Set</div>
                 </a>
             </div>
@@ -1122,15 +1122,15 @@
             <div class="our-best-seller-inner1">
                 <div class="our-best-seller-left">
                     <div class="sec-img-best-left">
-                        <img src="images/category_image_02.png" alt="img">
+                        <img src="{{asset('assets/images/category_image_02.png')}}" alt="img">
                     </div>
                     <div class="sec-img-best-left">
-                        <img src="images/category_image_03.png" alt="img">
+                        <img src="{{asset('assets/images/category_image_03.png')}}" alt="img">
                     </div>
                 </div>
                 <div class="our-best-seller-center">
                     <div class="sec-img-best-center">
-                        <img src="images/category_image_05.png" alt="img">
+                        <img src="{{asset('assets/images/category_image_05.png')}}" alt="img">
                     </div>
                     <div class="sec-head text-center">
                         <span class="curated mb-2">Curated for You</span>
@@ -1138,15 +1138,15 @@
                         <p>Gracefully crafted silhouettes with timeless.</p>
                     </div>
                     <div class="sec-img-best-center">
-                        <img src="images/large_cat3.jpeg" alt="img">
+                        <img src="{{ asset('assets/images/large_cat3.jpeg') }}" alt="img">
                     </div>
                 </div>
                 <div class="our-best-seller-right">
                     <div class="sec-img-best-right">
-                        <img src="images/category_image_03.png" alt="img">
+                        <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
                     </div>
                     <div class="sec-img-best-right">
-                        <img src="images/category_image_04.png" alt="img">
+                        <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
                     </div>
                 </div>
             </div>
@@ -1161,7 +1161,7 @@
                 <div class="ethnic-image-wrap">
                     <div class="ethnic-card">
                         <div class="ethnic-image">
-                            <img src="images/category_image_01.png" alt="">
+                            <img src="{{ asset('assets/images/category_image_01.png') }}" alt="">
                             <svg class="frame-border" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 700">
                                 <path
                                     d="         M40 700         L40 250         Q40 200 85 190         Q65 145 105 130         Q95 85 145 80         Q150 40 210 40         Q235 0 250 0         Q265 0 290 40         Q350 40 355 80         Q405 85 395 130         Q435 145 415 190         Q460 200 460 250         L460 700         Z"
@@ -1175,7 +1175,7 @@
                     </div>
                     <div class="ethnic-card">
                         <div class="ethnic-image">
-                            <img src="images/category_image_06.png" alt="">
+                            <img src="{{ asset('assets/images/category_image_06.png') }}" alt="">
                             <svg class="frame-border" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 700">
                                 <path
                                     d="         M40 700         L40 250         Q40 200 85 190         Q65 145 105 130         Q95 85 145 80         Q150 40 210 40         Q235 0 250 0         Q265 0 290 40         Q350 40 355 80         Q405 85 395 130         Q435 145 415 190         Q460 200 460 250         L460 700         Z"
@@ -1189,7 +1189,7 @@
                     </div>
                     <div class="ethnic-card">
                         <div class="ethnic-image">
-                            <img src="images/category_image_01.png" alt="">
+                            <img src="{{ asset('assets/images/category_image_01.png') }}" alt="">
                             <svg class="frame-border" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 700">
                                 <path
                                     d="         M40 700         L40 250         Q40 200 85 190         Q65 145 105 130         Q95 85 145 80         Q150 40 210 40         Q235 0 250 0         Q265 0 290 40         Q350 40 355 80         Q405 85 395 130         Q435 145 415 190         Q460 200 460 250         L460 700         Z"
@@ -1203,7 +1203,7 @@
                     </div>
                     <div class="ethnic-card">
                         <div class="ethnic-image">
-                            <img src="images/category_image_06.png" alt="">
+                            <img src="{{ asset('assets/images/category_image_06.png') }}" alt="">
                             <svg class="frame-border" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 700">
                                 <path
                                     d="         M40 700         L40 250         Q40 200 85 190         Q65 145 105 130         Q95 85 145 80         Q150 40 210 40         Q235 0 250 0         Q265 0 290 40         Q350 40 355 80         Q405 85 395 130         Q435 145 415 190         Q460 200 460 250         L460 700         Z"
@@ -1238,7 +1238,7 @@
                     <!-- One Item -->
                     <div class="product_item">
                         <div class="product_image">
-                            <img src="images/collection_image_01.jpg" alt="">
+                            <img src="{{ asset('assets/images/collection_image_01.jpg') }}" alt="">
 
                             <div class="product_hover">
                                 <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
@@ -1296,7 +1296,7 @@
                     <!-- One Item -->
                     <div class="product_item">
                         <div class="product_image">
-                            <img src="images/collection_image_02.jpg" alt="">
+                            <img src="{{ asset('assets/images/collection_image_02.jpg') }}" alt="">
 
                             <div class="product_hover">
                                 <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
@@ -1354,7 +1354,7 @@
                     <!-- One Item -->
                     <div class="product_item">
                         <div class="product_image">
-                            <img src="images/collection_image_03.jpg" alt="">
+                            <img src="{{ asset('assets/images/collection_image_03.jpg') }}" alt="">
 
                             <div class="product_hover">
                                 <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
@@ -1411,7 +1411,7 @@
                     <!-- One Item -->
                     <div class="product_item">
                         <div class="product_image">
-                            <img src="images/collection_image_04.jpg" alt="">
+                            <img src="{{ asset('assets/images/collection_image_04.jpg') }}" alt="">
 
                             <div class="product_hover">
                                 <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
@@ -1468,7 +1468,7 @@
                     <!-- One Item -->
                     <div class="product_item">
                         <div class="product_image">
-                            <img src="images/collection_image_03.jpg" alt="">
+                            <img src="{{ asset('assets/images/collection_image_03.jpg') }}" alt="">
 
                             <div class="product_hover">
                                 <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
@@ -1526,7 +1526,7 @@
                     <!-- One Item -->
                     <div class="product_item">
                         <div class="product_image">
-                            <img src="images/collection_image_03.jpg" alt="">
+                            <img src="{{ asset('assets/images/collection_image_03.jpg') }}" alt="">
 
                             <div class="product_hover">
                                 <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
@@ -1584,7 +1584,7 @@
                     <!-- One Item -->
                     <div class="product_item">
                         <div class="product_image">
-                            <img src="images/collection_image_04.jpg" alt="">
+                            <img src="{{ asset('assets/images/collection_image_04.jpg') }}" alt="">
 
                             <div class="product_hover">
                                 <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
@@ -1642,7 +1642,7 @@
                     <!-- One Item -->
                     <div class="product_item">
                         <div class="product_image">
-                            <img src="images/collection_image_03.jpg" alt="">
+                            <img src="{{ asset('assets/images/collection_image_03.jpg') }}" alt="">
 
                             <div class="product_hover">
                                 <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
@@ -1723,7 +1723,7 @@
                 <div class="hanging-card rotate-left">
                     <div class="clip"></div>
                     <div class="card-image">
-                        <img src="images/category_image_01.png" alt="">
+                        <img src="{{ asset('assets/images/category_image_01.png') }}" alt="">
                     </div>
                     <div class="card-content">
                         <div class="stars">★★★★★</div>
@@ -1736,7 +1736,7 @@
                 <div class="hanging-card rotate-right">
                     <div class="clip"></div>
                     <div class="card-image">
-                        <img src="images/category_image_03.png" alt="">
+                        <img src="{{ asset('assets/images/category_image_03.png') }}" alt="">
                     </div>
                     <div class="card-content">
                         <div class="stars">★★★★★</div>
@@ -1749,7 +1749,7 @@
                 <div class="hanging-card rotate-left">
                     <div class="clip"></div>
                     <div class="card-image">
-                        <img src="images/category_image_05.png" alt="">
+                        <img src="{{ asset('assets/images/category_image_05.png') }}" alt="">
                     </div>
                     <div class="card-content">
                         <div class="stars">★★★★★</div>
@@ -1762,7 +1762,7 @@
                 <div class="hanging-card rotate-right">
                     <div class="clip"></div>
                     <div class="card-image">
-                        <img src="images/category_image_08.png" alt="">
+                        <img src="{{ asset('assets/images/category_image_08.png') }}" alt="">
                     </div>
                     <div class="card-content">
                         <div class="stars">★★★★★</div>
@@ -1775,7 +1775,7 @@
                 <div class="hanging-card rotate-left">
                     <div class="clip"></div>
                     <div class="card-image">
-                        <img src="images/category_image_01.png" alt="">
+                        <img src="{{ asset('assets/images/category_image_01.png') }}" alt="">
                     </div>
                     <div class="card-content">
                         <div class="stars">★★★★★</div>
@@ -1788,7 +1788,7 @@
                 <div class="hanging-card rotate-right">
                     <div class="clip"></div>
                     <div class="card-image">
-                        <img src="images/category_image_03.png" alt="">
+                        <img src="{{ asset('assets/images/category_image_03.png') }}" alt="">
                     </div>
                     <div class="card-content">
                         <div class="stars">★★★★★</div>
@@ -1801,7 +1801,7 @@
                 <div class="hanging-card rotate-left">
                     <div class="clip"></div>
                     <div class="card-image">
-                        <img src="images/category_image_05.png" alt="">
+                        <img src="{{ asset('assets/images/category_image_05.png') }}" alt="">
                     </div>
                     <div class="card-content">
                         <div class="stars">★★★★★</div>
@@ -1814,7 +1814,7 @@
                 <div class="hanging-card rotate-right">
                     <div class="clip"></div>
                     <div class="card-image">
-                        <img src="images/category_image_08.png" alt="">
+                        <img src="{{ asset('assets/images/category_image_08.png') }}" alt="">
                     </div>
                     <div class="card-content">
                         <div class="stars">★★★★★</div>
@@ -1876,28 +1876,28 @@
             
             <div class="bridal-slider">
                 <div class="bridal-slide">
-                    <img src="images/s4k-1.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-1.jpeg') }}" alt="img">
                 </div>
                 <div class="bridal-slide">
-                    <img src="images/s4k-2.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
                 </div>
                 <div class="bridal-slide">
-                    <img src="images/s4k-3.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
                 </div>
                 <div class="bridal-slide">
-                    <img src="images/s4k-4.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-4.jpeg') }}" alt="img">
                 </div>
                 <div class="bridal-slide">
-                    <img src="images/s4k-5.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-5.jpeg') }}" alt="img">
                 </div>
                 <div class="bridal-slide">
-                    <img src="images/s4k-6.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-6.jpeg') }}" alt="img">
                 </div>
                 <div class="bridal-slide">
-                    <img src="images/s4k-7.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-7.jpeg') }}" alt="img">
                 </div>
                 <div class="bridal-slide">
-                    <img src="images/s4k-8.jpeg" alt="img">
+                    <img src="{{ asset('assets/images/s4k-8.jpeg') }}" alt="img">
                 </div>
             </div>
 
@@ -1907,7 +1907,7 @@
                         <div class="process-grid-left">
                             <div class="process-grid-left-img">
                                 <div class="process-grid-left-img1">
-                                    <img src="images/s4k-3.jpeg" alt="img">
+                                    <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
                                     <div class="process-overlay">
                                         <div class="process-top1">
                                             <div class="process-icon1">
@@ -1921,7 +1921,7 @@
                                     </div>
                                 </div>
                                 <div class="process-grid-left-img1">
-                                    <img src="images/s4k-4.jpeg" alt="img">
+                                    <img src="{{ asset('assets/images/s4k-4.jpeg') }}" alt="img">
                                     <div class="process-overlay">
                                         <div class="process-top1">
                                             <div class="process-icon1">
@@ -1938,7 +1938,7 @@
                         </div>
                         <div class="process-grid-center">
                             <div class="process-grid-center-img">
-                                <img src="images/s4k-7.jpeg" alt="img">
+                                <img src="{{ asset('assets/images/s4k-7.jpeg') }}" alt="img">
                                 <div class="process-overlay">
                                     <div class="process-top1">
                                         <div class="process-icon1">
@@ -1955,7 +1955,7 @@
                         <div class="process-grid-right">
                             <div class="process-grid-right-img">
                                 <div class="process-grid-right-img1">
-                                    <img src="images/s4k-5.jpeg" alt="img">
+                                    <img src="{{ asset('assets/images/s4k-5.jpeg') }}" alt="img">
                                     <div class="process-overlay">
                                         <div class="process-top1">
                                             <div class="process-icon1">
@@ -1969,7 +1969,7 @@
                                     </div>
                                 </div>
                                 <div class="process-grid-right-img1">
-                                    <img src="images/s4k-6.jpeg" alt="img">
+                                    <img src="{{ asset('assets/images/s4k-6.jpeg') }}" alt="img">
                                     <div class="process-overlay">
                                         <div class="process-top1">
                                             <div class="process-icon1">
@@ -2013,75 +2013,75 @@
             <!-- ROW 1 -->
             <div class="instagram-row instagram-row-one">
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_03.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_04.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_05.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_05.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_06.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_06.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_07.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_07.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_08.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_08.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_03.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_04.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_05.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_05.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_06.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_06.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_07.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_07.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_08.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_08.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_03.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_04.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_05.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_05.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_06.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_06.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_07.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_07.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_08.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_08.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
             </div>
@@ -2089,75 +2089,75 @@
             <!-- ROW 2 -->
             <div class="instagram-row instagram-row-two">
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_09.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_09.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_10.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_10.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_01.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_01.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_02.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_02.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_03.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_04.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_09.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_09.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_10.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_10.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_01.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_01.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_02.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_02.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_03.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_04.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_09.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_09.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_10.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_10.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_01.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_01.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_02.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_02.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_03.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
                 <a href="#" class="instagram-card">
-                    <img src="images/category_image_04.png" alt="img">
+                    <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
                     <div class="instagram-overlay"><span>♡</span></div>
                 </a>
             </div>
@@ -2176,7 +2176,7 @@
                 <div class="blog-item-main">
                     <div class="blog-image-main">
                         <span class="image-border"></span>
-                        <img src="images/category_image_05.png" alt="img">
+                        <img src="{{ asset('assets/images/category_image_05.png') }}" alt="img">
                     </div>
 
                     <div class="blog-content-main">
@@ -2191,7 +2191,7 @@
                 <div class="blog-item-main reverse">
                     <div class="blog-image-main">
                         <span class="image-border"></span>
-                        <img src="images/category_image_04.png" alt="img">
+                        <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
                     </div>
 
                     <div class="blog-content-main">
@@ -2215,13 +2215,13 @@
 
                     <div class="blog-image-main">
                         <span class="image-border"></span>
-                        <img src="images/category_image_03.png" alt="img">
+                        <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
                     </div>
                 </div>
                 <div class="blog-item-main reverse">
                     <div class="blog-image-main">
                         <span class="image-border"></span>
-                        <img src="images/category_image_06.png" alt="img">
+                        <img src="{{ asset('assets/images/category_image_06.png') }}" alt="img">
                     </div>
 
                     <div class="blog-content-main">
