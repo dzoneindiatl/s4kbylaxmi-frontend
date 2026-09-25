@@ -1,18 +1,4 @@
 $(function() {
-    $('.plus').on('click', function() {
-        let input = $(this).siblings('input');
-        let value = parseInt(input.val()) || 1;
-        input.val(value + 1);
-    });
-
-    $('.minus').on('click', function() {
-        let input = $(this).siblings('input');
-        let value = parseInt(input.val()) || 1;
-        if (value > 1) {
-            input.val(value - 1);
-        }
-    });
-
     $(window).on('scroll', function() {
         if ($(window).width() < 768) {
             if ($(window).scrollTop() > 700) {

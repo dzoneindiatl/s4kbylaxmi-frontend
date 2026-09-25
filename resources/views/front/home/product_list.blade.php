@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>SYK: Fashion Hero</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,100..700,0,0" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -144,17 +144,143 @@
                                             C323,48 336,58 344,70
                                             C350,78 356,82 368,82 L368,94 Z" fill="#f8f3ee"/>
                                     </svg>
-                                    <div class="product_colors">
-                                    {{-- @foreach($product->productVariants as $productVariant)     --}}
-                                        @foreach($product->color_variants as $color) 
-                                            <span style="background: {{ $color['color_code'] }}"></span>
-                                        @endforeach 
-                                    {{-- @endforeach         --}}
-                                    </div>
-                                    <div class="product_sizes">
-                                        @foreach($product->size_variants as $size)    
-                                            <span>{{ $size }}</span>
-                                        @endforeach 
+                                    <div class="product_variants">
+                                        @foreach($product->productVariants as $productVariant)
+                                            @php
+                                                $type = $productVariant->variant->type ?? null;
+                                                $variantValues = $productVariant->variantValues ?? collect();
+                                            @endphp
+                                            @if($type == 1)
+                                                <div class="product_colors variant-round">
+                                                    @foreach($variantValues as $item)
+                                                        <span
+                                                            title="{{ $item->variant_value->name ?? '' }}"
+                                                            data-variant-value-id="{{ $item->variant_value_id }}">
+                                                        </span>
+                                                    @endforeach
+                                                </div>
+
+                                            @elseif($type == 2)
+                                                <div class="product_sizes variant-box">
+                                                    @foreach($variantValues as $item)
+                                                        <span
+                                                            data-variant-value-id="{{ $item->variant_value_id }}">
+                                                            {{ $item->variant_value->name ?? '' }}
+                                                        </span>
+                                                    @endforeach
+                                                </div>
+
+                                            @elseif($type == 3)
+                                                <div class="product_colors variant-round variant-with-image">
+                                                    @foreach($variantValues as $item)
+                                                        @php
+                                                            $variantIcon = $product->product_main_images->where('variant_id', $item->variant_value_id)->where('is_variant_icon', 1)->first();
+                                                        @endphp
+                                                        <span
+                                                            data-variant-value-id="{{ $item->variant_value_id }}"
+                                                            title="{{ $item->variant_value->name ?? '' }}">
+                                                            @if($variantIcon)
+                                                                <img src ="{{ asset('uploads/products/'.$variantIcon->graphic)  }}" style="height: 25px;width:25px;">
+                                                            @endif
+
+                                                        </span>
+                                                    @endforeach
+                                                </div>
+
+                                            @elseif($type == 4)
+                                                <div class="product_colors variant-round">
+                                                    @foreach($variantValues as $item)
+                                                        @php
+                                                            $color = $item->variant_value->color_code ?? '#ffffff';
+                                                        @endphp
+                                                        <span
+                                                            data-variant-value-id="{{ $item->variant_value_id }}"
+                                                            title="{{ $item->variant_value->name ?? '' }}"
+                                                            style="background-color: {{ $color }}">
+                                                        </span>
+
+                                                    @endforeach
+                                                </div>
+
+                                            @elseif($type == 5)
+                                                <div class="product_sizes variant-box-color">
+                                                    @foreach($variantValues as $item)
+                                                        @php
+                                                            $color = $item->variant_value->color_code ?? '#ffffff';
+                                                        @endphp
+                                                        <span
+                                                            data-variant-value-id="{{ $item->variant_value_id }}"
+                                                            title="{{ $item->variant_value->name ?? '' }}"
+                                                            style="background-color: {{ $color }}">
+                                                            {{ $item->variant_value->name ?? '' }}
+                                                        </span>
+                                                    @endforeach
+                                                </div>
+
+                                            @elseif($type == 6)
+                                                    <div class="product_sizes variant-box-image">
+                                                        @foreach($variantValues as $item)
+                                                            @php
+                                                                $variantIcon = $product->product_main_images
+                                                                    ->where('variant_id', $item->variant_value_id)
+                                                                    ->where('is_variant_icon', 1)
+                                                                    ->first();
+                                                            @endphp
+                                                            <span
+                                                                data-variant-value-id="{{ $item->variant_value_id }}"
+                                                                title="{{ $item->variant_value->name ?? '' }}">
+
+                                                                @if($variantIcon)
+                                                                    <img src ="{{ asset('uploads/products/'.$variantIcon->graphic)  }}" style="height: 25px;width:25px;">
+                                                                @else
+                                                                    {{ $item->variant_value->name ?? '' }}
+                                                                @endif
+
+                                                            </span>
+                                                        @endforeach
+                                                    </div>
+
+                                            @elseif($type == 7)
+                                                <div class="product_sizes variant-rectangle">
+                                                    @foreach($variantValues as $item)
+                                                        <span
+                                                            data-variant-value-id="{{ $item->variant_value_id }}">
+                                                            {{ $item->variant_value->name ?? '' }}
+                                                        </span>
+                                                    @endforeach
+                                                </div>
+                                            @elseif($type == 8)
+                                                <div class="product_sizes variant-rectangle-image">
+                                                    @foreach($variantValues as $item)
+                                                        @php
+                                                            $variantIcon = $product->product_main_images->where('variant_id', $item->variant_value_id)->where('is_variant_icon', 1)->first();
+                                                        @endphp
+                                                        <span data-variant-value-id="{{ $item->variant_value_id }}" title="{{ $item->variant_value->name ?? '' }}">
+                                                            @if($variantIcon)
+                                                                <img src ="{{ asset('uploads/products/'.$variantIcon->graphic)  }}" style="height: 25px;width:25px;">
+                                                            @else
+                                                                {{ $item->variant_value->name ?? '' }}
+                                                            @endif
+                                                        </span>
+                                                    @endforeach
+                                                </div>
+
+                                            @elseif($type == 9)
+                                                <div class="product_sizes variant-rectangle-color">
+                                                    @foreach($variantValues as $item)
+                                                        @php
+                                                            $color = $item->variant_value->color_code ?? '#ffffff';
+                                                        @endphp
+                                                        <span
+                                                            data-variant-value-id="{{ $item->variant_value_id }}"
+                                                            title="{{ $item->variant_value->name ?? '' }}"
+                                                            style="background-color: {{ $color }}">
+                                                            {{ $item->variant_value->name ?? '' }}
+                                                        </span>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        @endforeach
                                     </div>
                                     <a href="@if(!empty($product->sku)){{ route('front-product.detail', ['product' => 'product', 'title' => $product->slug . '.html', 'sku' => $product->sku]) }} @endif" class="btn_cart">
                                         Add To Cart
@@ -170,7 +296,7 @@
                                 <span class="product_tag"> @if(!empty($discount)) @else New @endif </span>
 
                                 <div class="product_tag_wishlist">
-                                    <span class="material-symbols-outlined">
+                                    <span class="material-symbols-outlined addtoWishList">
                                         favorite
                                     </span>
                                 </div>

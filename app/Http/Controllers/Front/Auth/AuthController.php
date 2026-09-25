@@ -43,7 +43,7 @@ class AuthController extends Controller
     public function signup(Request $request)
     {
         try {
-            return view('front.modules.auth.signup');
+            return view('front.auth.signup');
         } catch (Exception $e) {
             Log::error($e);
             return redirect()->back()->with(['error' => 'Somethig went wrong', 'error_msg' => $e->getMessage()]);

@@ -297,28 +297,29 @@
                                             aria-label="Close"></button>
                 </div>
             @endif
-            <form id="loginForm" action="{{ route('front-user.postLogin') }}" autocomplete="off" method="POST">
+            <form id="loginForm" action="{{ route('front-user.postSignup') }}" autocomplete="off" method="POST">
                 @csrf
+                <div class="input-group">
+                    <label for="Name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required />
+                </div>
                 <div class="input-group">
                     <label for="username">Email</label>
                     <input type="text" id="username" name="email" placeholder="Enter your email" required />
                 </div>
                 <div class="input-group">
+                    <label for="phone_number">Phone Number</label>
+                    <input type="text" id="username" name="phone_number" placeholder="Enter your Phone Number" required />
+                </div>
+                <div class="input-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" placeholder="Enter your password" required />
                 </div>
-                <div class="login-options">
-                    <label class="checkbox-label">
-                        <input type="checkbox" />
-                        <span class="checkmark"></span>
-                        Remember me
-                    </label>
-                    {{-- <a href="{{ route('front-user.forgetPassword') }}" class="forgot-link">Forgot password?</a> --}}
+                <div class="input-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Enter your Confirm password" required />
                 </div>
-                <button type="submit" class="btn-login">SIGN IN</button>
-                <p class="signup-link">
-                    Don't have an account? <a href="{{ route('front-user.signup') }}">Sign up</a>
-                </p>
+                <button type="submit" class="btn-login">SIGN UP</button>
             </form>
         </div>
     </div>

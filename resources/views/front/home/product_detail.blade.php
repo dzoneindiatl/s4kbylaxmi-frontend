@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,100..700,0,0" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
@@ -16,9 +18,17 @@
             <div class="breadcrumb">
                 <a href="{{ url('/') }}">Home</a>
                 <span>/</span>
-                <a href="#">Women</a>
-                <span>/</span>
-                <a href="#">Kurtis</a>
+                @if($productcat->category_type_id == 1)
+                    <a href="{{ route('category.show',['path'=>$productcat->slug]) }}">{{ $productcat->name }}</a>
+                @else    
+                    <a href="{{ route('category.show',['path'=>$productcat->slug]) }}">{{ $productcat->name }}</a> 
+                    @if(!empty($productSubCat))  
+                        <span>/</span><a href="{{ route('category.show',['path'=>$productcat->slug.'/'.$productSubCat->slug]) }}">{{ $productSubCat->name }}</a>
+                    @endif
+                    @if(!empty($productChildCat))        
+                        <span>/</span> <a href="{{ route('category.show',['path'=>$productcat->slug.'/'.$productSubCat->slug.'/'.$productChildCat->slug]) }}">{{ $productChildCat->name }}</a> 
+                    @endif 
+                @endif      
                 <span>/</span>
                 <strong>{{ $product->name }}</strong>
             </div>
@@ -197,34 +207,64 @@
                             @foreach ($productvariants as $variant)
                                 @php
                                     $variantValues = $variant['variant_values'] ?? [];
-                                    $hasMain = collect($variantValues)
-                                        ->where('is_main', 1)
-                                        ->isNotEmpty();
+                                    $hasMain = collect($variantValues)->where('is_main', 1)->isNotEmpty();
+                                    $displayType = (int) ($variant['variant_type'] ?? 0);
                                 @endphp
+
                                 @if (count($variantValues))
                                     <div class="product-option">
                                         <div class="option-title">
                                             <h5>{{ $variant['variant_name'] }}</h5>
-                                            {{-- Size Guide sirf Size ke liye --}}
-                                            {{-- @if (strtolower($variant['variant_name']) === 'size')
-                                                <a href="#" class="d-flex gap-10 align-items-center">
-                                                    <span class="material-symbols-outlined">
-                                                        straighten
-                                                    </span>
-                                                    Size Guide
-                                                </a>
-                                            @endif --}}
                                         </div>
 
-                                        {{-- SIZE --}}
-                                        @if (strtolower($variant['variant_name']) === 'size')
-                                            <div class="sizes">
+                                        {{-- TYPE 1 : ONLY ROUND --}}
+                                        @if ($displayType === 1)
+                                            <div class="colors variant-round">
                                                 @foreach ($variantValues as $k => $variantValue)
                                                     @php
-                                                        $isActive =($hasMain && (int) $variantValue['is_main'] === 1)||(!$hasMain && $k === 0);
+                                                        $isActive = ($hasMain && (int) $variantValue['is_main'] === 1) || (!$hasMain && $k === 0);
+                                                        $colorCode = $variantValue['color_code'] ?? '#ddd';
                                                     @endphp
+
                                                     <label>
-                                                        <input type="radio" name="variant_{{ $variant['variant_id'] ?? $variant['variant_name'] }}" value="{{ $variantValue['variant_value_id'] }}" class="attribute-input" {{ $isActive ? 'checked' : '' }}>
+                                                        <input
+                                                            type="radio"
+                                                            name="variant_{{ $variant['variant_id'] ?? $variant['variant_name'] }}"
+                                                            value="{{ $variantValue['variant_value_id'] }}"
+                                                            class="attribute-input"
+                                                            {{ $isActive ? 'checked' : '' }}>
+
+                                                        <span
+                                                            class="s-variant color-variant {{ $isActive ? 'active' : '' }}"
+                                                            style="background: {{ $colorCode }};"
+                                                            data-product-id="{{ $variant['product_id'] ?? $product->id }}"
+                                                            data-id="{{ $variantValue['id'] }}"
+                                                            data-variant-id="{{ $variant['variant_id'] ?? '' }}"
+                                                            data-type="{{ $variant['variant_name'] }}"
+                                                            data-value="{{ $variantValue['name'] }}"
+                                                            data-vid="{{ $variantValue['variant_value_id'] }}"
+                                                            data-value-id="{{ $variantValue['variant_value_id'] }}"
+                                                            title="{{ $variantValue['name'] }}"
+                                                            onclick="selectVariant(this);checkVariantStock(this);">
+                                                        </span>
+                                                    </label>
+                                                @endforeach
+                                            </div>
+                                        @elseif ($displayType === 2)
+                                            <div class="sizes variant-box">
+                                                @foreach ($variantValues as $k => $variantValue)
+                                                    @php
+                                                        $isActive = ($hasMain && (int) $variantValue['is_main'] === 1) || (!$hasMain && $k === 0);
+                                                    @endphp
+
+                                                    <label>
+                                                        <input
+                                                            type="radio"
+                                                            name="variant_{{ $variant['variant_id'] ?? $variant['variant_name'] }}"
+                                                            value="{{ $variantValue['variant_value_id'] }}"
+                                                            class="attribute-input"
+                                                            {{ $isActive ? 'checked' : '' }}>
+
                                                         <span
                                                             class="s-variant {{ $isActive ? 'active' : '' }}"
                                                             data-product-id="{{ $variant['product_id'] ?? $product->id }}"
@@ -240,15 +280,61 @@
                                                     </label>
                                                 @endforeach
                                             </div>
-                                        @elseif (strtolower($variant['variant_name']) === 'color')
-                                            <div class="colors">
+
+                                        {{-- TYPE 3 : ROUND WITH IMAGE --}}
+                                        @elseif ($displayType === 3)
+                                            <div class="colors variant-round variant-with-image">
                                                 @foreach ($variantValues as $k => $variantValue)
                                                     @php
-                                                        $isActive =($hasMain && (int) $variantValue['is_main'] === 1)||(!$hasMain && $k === 0);
-                                                        $colorCode = $variantValue['color_code']?? '#ddd';
+                                                        $isActive = ($hasMain && (int) $variantValue['is_main'] === 1) || (!$hasMain && $k === 0);
+                                                        $image = $variantValue['image'] ?? null;
                                                     @endphp
+
                                                     <label>
-                                                        <input type="radio" name="variant_{{ $variant['variant_id'] ?? $variant['variant_name'] }}" value="{{ $variantValue['variant_value_id'] }}"class="attribute-input"{{ $isActive ? 'checked' : '' }}>
+                                                        <input
+                                                            type="radio"
+                                                            name="variant_{{ $variant['variant_id'] ?? $variant['variant_name'] }}"
+                                                            value="{{ $variantValue['variant_value_id'] }}"
+                                                            class="attribute-input"
+                                                            {{ $isActive ? 'checked' : '' }}>
+
+                                                        <span
+                                                            class="s-variant {{ $isActive ? 'active' : '' }}"
+                                                            data-product-id="{{ $variant['product_id'] ?? $product->id }}"
+                                                            data-id="{{ $variantValue['id'] }}"
+                                                            data-variant-id="{{ $variant['variant_id'] ?? '' }}"
+                                                            data-type="{{ $variant['variant_name'] }}"
+                                                            data-value="{{ $variantValue['name'] }}"
+                                                            data-vid="{{ $variantValue['variant_value_id'] }}"
+                                                            data-value-id="{{ $variantValue['variant_value_id'] }}"
+                                                            onclick="selectVariant(this);checkVariantStock(this);">
+
+                                                            @if ($image)
+                                                                <img src="{{ asset('uploads/products/' . $image) }}" alt="{{ $variantValue['name'] }}">
+                                                            @else
+                                                                {{ $variantValue['name'] }}
+                                                            @endif
+                                                        </span>
+                                                    </label>
+                                                @endforeach
+                                            </div>
+
+                                        {{-- TYPE 4 : ROUND WITH COLOR --}}
+                                        @elseif ($displayType === 4)
+                                            <div class="colors variant-round">
+                                                @foreach ($variantValues as $k => $variantValue)
+                                                    @php
+                                                        $isActive = ($hasMain && (int) $variantValue['is_main'] === 1) || (!$hasMain && $k === 0);
+                                                        $colorCode = $variantValue['color_code'] ?? '#ddd';
+                                                    @endphp
+
+                                                    <label>
+                                                        <input
+                                                            type="radio"
+                                                            name="variant_{{ $variant['variant_id'] ?? $variant['variant_name'] }}"
+                                                            value="{{ $variantValue['variant_value_id'] }}"
+                                                            class="attribute-input"
+                                                            {{ $isActive ? 'checked' : '' }}>
 
                                                         <span
                                                             class="s-variant color-variant {{ $isActive ? 'active' : '' }}"
@@ -261,25 +347,174 @@
                                                             data-vid="{{ $variantValue['variant_value_id'] }}"
                                                             data-value-id="{{ $variantValue['variant_value_id'] }}"
                                                             title="{{ $variantValue['name'] }}"
-                                                            onclick="selectVariant(this);checkVariantStock(this);"></span>
+                                                            onclick="selectVariant(this);checkVariantStock(this);">
+                                                        </span>
                                                     </label>
                                                 @endforeach
                                             </div>
-                                        @else
-                                            <div class="sizes">
+
+                                        {{-- TYPE 5 : BOX WITH COLOR --}}
+                                        @elseif ($displayType === 5)
+                                            <div class="sizes variant-box-color">
                                                 @foreach ($variantValues as $k => $variantValue)
                                                     @php
-                                                        $isActive =($hasMain && (int) $variantValue['is_main'] === 1)||(!$hasMain && $k === 0);
+                                                        $isActive = ($hasMain && (int) $variantValue['is_main'] === 1) || (!$hasMain && $k === 0);
+                                                        $colorCode = $variantValue['color_code'] ?? '#ddd';
                                                     @endphp
+
                                                     <label>
                                                         <input
                                                             type="radio"
                                                             name="variant_{{ $variant['variant_id'] ?? $variant['variant_name'] }}"
                                                             value="{{ $variantValue['variant_value_id'] }}"
-                                                            class="attribute-input"{{ $isActive ? 'checked' : '' }}>
+                                                            class="attribute-input"
+                                                            {{ $isActive ? 'checked' : '' }}>
 
                                                         <span
                                                             class="s-variant {{ $isActive ? 'active' : '' }}"
+                                                            style="background: {{ $colorCode }};"
+                                                            data-product-id="{{ $variant['product_id'] ?? $product->id }}"
+                                                            data-id="{{ $variantValue['id'] }}"
+                                                            data-variant-id="{{ $variant['variant_id'] ?? '' }}"
+                                                            data-type="{{ $variant['variant_name'] }}"
+                                                            data-value="{{ $variantValue['name'] }}"
+                                                            data-vid="{{ $variantValue['variant_value_id'] }}"
+                                                            data-value-id="{{ $variantValue['variant_value_id'] }}"
+                                                            onclick="selectVariant(this);checkVariantStock(this);">
+                                                            {{ $variantValue['name'] }}
+                                                        </span>
+                                                    </label>
+                                                @endforeach
+                                            </div>
+
+                                        {{-- TYPE 6 : BOX WITH IMAGE --}}
+                                        @elseif ($displayType === 6)
+                                            <div class="sizes variant-box-image">
+                                                @foreach ($variantValues as $k => $variantValue)
+                                                    @php
+                                                        $isActive = ($hasMain && (int) $variantValue['is_main'] === 1) || (!$hasMain && $k === 0);
+                                                        $image = $variantValue['image'] ?? null;
+                                                    @endphp
+
+                                                    <label>
+                                                        <input
+                                                            type="radio"
+                                                            name="variant_{{ $variant['variant_id'] ?? $variant['variant_name'] }}"
+                                                            value="{{ $variantValue['variant_value_id'] }}"
+                                                            class="attribute-input"
+                                                            {{ $isActive ? 'checked' : '' }}>
+
+                                                        <span
+                                                            class="s-variant {{ $isActive ? 'active' : '' }}"
+                                                            data-product-id="{{ $variant['product_id'] ?? $product->id }}"
+                                                            data-id="{{ $variantValue['id'] }}"
+                                                            data-variant-id="{{ $variant['variant_id'] ?? '' }}"
+                                                            data-type="{{ $variant['variant_name'] }}"
+                                                            data-value="{{ $variantValue['name'] }}"
+                                                            data-vid="{{ $variantValue['variant_value_id'] }}"
+                                                            data-value-id="{{ $variantValue['variant_value_id'] }}"
+                                                            onclick="selectVariant(this);checkVariantStock(this);">
+
+                                                            @if ($image)
+                                                                <img src="{{ asset('uploads/products/' . $image) }}" alt="{{ $variantValue['name'] }}">
+                                                            @else
+                                                                {{ $variantValue['name'] }}
+                                                            @endif
+                                                        </span>
+                                                    </label>
+                                                @endforeach
+                                            </div>
+
+                                        {{-- TYPE 7 : ONLY RECTANGLE --}}
+                                        @elseif ($displayType === 7)
+                                            <div class="sizes variant-rectangle">
+                                                @foreach ($variantValues as $k => $variantValue)
+                                                    @php
+                                                        $isActive = ($hasMain && (int) $variantValue['is_main'] === 1) || (!$hasMain && $k === 0);
+                                                    @endphp
+
+                                                    <label>
+                                                        <input
+                                                            type="radio"
+                                                            name="variant_{{ $variant['variant_id'] ?? $variant['variant_name'] }}"
+                                                            value="{{ $variantValue['variant_value_id'] }}"
+                                                            class="attribute-input"
+                                                            {{ $isActive ? 'checked' : '' }}>
+
+                                                        <span
+                                                            class="s-variant {{ $isActive ? 'active' : '' }}"
+                                                            data-product-id="{{ $variant['product_id'] ?? $product->id }}"
+                                                            data-id="{{ $variantValue['id'] }}"
+                                                            data-variant-id="{{ $variant['variant_id'] ?? '' }}"
+                                                            data-type="{{ $variant['variant_name'] }}"
+                                                            data-value="{{ $variantValue['name'] }}"
+                                                            data-vid="{{ $variantValue['variant_value_id'] }}"
+                                                            data-value-id="{{ $variantValue['variant_value_id'] }}"
+                                                            onclick="selectVariant(this);checkVariantStock(this);">
+                                                            {{ $variantValue['name'] }}
+                                                        </span>
+                                                    </label>
+                                                @endforeach
+                                            </div>
+
+                                        {{-- TYPE 8 : RECTANGLE WITH IMAGE --}}
+                                        @elseif ($displayType === 8)
+                                            <div class="sizes variant-rectangle-image">
+                                                @foreach ($variantValues as $k => $variantValue)
+                                                    @php
+                                                        $isActive = ($hasMain && (int) $variantValue['is_main'] === 1) || (!$hasMain && $k === 0);
+                                                        $image = $variantValue['image'] ?? null;
+                                                    @endphp
+
+                                                    <label>
+                                                        <input
+                                                            type="radio"
+                                                            name="variant_{{ $variant['variant_id'] ?? $variant['variant_name'] }}"
+                                                            value="{{ $variantValue['variant_value_id'] }}"
+                                                            class="attribute-input"
+                                                            {{ $isActive ? 'checked' : '' }}>
+
+                                                        <span
+                                                            class="s-variant {{ $isActive ? 'active' : '' }}"
+                                                            data-product-id="{{ $variant['product_id'] ?? $product->id }}"
+                                                            data-id="{{ $variantValue['id'] }}"
+                                                            data-variant-id="{{ $variant['variant_id'] ?? '' }}"
+                                                            data-type="{{ $variant['variant_name'] }}"
+                                                            data-value="{{ $variantValue['name'] }}"
+                                                            data-vid="{{ $variantValue['variant_value_id'] }}"
+                                                            data-value-id="{{ $variantValue['variant_value_id'] }}"
+                                                            onclick="selectVariant(this);checkVariantStock(this);">
+
+                                                            @if ($image)
+                                                                <img src="{{ asset('uploads/products/' . $image) }}" alt="{{ $variantValue['name'] }}">
+                                                            @else
+                                                                {{ $variantValue['name'] }}
+                                                            @endif
+                                                        </span>
+                                                    </label>
+                                                @endforeach
+                                            </div>
+
+                                        {{-- TYPE 9 : RECTANGLE WITH COLOR --}}
+                                        @elseif ($displayType === 9)
+                                            <div class="sizes variant-rectangle-color">
+                                                @foreach ($variantValues as $k => $variantValue)
+                                                    @php
+                                                        $isActive = ($hasMain && (int) $variantValue['is_main'] === 1) || (!$hasMain && $k === 0);
+                                                        $colorCode = $variantValue['color_code'] ?? '#ddd';
+                                                    @endphp
+
+                                                    <label>
+                                                        <input
+                                                            type="radio"
+                                                            name="variant_{{ $variant['variant_id'] ?? $variant['variant_name'] }}"
+                                                            value="{{ $variantValue['variant_value_id'] }}"
+                                                            class="attribute-input"
+                                                            {{ $isActive ? 'checked' : '' }}>
+
+                                                        <span
+                                                            class="s-variant {{ $isActive ? 'active' : '' }}"
+                                                            style="background: {{ $colorCode }};"
                                                             data-product-id="{{ $variant['product_id'] ?? $product->id }}"
                                                             data-id="{{ $variantValue['id'] }}"
                                                             data-variant-id="{{ $variant['variant_id'] ?? '' }}"
@@ -299,6 +534,11 @@
                             @endforeach
                         @endif
                     </div>
+                    
+                    <div class="our-measurement">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#centimeterPreviewModal{{ $sizeChartData->id }}" title="Preview">Measurements</button>
+                    </div>
+
                     <div class="product-option quantity-option">
                         <h5 class="mb-10">
                             Quantity
@@ -308,7 +548,7 @@
                             <button class="minus qty-btn">
                                 -
                             </button>
-                            <input type="text" value="1" class="qty" maxlength="{{ $product->qty }}" max="{{ $product->qty }}">
+                            <input type="text" value="1" id="quantity" class="qty" maxlength="{{ $product->qty }}" max="{{ $product->qty }}">
                             <button class="plus qty-btn">
                                 +
                             </button>
@@ -1049,13 +1289,91 @@
             </div>
         </div>
     </section>
+    <style>
+        .textcentercss{
+            margin-left:12em; 
+        }
+    </style>
+    <div class="modal fade"
+         id="centimeterPreviewModal{{ $sizeChartData->id }}"
+         tabindex="-1"
+         aria-hidden="true">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ $sizeChartData->title }}</h5>
+                    <h4 class="textcentercss">{{ ucwords(str_replace('_',' ',$sizeChartData->chart_format)) }}</h4>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <ul class="nav nav-tabs mb-3"
+                        id="sizeChartTabs{{ $sizeChartData->id }}"
+                        role="tablist">
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#inchTab{{ $sizeChartData->id }}"
+                                    type="button">
+                                Inch
+                            </button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#cmTab{{ $sizeChartData->id }}"
+                                    type="button">
+                                CM
+                            </button>
+                        </li>
+
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active"
+                             id="inchTab{{ $sizeChartData->id }}">
+
+                            @include('front.modals.chart_preview', [
+                                'result' => $sizeChartData,
+                                'unit' => 'inch'
+                            ])
+
+                        </div>
+                        <div class="tab-pane fade"
+                             id="cmTab{{ $sizeChartData->id }}">
+
+                            @include('front.modals.chart_preview', [
+                                'result' => $sizeChartData,
+                                'unit' => 'cm'
+                            ])
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <!-- jQuery (required) -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flickity@2/dist/flickity.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flickity@2/dist/flickity.pkgd.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6/dist/fancybox/fancybox.css" />
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6/dist/fancybox/fancybox.umd.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
     <script src="{{ asset('assets/js/custom.js') }}"></script>
     <script src="{{ asset('assets/js/product-page.js') }}"></script>
     <script src="{{ asset('assets/js/cart.js') }}"></script>
@@ -1068,29 +1386,34 @@
         var minSellingQty = '{{ $minSellingQty }}';
         var maxSellingQty = '{{ $maxSellingQty }}';
         var getVarient = "{{ route('variant.combination.prices') }}";
-        $(document).on('click', '.qty-btn', function () {
-            const input = $(this).siblings('.qty');
-            let qty = parseInt(input.val()) || 1;
-            const maxQty = parseInt(input.attr('max')) || 1;
-            if ($(this).hasClass('inc')) {
-                if (qty < maxQty) {
-                    qty++;
-                    input.val(qty);
-                } else {
-                    input.val(maxQty);
-                    console.log('Maximum available quantity is ' + maxQty);
-                }
+        $(document).off('click.qty', '.qty-btn');
 
-            } else if ($(this).hasClass('dec')) {
+        $(document).on('click.qty', '.qty-btn', function (e) {
+            e.preventDefault();
+
+            const input = $(this).siblings('.qty');
+            let qty = parseInt(input.val(), 10) || 1;
+            const maxQty = parseInt(input.attr('max'), 10) || 1;
+
+            if ($(this).hasClass('plus')) {
+                if (qty < maxQty) {
+                    input.val(qty + 1).trigger('change');
+                }
+            }
+
+            if ($(this).hasClass('minus')) {
                 if (qty > 1) {
-                    qty--;
-                    input.val(qty);
+                    input.val(qty - 1).trigger('change');
                 }
             }
         });
-        $(document).on('input', '.qty', function () {
-            let qty = parseInt($(this).val()) || 1;
-            const maxQty = parseInt($(this).attr('max')) || 1;
+
+        $(document).off('input.qty', '.qty');
+
+        $(document).on('input.qty', '.qty', function () {
+            let qty = parseInt($(this).val(), 10) || 1;
+            const maxQty = parseInt($(this).attr('max'), 10) || 1;
+
             if (qty < 1) {
                 qty = 1;
             }

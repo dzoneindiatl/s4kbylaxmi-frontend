@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\SizeChartManager;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category; 
@@ -63,7 +64,7 @@ class HomeController extends Controller
         
         if (!$hasCategoryFilter) {
             if (count($segments) === 1) {
-                $DB->where('main_category_id', $category->id);
+                $DB->where('main_category_id', $category->id)->orWhere('main_collection_id',$category->id);
                 $categoriesData = Category::where('is_active', 1)
                     ->where('is_deleted', 0)
                     ->where('parent_id', $category->id)
@@ -94,13 +95,11 @@ class HomeController extends Controller
                                 ->whereJsonContains('child_category_id', (string) $subChildCategory->id);
                         });
                 });
-
-                $categoriesData = collect();
+                 $categoriesData = collect();
             }
         } else {
             $categoriesData = collect();
         } 
-    
         $categoryIds = (array) $request->input('category_id', []);
         if (!empty($categoryIds)) {
             $DB->whereIn('main_category_id', $categoryIds);
@@ -228,12 +227,10 @@ class HomeController extends Controller
             $product->color_variants = $colorVariants;
             $product->size_variants = $sizeVariants;
         });
-      
         $user = Auth::guard('customer')->user();
         if ($user) {
             $isWishlisteddata =Wishlist::where('user_id',$user->id)->pluck('product_id')->toArray();
         }
-
         if ($request->ajax()) {
             return response()->json([
                 'html' => view('front.home.product_list',compact('results','isWishlisteddata','totalResults','category','grandParent','parent','categoriesData','variants','attributes','limit','allSubCategory','AllMainCategory','variantColor','path','priceDrop'))->render(),
@@ -276,7 +273,8 @@ class HomeController extends Controller
         $today = now()->toDateString();
         $priceDrop = PriceDrop::whereDate('start_date', '<=', $today)->whereDate('end_date', '>=', $today)->where('is_deleted',0)->latest()->first();
 
-        $productcat = Category::where('id', $product->main_category_id)->first();
+        $productcat = Category::where('id', $product->main_category_id)->orWhere('id',$product->main_collection_id)->first();
+        $sizeChartData = SizeChartManager::with([ 'sizes', 'sections.measurements.values' ])->where('id',$productcat->size_chart_id)->first(); 
         $productDetailId = explode(',',$productcat->product_detail_manager); 
         $productDetailManager = ProductDetailManager::whereIn('id',$productDetailId)->select('id','section_name','content','order')->orderBy('order','asc')->get(); 
         $productSubCat = Category::where('id', $product->main_sub_category_id)->first(); 
@@ -395,7 +393,7 @@ class HomeController extends Controller
         // return $product; 
         // 'reviews', 'productreview',
 
-        return view('front.home.product_detail', compact('product','productChildCat', 'productcat', 'productSubCat', 'productvariants', 'related_products', 'bestproduct', 'releatedProduct', 'returnexchangeProduct', 'contactDetails', 'productVarientCom', 'isWishlisted', 'isWishlisteddata', 'categoryTaxes',  'recentlyViewedProducts','facebook','instagram','pinterst','youtube','twitter','productDetailManager', 'best_seller_products','priceDrop','couponOnDetail'));
+        return view('front.home.product_detail', compact('product','productChildCat', 'productcat', 'productSubCat', 'productvariants', 'related_products', 'bestproduct', 'releatedProduct', 'returnexchangeProduct', 'contactDetails', 'productVarientCom', 'isWishlisted', 'isWishlisteddata', 'categoryTaxes',  'recentlyViewedProducts','facebook','instagram','pinterst','youtube','twitter','productDetailManager', 'best_seller_products','priceDrop','couponOnDetail','sizeChartData'));
 
     }
 

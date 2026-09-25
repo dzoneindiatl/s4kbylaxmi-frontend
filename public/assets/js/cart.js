@@ -58,9 +58,6 @@ $(document).on('click', '.addToCartBtn', function() {
     let rawTaxArr = button.attr('data-tax-arr');
     let quantity = parseInt($('#quantity').val()) || 1;
 
-    // =========================
-    // LOGGED-IN USER
-    // =========================
     if (isLoggedIn) {
         let selectedVariants = getSelectedVariants([], false);
         console.log('Logged-in selectedVariants:', selectedVariants);
@@ -738,49 +735,7 @@ document.addEventListener('click', function (e) {
 
 }, true);
 
-$(document).off('click', '.addtoWishList').on('click', '.addtoWishList', function () {
-    const productId = this.getAttribute('data-product-id');
-    const heartIcon = this.querySelector('i');
-   
-    if (!isLoggedIn) {
-        //const loginModal = new bootstrap.Modal(document.getElementById('login'));
-        //loginModal.show();
-        window.location.href = '/login';
-        return;
-    }
-    
-    fetch(addToWish, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({ product_id: productId })
-    })
-    .then(response => {
-        if (!response.ok) throw new Error("Something went wrong");
-        return response.json();
-    })
-    .then(data => { 
-        if (data.status === 'added') {
-            showFlashMessage("Product added in wishlist");
-            // alert("Product added in wishlist");
-            heartIcon.classList.remove('fa-regular');
-            heartIcon.classList.add('fa-solid');
-        } else if (data.status === 'removed') {
-            showFlashMessage("Product remove in wishlist", "warning");
-            // alert("Product remove in wishlist", "warning");
-            heartIcon.classList.remove('fa-solid');
-            heartIcon.classList.add('fa-regular');
-        }
-        //showToastr(data.status, data.message);
-        localStorage.setItem('wishlistCount', JSON.stringify(data.wishlistCount));
-        displayWishlistItem();
-    })
-    .catch(error => {
-        console.error("Wishlist error:", error);
-    });
-});
+
 
 displayWishlistItem();
 function displayWishlistItem() {

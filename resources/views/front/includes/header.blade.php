@@ -7,7 +7,7 @@
                 <li>
                     <a href="{{ url('/') }}">Home</a>
                 </li>
-                @foreach($categories->whereNull('parent_id') as $cat)
+                @foreach($categories->whereNull('parent_id')->where('category_type_id',2)->where('show_on_menu',1) as $cat)
                     <li class="has-mega">
                         <a href="{{ route('category.show',['path'=>$cat->slug]) }}">{{ $cat->name }}
                             <span class="material-symbols-outlined">chevron_right</span>
@@ -16,7 +16,7 @@
                             @foreach($subCategories as $sub)
                                 @if($sub->parent_id == $cat->id)
                                     <div class="mega-column">
-                                        <h4>{{ $sub->name }}</h4>
+                                       <a href="{{ route('category.show',['path'=>$cat->slug.'/'.$sub->slug]) }}"><h4>{{ $sub->name }}</h4></a> 
                                         @foreach($childCategories as $child)
                                             @if($child->parent_id == $sub->id)
                                                 <a href="{{ route('category.show',['path'=>$cat->slug.'/'.$sub->slug.'/'.$child->slug]) }}">
@@ -32,7 +32,20 @@
                             @endforeach 
                         </div>
                     </li>
-                @endforeach 
+                @endforeach     
+                <li class="has-dropdown">
+                    <a href="#">Collections <span class="material-symbols-outlined">chevron_right</span></a>
+                    <ul class="dropdown"> 
+                        @foreach($categories->where('category_type_id',1)->where('show_on_menu',1) as $collection)
+                            <li><a href="{{ route('category.show',['path'=>$collection->slug]) }}">
+                                <svg viewBox="0 0 14 10" fill="none" aria-hidden="true" focusable="false" class="icon icon-arrow" xmlns="https://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.537.808a.5.5 0 01.817-.162l4 4a.5.5 0 010 .708l-4 4a.5.5 0 11-.708-.708L11.793 5.5H1a.5.5 0 010-1h10.793L8.646 1.354a.5.5 0 01-.109-.546z" fill="currentColor">
+                                    </path>
+                                </svg>{{ $collection->name }}</a>
+                            </li>
+                        @endforeach 
+                    </ul>
+                </li>
             </ul>
         </nav>
         <button class="menu-toggle">
