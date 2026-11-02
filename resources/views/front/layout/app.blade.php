@@ -16,6 +16,7 @@
             @yield('content')
             @include('front.includes.footer')
             @include('front.includes.script')
+            @stack('scripts')
         </div>
     </body>
 </html>

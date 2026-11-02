@@ -1,8 +1,10 @@
 <script>
     window.csrfToken = "{{ csrf_token() }}";
     var addToWish = "{{ route('front-addwish') }}";
-    const isLoggedIn = "{{ Auth::guard('customer')->check() ? true : false }}";
+    var isLoggedIn = @json(Auth::guard('customer')->check());
+    window.isCustomerLoggedIn = isLoggedIn;
    var addToCart = "{{ route('user.addToCart') }}";
+    window.addToCartUrl = addToCart;
     var getCouponUrl = "{{ route('get.coupon') }}";
     var wishlistUrl = "{{ route('front-user.wishlist') }}";
     var viewCartUrl = "{{ route('product.viewBag') }}";
@@ -63,47 +65,66 @@
         }, 3000);
     }
 
-    $(document).off('click', '.addtoWishList').on('click', '.addtoWishList', function () {
-    const productId = this.getAttribute('data-product-id');
-    const heartIcon = this.querySelector('i');
-   
-    if (!isLoggedIn) {
-        //const loginModal = new bootstrap.Modal(document.getElementById('login'));
-        //loginModal.show();
-        window.location.href = '/login';
-        return;
-    }
-    
-    fetch(addToWish, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({ product_id: productId })
-    })
-    .then(response => {
-        if (!response.ok) throw new Error("Something went wrong");
-        return response.json();
-    })
-    .then(data => { 
-        if (data.status === 'added') {
-            showFlashMessage("Product added in wishlist");
-            // alert("Product added in wishlist");
-            heartIcon.classList.remove('fa-regular');
-            heartIcon.classList.add('fa-solid');
-        } else if (data.status === 'removed') {
-            showFlashMessage("Product remove in wishlist", "warning");
-            // alert("Product remove in wishlist", "warning");
-            heartIcon.classList.remove('fa-solid');
-            heartIcon.classList.add('fa-regular');
+    $(document).off('click', '.addtoWishList, .detail-wishlist').on('click', '.addtoWishList, .detail-wishlist', function (event) {
+        event.preventDefault();
+
+        const button = this;
+        const productId = button.getAttribute('data-product-id');
+        const productName = button.getAttribute('data-product-name') || 'Product';
+
+        if (!isLoggedIn) {
+            window.location.href = @json(route('front-user.login'));
+            return;
         }
-        //showToastr(data.status, data.message);
-        localStorage.setItem('wishlistCount', JSON.stringify(data.wishlistCount));
-        displayWishlistItem();
-    })
-    .catch(error => {
-        console.error("Wishlist error:", error);
+
+        if (!productId) {
+            console.error('Wishlist error: product ID is missing.');
+            showFlashMessage('Unable to update wishlist. Please refresh the page and try again.', 'error');
+            return;
+        }
+
+        button.disabled = true;
+        fetch(addToWish, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': window.csrfToken
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({ product_id: productId })
+        })
+        .then(async response => {
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Unable to update wishlist.');
+            }
+            return data;
+        })
+        .then(data => {
+            if (data.status !== 'added' && data.status !== 'removed') {
+                throw new Error(data.message || 'The wishlist response was invalid.');
+            }
+
+            const isWishlisted = data.status === 'added';
+            button.classList.toggle('is-active', isWishlisted);
+            button.setAttribute('aria-pressed', String(isWishlisted));
+            button.setAttribute(
+                'aria-label',
+                (isWishlisted ? 'Remove ' : 'Add ') + productName + (isWishlisted ? ' from' : ' to') + ' wishlist'
+            );
+            showFlashMessage(data.message || (isWishlisted ? 'Product added to wishlist.' : 'Product removed from wishlist.'), isWishlisted ? 'success' : 'warning');
+            localStorage.setItem('wishlistCount', JSON.stringify(data.wishlistCount));
+            if (typeof displayWishlistItem === 'function') {
+                displayWishlistItem();
+            }
+        })
+        .catch(error => {
+            console.error('Wishlist error:', error);
+            showFlashMessage(error.message || 'Unable to update wishlist. Please try again.', 'error');
+        })
+        .finally(() => {
+            button.disabled = false;
+        });
     });
-});
 </script>

@@ -14,15 +14,262 @@ use App\Models\Pincodes;
 use App\Models\Wishlist;
 use App\Models\CouponUse;
 use App\Models\CategoryTax;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ProductVariantCombinationImage;
-use App\Models\{ProductVariantCombination, VariantValue, Coupon, ProductGraphics};
+use App\Models\{ProductVariantCombination, ProductVariantValue, VariantValue, Coupon, ProductGraphics};
 
 class CartController extends Controller
 {
+
+    public function viewPage()
+    {
+        $carts = collect();
+        $cartItems = [];
+        $addresses = collect();
+        $countries = collect();
+        $totalMRP = $totalDiscount = $subtotal = $taxableAmount = $totalGst = $totalPayable = 0;
+        $inclusiveTaxTotal = $exclusiveTaxTotal = 0;
+
+        if (Auth::guard('customer')->check()) {
+            $userId = Auth::guard('customer')->id();
+            $carts = Cart::with(['product.product_main_images', 'productVariantCombination'])
+                ->where('user_id', $userId)
+                ->get();
+            $addresses = \App\Models\UserAddress::where('user_id', $userId)->latest()->get();
+            $countries = Country::where('is_active', 1)->orderBy('name')->get(['id', 'name']);
+
+            foreach ($carts as $cart) {
+                $product = $cart->product;
+                if (!$product) {
+                    continue;
+                }
+
+                $combination = $cart->productVariantCombination;
+                $variantIds = $combination
+                    ? array_map('intval', json_decode($combination->combination_id, true) ?: [])
+                    : [];
+                $variantValues = $variantIds
+                    ? VariantValue::with('variant')->whereIn('id', $variantIds)->get()
+                        ->sortBy(fn ($value) => array_search((int) $value->id, $variantIds, true))
+                    : collect();
+                $selectedVariants = [];
+                foreach ($variantValues as $variantValue) {
+                    if ($variantValue->variant) {
+                        $selectedVariants[lcfirst($variantValue->variant->name)] = $variantValue->name;
+                    }
+                }
+
+                $categoryTaxes = CategoryTax::where('category_taxes.category_id', $product->main_category_id ?? 0)
+                    ->leftJoin('taxes', 'taxes.id', '=', 'category_taxes.tax_id')
+                    ->get([
+                        'category_taxes.id',
+                        'category_taxes.category_id',
+                        'taxes.tax_type',
+                        'taxes.tax_option',
+                        'taxes.tax_from',
+                        'taxes.tax_to',
+                        'taxes.tax_rate',
+                    ]);
+
+                $price = (float) ($combination->price ?? $product->buying_price ?? 0);
+                $sellingPrice = (float) ($combination->selling_price ?? $product->selling_price ?? 0);
+                $stock = max((int) ($combination->qty ?? $product->qty ?? 0), 0);
+                $minQuantity = max((int) ($product->min_selling_units ?? 1), 1);
+                $productMax = max((int) ($product->max_selling_units ?? 0), 0);
+                $maxQuantity = $productMax > 0 ? min($stock, $productMax) : $stock;
+
+                $taxId = null;
+                $taxRate = 0;
+                $taxOption = 'inclusive';
+                $taxType = 'flat';
+                $unitTax = 0;
+                foreach ($categoryTaxes as $tax) {
+                    $rate = max((float) ($tax->tax_rate ?? 0), 0);
+                    if ($tax->tax_type === 'floating'
+                        && ($sellingPrice < (float) $tax->tax_from || $sellingPrice > (float) $tax->tax_to)) {
+                        continue;
+                    }
+                    $taxId = $tax->id;
+                    $taxRate = $rate;
+                    $taxOption = $tax->tax_option ?: 'inclusive';
+                    $taxType = $tax->tax_type ?: 'flat';
+                    if ($rate > 0) {
+                        $unitTax = $taxOption === 'inclusive'
+                            ? $sellingPrice - ($sellingPrice / (1 + ($rate / 100)))
+                            : $sellingPrice * $rate / 100;
+                    }
+                    break;
+                }
+
+                $image = null;
+                if ($variantIds) {
+                    $image = ProductGraphics::where('product_id', $product->id)
+                        ->whereIn('variant_id', $variantIds)
+                        ->where('status', 1)
+                        ->where('graphic_type', 'image')
+                        ->orderByDesc('is_front')
+                        ->value('graphic');
+                }
+                $image = $image ?: $product->product_main_images
+                    ->where('status', 1)
+                    ->where('graphic_type', 'image')
+                    ->sortByDesc('is_front')
+                    ->first()?->graphic;
+                $imageUrl = $image
+                    ? asset('uploads/products/' . $image)
+                    : asset('assets/img/placeholder.png');
+
+                $cart->sellingPrice = $sellingPrice;
+                $cart->price = $price;
+                $cart->sku = $combination->sku ?? $product->sku;
+                $cart->minQuantity = $minQuantity;
+                $cart->maxQuantity = $maxQuantity;
+                $cart->imageUrl = $imageUrl;
+                $cart->selectedVariants = $selectedVariants;
+
+                $cartItems[] = [
+                    'randomId' => 'cart_' . $cart->id,
+                    'cartId' => $cart->id,
+                    'productId' => $product->id,
+                    'product_id' => $product->id,
+                    'name' => $product->name,
+                    'slug' => $product->slug,
+                    'sku' => $combination->sku ?? $product->sku,
+                    'productType' => $product->product_type,
+                    'quantity' => (int) $cart->quantity,
+                    'minQuantity' => $minQuantity,
+                    'maxQuantity' => $maxQuantity,
+                    'stockQuantity' => $stock,
+                    'price' => $price,
+                    'sellingPrice' => $sellingPrice,
+                    'discountType' => $combination->discount_type ?? $product->discount_type,
+                    'discountAmount' => (float) ($combination->discount ?? $product->discount ?? 0),
+                    'image' => $imageUrl,
+                    'combinationId' => $combination->id ?? null,
+                    'selectedVariantIds' => $variantIds,
+                    'selectedVariants' => $selectedVariants,
+                    'rawTaxArr' => $categoryTaxes->toJson(),
+                    'tax_id' => $taxId,
+                    'tax_rate' => $taxRate,
+                    'tax_option' => $taxOption,
+                    'tax_type' => $taxType,
+                    'tax_price' => $unitTax * (int) $cart->quantity,
+                ];
+
+                $quantity = (int) $cart->quantity;
+                $totalMRP += $price * $quantity;
+                $subtotal += $sellingPrice * $quantity;
+                $totalGst += $unitTax * $quantity;
+                if ($taxOption === 'exclusive') {
+                    $exclusiveTaxTotal += $unitTax * $quantity;
+                } else {
+                    $inclusiveTaxTotal += $unitTax * $quantity;
+                }
+            }
+
+            $totalDiscount = $totalMRP - $subtotal;
+            $taxableAmount = max(0, $subtotal - $inclusiveTaxTotal);
+            $totalPayable = $subtotal + $exclusiveTaxTotal;
+            $grandTotal = $totalPayable;
+        } else {
+            $totalDiscount = 0;
+            $grandTotal = 0;
+        }
+
+        return view('front.home.cart', compact(
+            'carts',
+            'cartItems',
+            'addresses',
+            'countries',
+            'totalMRP',
+            'totalDiscount',
+            'subtotal',
+            'taxableAmount',
+            'totalGst',
+            'totalPayable',
+            'grandTotal'
+        ));
+    }
+
+    public function syncGuestCart(Request $request)
+    {
+        $validated = $request->validate([
+            'cart_items' => ['required', 'array', 'min:1'],
+            'cart_items.*.productId' => ['required', 'integer', 'exists:products,id'],
+            'cart_items.*.quantity' => ['required', 'integer', 'min:1'],
+            'cart_items.*.selectedVariantIds' => ['nullable', 'array'],
+            'cart_items.*.selectedVariantIds.*' => ['integer', 'min:1'],
+            'cart_items.*.selectedVariants' => ['nullable', 'array'],
+        ]);
+
+        session()->put('guest_cart_items', $validated['cart_items']);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function updateQuantity(Request $request)
+    {
+        $validated = $request->validate([
+            'cart_id' => ['required', 'integer'],
+            'quantity' => ['required', 'integer', 'min:1'],
+        ]);
+        $userId = Auth::guard('customer')->id();
+        if (!$userId) {
+            return response()->json(['status' => false, 'message' => 'Please sign in to update your cart.'], 401);
+        }
+
+        $cart = Cart::with(['product', 'productVariantCombination'])
+            ->where('user_id', $userId)
+            ->findOrFail($validated['cart_id']);
+        $product = $cart->product;
+        if (!$product) {
+            return response()->json(['status' => false, 'message' => 'This product is no longer available.'], 422);
+        }
+
+        $combination = $cart->productVariantCombination;
+        $stock = max((int) ($combination->qty ?? $product->qty ?? 0), 0);
+        $minimum = max((int) ($product->min_selling_units ?? 1), 1);
+        $productMaximum = max((int) ($product->max_selling_units ?? 0), 0);
+        $maximum = $productMaximum > 0 ? min($stock, $productMaximum) : $stock;
+
+        if ($validated['quantity'] < $minimum || $validated['quantity'] > $maximum) {
+            return response()->json([
+                'status' => false,
+                'message' => $maximum < $minimum
+                    ? 'This item is currently unavailable.'
+                    : "Quantity must be between {$minimum} and {$maximum}.",
+            ], 422);
+        }
+
+        $cart->quantity = $validated['quantity'];
+        $cart->save();
+
+        return response()->json(['status' => true, 'quantity' => $cart->quantity]);
+    }
+
+    public function removeCartItem(Request $request)
+    {
+        $validated = $request->validate([
+            'cartId' => ['required', 'integer'],
+        ]);
+        $userId = Auth::guard('customer')->id();
+        if (!$userId) {
+            return response()->json(['success' => false, 'message' => 'Please sign in to update your cart.'], 401);
+        }
+
+        $cart = Cart::where('user_id', $userId)->find($validated['cartId']);
+        if (!$cart) {
+            return response()->json(['success' => false, 'message' => 'This cart item could not be found.'], 404);
+        }
+
+        $cart->delete();
+
+        return response()->json(['success' => true, 'message' => 'Product removed from cart.']);
+    }
 
     public function index(Request $request)
     {
@@ -68,8 +315,10 @@ class CartController extends Controller
             }
 
             $productId = $request->input('product_id');
+            $productSku = trim((string) $request->input('product_sku', ''));
             $quantity = (int) $request->input('quantity', 1);
             $selectedVariants = $request->input('selected_variants', []);
+            $selectedVariantIds = $request->input('selected_variant_ids', []);
             $type = $request->input('addType');
 
             info("----------productId--------", [$productId]);
@@ -77,11 +326,36 @@ class CartController extends Controller
             info("-------selected variants-------", [$selectedVariants]);
             info("-----type-----", [$type]);
 
-            if (!$productId || $quantity < 1) {
+            if ((!$productId && $productSku === '') || $quantity < 1) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Invalid data'
                 ], 400);
+            }
+            $product = $productId ? Product::find($productId) : null;
+            if ($productSku !== '') {
+                $productBySku = Product::where('sku', $productSku)->first();
+                $product = $productBySku;
+                $productId = $productBySku?->id ?? $productId;
+            }
+            if (!$product || (int) $product->is_active !== 1 || (int) ($product->is_deleted ?? 0) === 1) {
+                Log::warning('Rejected add-to-cart request for unavailable product', [
+                    'user_id' => $userId,
+                    'product_id' => $productId,
+                    'product_sku' => $productSku,
+                    'product_found' => (bool) $product,
+                    'is_active' => $product?->is_active,
+                    'is_deleted' => $product?->is_deleted,
+                ]);
+                return response()->json(['success' => false, 'message' => 'Product is no longer available.'], 404);
+            }
+            if ((int) $product->product_type !== 1
+                && empty($selectedVariantIds)
+                && empty($selectedVariants)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Select all required product options before adding this item.',
+                ], 422);
             }
 
             /*
@@ -116,22 +390,25 @@ class CartController extends Controller
                     'message' => 'Product removed from cart'
                 ]);
             }
-            if (!empty($selectedVariants) && is_array($selectedVariants)) {
+            if (!empty($selectedVariantIds) || (!empty($selectedVariants) && is_array($selectedVariants))) {
+                $variantValueIds = array_values(array_unique(array_filter(
+                    array_map('intval', is_array($selectedVariantIds) ? $selectedVariantIds : [])
+                )));
 
-                $variantValueNames = array_values($selectedVariants);
-
-                $nameToId = VariantValue::whereIn('name', $variantValueNames)
-                    ->pluck('id', 'name');
-
-                info("-----nameToId-----", [$nameToId]);
-
-                $variantValueIds = collect($variantValueNames)
-                    ->map(function ($name) use ($nameToId) {
-                        return (int) ($nameToId[$name] ?? 0);
-                    })
-                    ->filter()
-                    ->values()
-                    ->toArray();
+                if (!$variantValueIds) {
+                    $productValues = ProductVariantValue::with('variant_value.variant')
+                        ->where('product_id', $productId)->get();
+                    foreach ($selectedVariants as $variantName => $valueName) {
+                        $matchingValue = $productValues->first(function ($productValue) use ($variantName, $valueName) {
+                            return $productValue->variant_value
+                                && strcasecmp((string) $productValue->variant_value->name, (string) $valueName) === 0
+                                && strcasecmp((string) ($productValue->variant_value->variant->name ?? ''), (string) $variantName) === 0;
+                        });
+                        if ($matchingValue) {
+                            $variantValueIds[] = (int) $matchingValue->variant_value_id;
+                        }
+                    }
+                }
 
                 info("-----variantValueIds-------", [$variantValueIds]);
 
@@ -142,11 +419,25 @@ class CartController extends Controller
                     ], 400);
                 }
 
-                $jsonCombo = json_encode($variantValueIds);
+                $productValueIds = ProductVariantValue::where('product_id', $productId)
+                    ->pluck('variant_value_id')->map(fn ($id) => (int) $id)->all();
+                if (array_diff($variantValueIds, $productValueIds)) {
+                    return response()->json(['success' => false, 'message' => 'Invalid variant selected'], 422);
+                }
 
-                $combination = ProductVariantCombination::where('product_id', $productId)
-                    ->where('combination_id', $jsonCombo)
-                    ->first();
+                $requestedIds = $variantValueIds;
+                sort($requestedIds, SORT_NUMERIC);
+                $combinationQuery = ProductVariantCombination::where('product_id', $productId);
+                foreach ($variantValueIds as $valueId) {
+                    $combinationQuery->whereJsonContains('combination_id', $valueId);
+                }
+                $combination = $combinationQuery->get()->first(function ($candidate) use ($requestedIds) {
+                    $combinationIds = json_decode($candidate->combination_id, true);
+                    if (!is_array($combinationIds)) return false;
+                    $combinationIds = array_map('intval', $combinationIds);
+                    sort($combinationIds, SORT_NUMERIC);
+                    return $combinationIds === $requestedIds;
+                });
 
                 info("---------combination--------", [$combination]);
 
@@ -155,6 +446,19 @@ class CartController extends Controller
                         'success' => false,
                         'message' => 'Combination not found'
                     ], 404);
+                }
+
+                $stock = max((int) $combination->qty, 0);
+                $minimum = max((int) ($product->min_selling_units ?? 1), 1);
+                $productMaximum = max((int) ($product->max_selling_units ?? 0), 0);
+                $maximum = $productMaximum > 0 ? min($stock, $productMaximum) : $stock;
+                if ($quantity < $minimum || $quantity > $maximum || $maximum < $minimum) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $maximum < $minimum
+                            ? 'This option is currently unavailable.'
+                            : "Quantity must be between {$minimum} and {$maximum}.",
+                    ], 422);
                 }
 
                 $alreadyExists = Cart::where('user_id', $userId)
@@ -191,18 +495,28 @@ class CartController extends Controller
                 |--------------------------------------------------------------------------
                 */
 
+                $newQuantity = $type === 'add'
+                    ? $quantity + (int) ($alreadyExists->quantity ?? 0)
+                    : $quantity;
+                if ($newQuantity > $maximum) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Only {$maximum} items are available for this option.",
+                    ], 422);
+                }
+
                 if (!$alreadyExists) {
 
                     Cart::create([
                         'user_id' => $userId,
                         'product_id' => $productId,
                         'product_variant_combination_id' => $combination->id,
-                        'quantity' => $quantity,
+                        'quantity' => $newQuantity,
                     ]);
 
                 } else {
 
-                    $alreadyExists->quantity = $quantity;
+                    $alreadyExists->quantity = $newQuantity;
                     $alreadyExists->save();
                 }
             }
@@ -214,6 +528,18 @@ class CartController extends Controller
             */
 
             else {
+                $stock = max((int) ($product->qty ?? 0), 0);
+                $minimum = max((int) ($product->min_selling_units ?? 1), 1);
+                $productMaximum = max((int) ($product->max_selling_units ?? 0), 0);
+                $maximum = $productMaximum > 0 ? min($stock, $productMaximum) : $stock;
+                if ($quantity < $minimum || $quantity > $maximum || $maximum < $minimum) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $maximum < $minimum
+                            ? 'This product is currently unavailable.'
+                            : "Quantity must be between {$minimum} and {$maximum}.",
+                    ], 422);
+                }
 
                 $alreadyExists = Cart::where('user_id', $userId)
                     ->where('product_id', $productId)
@@ -246,18 +572,28 @@ class CartController extends Controller
                 |--------------------------------------------------------------------------
                 */
 
+                $newQuantity = $type === 'add'
+                    ? $quantity + (int) ($alreadyExists->quantity ?? 0)
+                    : $quantity;
+                if ($newQuantity > $maximum) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Only {$maximum} items are available.",
+                    ], 422);
+                }
+
                 if (!$alreadyExists) {
 
                     Cart::create([
                         'user_id' => $userId,
                         'product_id' => $productId,
                         'product_variant_combination_id' => null,
-                        'quantity' => $quantity,
+                        'quantity' => $newQuantity,
                     ]);
 
                 } else {
 
-                    $alreadyExists->quantity = $quantity;
+                    $alreadyExists->quantity = $newQuantity;
                     $alreadyExists->save();
                 }
             }

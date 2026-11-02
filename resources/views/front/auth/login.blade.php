@@ -299,6 +299,7 @@
             @endif
             <form id="loginForm" action="{{ route('front-user.postLogin') }}" autocomplete="off" method="POST">
                 @csrf
+                <input type="hidden" name="return_to" value="{{ $returnTo ?? 'cart' }}">
                 <div class="input-group">
                     <label for="username">Email</label>
                     <input type="text" id="username" name="email" placeholder="Enter your email" required />

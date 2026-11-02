@@ -22,10 +22,49 @@ use App\Models\Coupon;
 use App\Models\ProductVariant; 
 use App\Models\ProductVariantCombination;
 use App\Models\CategoryTax;  
+use App\Models\Country;
+use App\Models\State;
+use App\Models\City;
 class HomeController extends Controller
 {
     public function index(){
         return view('front.home.index'); 
+    }
+
+    public function getStates(Request $request)
+    {
+        $validated = $request->validate([
+            'countryId' => ['required', 'integer', 'exists:countries,id'],
+        ]);
+
+        return response()->json(State::where('country_id', $validated['countryId'])
+            ->where('is_active', 1)
+            ->orderBy('name')
+            ->get(['id', 'name']));
+    }
+
+    public function getCities(Request $request)
+    {
+        $validated = $request->validate([
+            'countryId' => ['required', 'integer', 'exists:countries,id'],
+            'stateId' => ['required', 'integer', 'exists:states,id'],
+        ]);
+
+        $state = State::where('id', $validated['stateId'])
+            ->where('country_id', $validated['countryId'])
+            ->where('is_active', 1)
+            ->first();
+        if (!$state) {
+            return response()->json([
+                'message' => 'The selected state does not belong to this country.',
+            ], 422);
+        }
+
+        return response()->json(City::where('country_id', $validated['countryId'])
+            ->where('state_id', $state->id)
+            ->where('is_active', 1)
+            ->orderBy('name')
+            ->get(['id', 'name']));
     }
 
     public function productListing(Request $request, $path)
@@ -251,6 +290,23 @@ class HomeController extends Controller
         $productChildCat = '';
         $user = Auth::guard('customer')->user();
         $product = Product::where('sku', $sku)->first();
+        $resolvedBySlug = false;
+        if (!$product) {
+            $productSlug = preg_replace('/\.html$/i', '', (string) $title);
+            $product = Product::where('slug', $productSlug)->first();
+            $resolvedBySlug = (bool) $product;
+        }
+        if ($product && ((int) $product->is_active !== 1 || (int) ($product->is_deleted ?? 0) === 1)) {
+            $product = null;
+        }
+        abort_if(!$product, 404);
+        if ($resolvedBySlug && $product->sku) {
+            return redirect()->route('front-product.detail', [
+                'product' => 'product',
+                'title' => $product->slug . '.html',
+                'sku' => $product->sku,
+            ]);
+        }
         if ($user) {
             RecentlyViewed::updateOrCreate(
                 [
@@ -273,17 +329,25 @@ class HomeController extends Controller
         $today = now()->toDateString();
         $priceDrop = PriceDrop::whereDate('start_date', '<=', $today)->whereDate('end_date', '>=', $today)->where('is_deleted',0)->latest()->first();
 
-        $productcat = Category::where('id', $product->main_category_id)->orWhere('id',$product->main_collection_id)->first();
-        $sizeChartData = SizeChartManager::with([ 'sizes', 'sections.measurements.values' ])->where('id',$productcat->size_chart_id)->first(); 
-        $productDetailId = explode(',',$productcat->product_detail_manager); 
-        $productDetailManager = ProductDetailManager::whereIn('id',$productDetailId)->select('id','section_name','content','order')->orderBy('order','asc')->get(); 
+        $productcat = Category::whereIn('id', array_filter([
+            $product->main_category_id,
+            $product->main_collection_id,
+        ]))->first();
+        $sizeChartData = $productcat?->size_chart_id
+            ? SizeChartManager::with(['sizes', 'sections.measurements.values'])
+                ->find($productcat->size_chart_id)
+            : null;
+        $productDetailIds = array_filter(explode(',', (string) ($productcat->product_detail_manager ?? '')));
+        $productDetailManager = $productDetailIds
+            ? ProductDetailManager::whereIn('id', $productDetailIds)
+                ->select('id', 'section_name', 'content', 'order')
+                ->orderBy('order', 'asc')
+                ->get()
+            : collect();
         $productSubCat = Category::where('id', $product->main_sub_category_id)->first(); 
         
         $productChildCat = Category::where('id', $product->main_child_category_id)->first();
         
-        $productreview = Product::with(['reviews.user'])->where('sku', $sku)->where('is_active', "1")->first();
-        $reviews = $productreview->reviews()->latest()->get();
-
         $productvariants = ProductVariant::with([
             'variant:id,name,type',
             'variantValues.variant_value:id,name,color_code',
@@ -409,30 +473,57 @@ class HomeController extends Controller
             $skuIds    = $data['vsku'] ?? null;
             $variantId = $data['variant_id'] ?? null;
 
-            if (!$productId || !$skuIds) {
+            if (!$productId || !is_array($skuIds) || count($skuIds) === 0) {
                 return response()->json(['error' => 'Missing required data'], 422);
             }
-            
+
+            $skuIds = array_values(array_unique(array_filter(
+                array_map('intval', $skuIds),
+                fn ($id) => $id > 0
+            )));
+            if (count($skuIds) === 0) {
+                return response()->json(['error' => 'Missing required variant data'], 422);
+            }
+
             
             $today = now()->toDateString();
             $priceDrop = PriceDrop::whereDate('start_date', '<=', $today)->whereDate('end_date', '>=', $today)->where('is_deleted',0)->latest()->first();
 
             
-            $combination = ProductVariantCombination::select('price', 'selling_price', 'sku', 'discount', 'discount_type','qty')
-                ->where('product_id', $productId)
-                ->where('combination_id', json_encode($skuIds))
-                ->first();
+            $combinationsQuery = ProductVariantCombination::where('product_id', $productId);
+            foreach ($skuIds as $skuId) {
+                $combinationsQuery->whereJsonContains('combination_id', $skuId);
+            }
 
+            $requestedIds = $skuIds;
+            sort($requestedIds, SORT_NUMERIC);
+            $combination = $combinationsQuery
+                ->get(['combination_id', 'price', 'selling_price', 'sku', 'discount', 'discount_type', 'qty'])
+                ->first(function ($candidate) use ($requestedIds) {
+                    $combinationIds = is_array($candidate->combination_id)
+                        ? $candidate->combination_id
+                        : json_decode($candidate->combination_id, true);
+
+                    if (!is_array($combinationIds)) {
+                        return false;
+                    }
+
+                    $combinationIds = array_map('intval', $combinationIds);
+                    sort($combinationIds, SORT_NUMERIC);
+
+                    return $combinationIds === $requestedIds;
+                });
 
             if (!$combination) {
                 return response()->json(['error' => 'Combination not found'], 404);
             }
 
+            $mainPrice = $combination->selling_price;
             if(isset($priceDrop) && !empty($priceDrop)){
-                $productId = $priceDrop->product_id;
+                $priceDropProductIds = $priceDrop->product_id;
                 $discountAmount = $priceDrop->amount;
                 if($priceDrop->gain_type == "drop"){
-                    if($productId == "all"){
+                    if($priceDropProductIds == "all"){
                         if($priceDrop->drop_type == "percentage"){
                             $mainPrice =$combination->selling_price - (($discountAmount/100) * $combination->selling_price) ; 
                         }
@@ -441,8 +532,8 @@ class HomeController extends Controller
                         }
                     }
                     else{
-                        $productIdArray = explode(",",$productId); 
-                        if(in_array($productId,$productIdArray)){
+                        $productIdArray = array_map('trim', explode(",", $priceDropProductIds));
+                        if(in_array((string) $productId, $productIdArray, true)){
                             if ($priceDrop->drop_type == "percentage") {
                                 $mainPrice = $combination->selling_price - (($priceDrop->amount / 100) * $combination->selling_price);
                             } 
@@ -453,7 +544,7 @@ class HomeController extends Controller
                     }
                 }
                 if($priceDrop->gain_type == "gain"){
-                    if($productId == "all"){
+                    if($priceDropProductIds == "all"){
                         if($priceDrop->drop_type == "percentage"){
                             $mainPrice = $combination->selling_price + (($discountAmount/100) * $combination->selling_price) ; 
                         }
@@ -462,8 +553,8 @@ class HomeController extends Controller
                         }
                     }
                     else{
-                        $productIdArray = explode(",",$productId); 
-                        if(in_array($productId,$productIdArray)){
+                        $productIdArray = array_map('trim', explode(",", $priceDropProductIds));
+                        if(in_array((string) $productId, $productIdArray, true)){
                             if ($priceDrop->drop_type == "percentage") {
                                 $mainPrice = $combination->selling_price + (($priceDrop->amount / 100) * $combination->selling_price);
                             } 
@@ -473,13 +564,14 @@ class HomeController extends Controller
                         }
                     }
                 }    
-            }               
-            $combination->selling_price = (isset($priceDrop) && !empty($priceDrop)) ? $mainPrice : $combination->selling_price;  
+            }
+            $combination->selling_price = $mainPrice;
 
-            $images = ProductGraphics::where([
-                'product_id' => $productId,
-                'variant_id' => $variantId
-            ])
+            $variantValueId = $data['variant_value_id'] ?? null;
+            $images = ProductGraphics::where('product_id', $productId)
+            ->where('variant_id', $variantValueId ?: $variantId)
+            ->where('status', 1)
+            ->where('graphic_type', 'image')
             ->orderBy('is_front', 'desc')   // front first
             ->orderBy('is_back', 'desc')    // back second
             ->orderBy('updated_at', 'asc')  // optional: stable order for rest
@@ -490,6 +582,8 @@ class HomeController extends Controller
                 'images'        => $images->map(fn($img) => [
                     'graphic'      => asset('uploads/products/' . $img->graphic),
                     'graphic_type' => $img->graphic_type,
+                    'is_front'     => $img->is_front,
+                    'is_back'      => $img->is_back,
                 ]),
             ]);
         } catch (\Throwable $e) {
@@ -499,11 +593,46 @@ class HomeController extends Controller
 
     public function variantStockCheck(Request $request)
     {
-        $stock = ProductVariantCombination::where('product_id', $request->product_id)
-            ->whereJsonContains('combination_id',  (int) $request->variant_value_id)->where('is_out_of_stock', 1)
-            ->count();
+        $variantValueIds = $request->input('vsku');
+        if (!is_array($variantValueIds) || count($variantValueIds) === 0) {
+            $variantValueIds = [$request->input('variant_value_id')];
+        }
+
+        $variantValueIds = array_values(array_unique(array_filter(
+            array_map('intval', $variantValueIds),
+            fn ($id) => $id > 0
+        )));
+
+        if (!$request->input('product_id') || count($variantValueIds) === 0) {
+            return response()->json(['error' => 'Missing product or variant data'], 422);
+        }
+
+        $combinationsQuery = ProductVariantCombination::where('product_id', $request->input('product_id'));
+        foreach ($variantValueIds as $variantValueId) {
+            $combinationsQuery->whereJsonContains('combination_id', $variantValueId);
+        }
+
+        $requestedIds = $variantValueIds;
+        sort($requestedIds, SORT_NUMERIC);
+        $combination = $combinationsQuery->get(['combination_id', 'qty', 'is_out_of_stock'])
+            ->first(function ($candidate) use ($requestedIds) {
+                $combinationIds = is_array($candidate->combination_id)
+                    ? $candidate->combination_id
+                    : json_decode($candidate->combination_id, true);
+
+                if (!is_array($combinationIds)) {
+                    return false;
+                }
+
+                $combinationIds = array_map('intval', $combinationIds);
+                sort($combinationIds, SORT_NUMERIC);
+
+                return $combinationIds === $requestedIds;
+            });
+
         return response()->json([
-            'out_of_stock' => $stock > 0
+            'out_of_stock' => !$combination || (int) $combination->qty <= 0 || (int) $combination->is_out_of_stock === 1,
+            'qty' => $combination ? (int) $combination->qty : 0,
         ]);
     }
 }

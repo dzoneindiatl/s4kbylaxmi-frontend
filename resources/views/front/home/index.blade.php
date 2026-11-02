@@ -1,2240 +1,1278 @@
 @extends('front.layout.app')
 @section('content')
-<div class="offer-tag">
+{{-- <div class="offer-tag">
         <span>OFFER</span>
         <p>Buy for ₹2499 & More, Get flat ₹100 Off I Use Code: SALE100</p>
-    </div>
+    </div> --}}
 
     <!-- HERO -->
-    <section class="hero-gallery">
-        <div class="hero-main-slider">
-            <div><img src="{{asset('assets/images/slider_01.png')}}" alt=""></div>
-            <div><img src="{{asset('assets/images/slider_02.png')}}" alt=""></div>
-            <div><img src="{{asset('assets/images/slider_03.png')}}" alt=""></div>
-            <div><img src="{{asset('assets/images/slider_04.png')}}" alt=""></div>
-            <div><img src="{{asset('assets/images/slider_01.png')}}" alt=""></div>
-            <div><img src="{{asset('assets/images/slider_02.png')}}" alt=""></div>
-            <div><img src="{{asset('assets/images/slider_03.png')}}" alt=""></div>
-            <div><img src="{{asset('assets/images/slider_04.png')}}" alt=""></div>
+    <section class="hero-section" aria-label="Featured collection">
+      <div class="hero-layout">
+        <div class="hero-carousel carousel slide" id="heroCarousel" data-bs-ride="carousel" data-bs-interval="4500">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="assets/img/silder-1.jpg" class="hero-image" alt="Model in a plum festive outfit">
+              <div class="hero-copy">
+                <span class="eyebrow">Crafted in Jaipur</span>
+                <h1>Timeless elegance<br>Woven with Grace</h1>
+                <p>Get 20% OFF</p>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img src="assets/img/silder-4.jpg" class="hero-image" alt="Model in a pink festive outfit">
+              <div class="hero-copy">
+                <span class="eyebrow">Crafted in Jaipur</span>
+                <h2>Timeless elegance<br>Woven with Grace</h2>
+                <p>Get 20% OFF</p>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img src="assets/img/silder-3.jpg" class="hero-image" alt="Model in an embroidered ivory outfit">
+              <div class="hero-copy">
+                <span class="eyebrow">Crafted in Jaipur</span>
+                <h2>Timeless elegance<br>Woven with Grace</h2>
+                <p>Get 20% OFF</p>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img src="assets/img/silder-2.jpg" class="hero-image" alt="Model in a deep purple outfit">
+              <div class="hero-copy">
+                <span class="eyebrow">Crafted in Jaipur</span>
+                <h2>Timeless elegance<br>Woven with Grace</h2>
+                <p>Get 20% OFF</p>
+              </div>
+            </div>
+          </div>
+          <button class="hero-deck-card hero-deck-card--next" type="button" data-bs-target="#heroCarousel"
+            data-bs-slide-to="1" aria-label="Show next look, slide 2">
+            <img src="assets/img/silder-4.jpg" alt="">
+          </button>
         </div>
-        <div class="hero-thumb-slider">
-            <div><img src="{{asset('assets/images/slider_01.png')}}" alt=""></div>
-            <div><img src="{{asset('assets/images/slider_02.png')}}" alt=""></div>
-            <div><img src="{{asset('assets/images/slider_03.png')}}" alt=""></div>
-            <div><img src="{{asset('assets/images/slider_04.png')}}" alt=""></div>
-            <div><img src="{{asset('assets/images/slider_01.png')}}" alt=""></div>
-            <div><img src="{{asset('assets/images/slider_02.png')}}" alt=""></div>
-            <div><img src="{{asset('assets/images/slider_03.png')}}" alt=""></div>
-            <div><img src="{{asset('assets/images/slider_04.png')}}" alt=""></div>
+        <aside class="hero-rail" aria-label="Special offers">
+          <button class="hero-rail-arrow" type="button" data-offer-scroll="up" aria-label="Show previous offer">
+            <img src="assets/icons/arrow-up.svg" alt="">
+          </button>
+          <div class="hero-thumbnails">
+            <a class="hero-thumb" href="product-list.html" aria-label="Shop the plum festive offer">
+              <img src="assets/img/silder-1.jpg" alt="">
+              <span class="hero-thumb-copy"><span class="eyebrow">Crafted in Jaipur</span><span
+                  class="hero-thumb-title">Timeless elegance<br>Woven with Grace</span><span
+                  class="hero-thumb-offer">Get 20% OFF</span></span>
+            </a>
+            <a class="hero-thumb" href="product-list.html" aria-label="Shop the pink festive offer">
+              <img src="assets/img/silder-min-4.jpg" alt="">
+              <span class="hero-thumb-copy"><span class="eyebrow">Crafted in Jaipur</span><span
+                  class="hero-thumb-title">Timeless elegance<br>Woven with Grace</span><span
+                  class="hero-thumb-offer">Get 20% OFF</span></span>
+            </a>
+            <a class="hero-thumb" href="product-list.html" aria-label="Shop the ivory festive offer">
+              <img src="assets/img/silder-min-3.jpg" alt="">
+              <span class="hero-thumb-copy"><span class="eyebrow">Crafted in Jaipur</span><span
+                  class="hero-thumb-title">Timeless elegance<br>Woven with Grace</span><span
+                  class="hero-thumb-offer">Get 20% OFF</span></span>
+            </a>
+            <a class="hero-thumb" href="product-list.html" aria-label="Shop the purple festive offer">
+              <img src="assets/img/silder-min-2.jpg" alt="">
+              <span class="hero-thumb-copy"><span class="eyebrow">Crafted in Jaipur</span><span
+                  class="hero-thumb-title">Timeless elegance<br>Woven with Grace</span><span
+                  class="hero-thumb-offer">Get 20% OFF</span></span>
+            </a>
+          </div>
+          <button class="hero-rail-arrow" type="button" data-offer-scroll="down" aria-label="Show next offer">
+            <img src="assets/icons/arrow-down.svg" alt="">
+          </button>
+        </aside>
+      </div>
+      <div class="hero-indicators carousel-indicators" aria-label="Featured slide progress">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true"
+          aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+      </div>
+    </section>
+    <section class="bestseller-feature-section" aria-labelledby="bestsellerFeatureTitle">
+      <div class="page-container bestseller-gallery">
+        <a class="bestseller-card bestseller-card--top-left" href="#featured">
+          <img src="assets/img/insta-2.jpg" alt="Model in a pink embroidered suit">
+        </a>
+        <a class="bestseller-card bestseller-card--top-center" href="#featured">
+          <img src="assets/img/bastsaller-1.jpg" alt="Model wearing a navy and magenta festive outfit">
+        </a>
+        <a class="bestseller-card bestseller-card--top-right" href="#featured">
+          <img src="assets/img/category-2.jpg" alt="Model wearing an elegant occasion outfit">
+        </a>
+        <div class="bestseller-gallery-heading">
+          <span>Curated for you</span>
+          <h2 id="bestsellerFeatureTitle">Our Bestseller</h2>
+          <p>Gracefully crafted silhouettes with timeless appeal.</p>
         </div>
+        <a class="bestseller-card bestseller-card--bottom-left" href="#featured">
+          <img src="assets/img/featured-1.jpg" alt="Model in a soft pink printed outfit">
+        </a>
+        <a class="bestseller-card bestseller-card--bottom-center" href="#featured">
+          <img src="assets/img/insta-1.jpg" alt="Model wearing a mustard yellow embroidered suit">
+        </a>
+        <a class="bestseller-card bestseller-card--bottom-right" href="#featured">
+          <img src="assets/img/trending-2.jpg" alt="Model wearing a magenta festive outfit">
+        </a>
+      </div>
+    </section>
+    <section class="designer-section section-pad" id="new-arrivals">
+      <div class="page-container">
+        <div class="section-heading light-heading">
+          <h4>Discover Anarkalis crafted to make every occasion unforgettable.From graceful silhouettes to exquisite
+            details, find your perfect look for every celebration.</h4>
+
+        </div>
+        <div class="row g-3 g-lg-4 feature-products">
+          <div class="col-12 col-sm-4">
+            <a class="image-card" href="product-list.html">
+              <img src="assets/img/img-1.jpg" alt="Green occasionwear styled for a celebration">
+              <span class="image-card-caption">
+                <span class="image-card-caption-title">ELEGANCE,<br>REDEFINED <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                    <path d="m12 2 2.8 7.2L22 12l-7.2 2.8L12 22l-2.8-7.2L2 12l7.2-2.8L12 2Z"></path>
+                  </svg></span>
+                <span class="image-card-cta">See More <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                    <path d="M5 12h14m-6-6 6 6-6 6"></path>
+                  </svg></span>
+              </span>
+            </a>
+          </div>
+          <div class="col-6  col-sm-4">
+            <a class="image-card" href="product-list.html">
+              <img src="assets/img/img-2.jpg" alt="Warm-toned festive outfit">
+              <span class="image-card-offer">
+                <span><strong>FLAT 20% OFF</strong><small>on selected styles</small></span>
+                <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="M5 12h14m-6-6 6 6-6 6"></path>
+                </svg>
+              </span>
+            </a>
+          </div>
+          <div class="col-6 col-sm-4">
+            <a class="image-card" href="product-list.html">
+              <img src="assets/img/img-3.jpg" alt="Elegant embroidered occasionwear">
+              <span class="image-card-offer image-card-style">
+                <span><small>Discover Your</small><small>Signature Style</small></span>
+                <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="M5 12h14m-6-6 6 6-6 6"></path>
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+        <div class="subsection-title">
+          <h2>EVERYDAY ELEGANCE</h2>
+          <div class="everyday-actions">
+            <a class="btn-dark-theme" href="product-list.html">View all <span aria-hidden="true"> <svg class="svg-icon" viewBox="0 0 24 24">
+                  <path d="M5 12h14m-6-6 6 6-6 6"></path>
+                </svg></span></a>
+          </div>
+        </div>
+        <div class="everyday-carousel" role="region" aria-label="Everyday elegance styles"
+          aria-roledescription="carousel">
+          <div class="everyday-track" aria-live="off">
+            <a class="image-card everyday-card" href="product-details.html"><img src="assets/img/festive-1.jpg"
+                alt="Magenta festive look"></a>
+            <a class="image-card everyday-card" href="product-details.html"><img src="assets/img/festive-2.jpg"
+                alt="Printed outfit for everyday wear"></a>
+            <a class="image-card everyday-card" href="product-details.html"><img src="assets/img/festive-3.jpg"
+                alt="Women browsing a fashion collection"></a>
+            <a class="image-card everyday-card" href="product-details.html"><img src="assets/img/festive-4.jpg"
+                alt="A joyful, colourful style"></a>
+            <a class="image-card everyday-card" href="product-details.html"><img src="assets/img/festive-5.jpg"
+                alt="An elegant everyday outfit"></a>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- IMAGES GRID -->
-    <section class="lookbook-section">
-        <div class="container">
-            <div class="lookbook-grid">
 
-                <!-- Left Column -->
-                <div class="lookbook-column left">
-
-                    <a href="#" class="lookbook-item small">
-                        <img src="{{asset('assets/images/category_image_03.png')}}" alt="">
-                        <div class="overlay">
-                            <h3>Kaftan Dress</h3>
-                            <span>Explore Collection</span>
-                        </div>
-                    </a>
-
-                    <a href="#" class="lookbook-item medium">
-                        <img src="{{asset('assets/images/category_image_03.png')}}" alt="">
-                        <div class="overlay">
-                            <h3>Kaftan Dress</h3>
-                            <span>Explore Collection</span>
-                        </div>
-                    </a>
-
-                    <a href="#" class="lookbook-item small">
-                        <img src="{{asset('assets/images/category_image_01.png')}}" alt="">
-                        <div class="overlay">
-                            <h3>New Arrivals</h3>
-                            <span>Explore Collection</span>
-                        </div>
-                    </a>
-
-                </div>
-
-                <!-- Center Column -->
-                <div class="lookbook-column center">
-
-                    <div class="lookbook-column-inner">
-                        <a href="#" class="lookbook-item large">
-                            <img src="{{asset('assets/images/large_cat1.jpg')}}" alt="">
-                            <div class="overlay">
-                                <h3>Anarkali Gown</h3>
-                                <span>Explore Collection</span>
-                            </div>
-                        </a>
-                        <a href="#" class="lookbook-item large">
-                            <img src="{{asset('assets/images/large_cat1.jpg')}}" alt="">
-                            <div class="overlay">
-                                <h3>Anarkali Gown</h3>
-                                <span>Explore Collection</span>
-                            </div>
-                        </a>
-                        <a href="#" class="lookbook-item large">
-                            <img src="{{asset('assets/images/large_cat1.jpg')}}" alt="">
-                            <div class="overlay">
-                                <h3>Anarkali Gown</h3>
-                                <span>Explore Collection</span>
-                            </div>
-                        </a>
-                        <a href="#" class="lookbook-item large">
-                            <img src="{{asset('assets/images/large_cat1.jpg')}}" alt="">
-                            <div class="overlay">
-                                <h3>Anarkali Gown</h3>
-                                <span>Explore Collection</span>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="lookbook-column-inner">
-                        <a href="#" class="lookbook-item large">
-                            <img src="{{asset('assets/images/collection_image_03.jpg')}}" alt="">
-                            <div class="overlay">
-                                <h3>Luxury Edit</h3>
-                                <span>Explore Collection</span>
-                            </div>
-                        </a>
-                        <a href="#" class="lookbook-item large">
-                            <img src="{{asset('assets/images/collection_image_03.jpg')}}" alt="">
-                            <div class="overlay">
-                                <h3>Luxury Edit</h3>
-                                <span>Explore Collection</span>
-                            </div>
-                        </a>
-                        <a href="#" class="lookbook-item large">
-                            <img src="{{asset('assets/images/collection_image_03.jpg')}}" alt="">
-                            <div class="overlay">
-                                <h3>Luxury Edit</h3>
-                                <span>Explore Collection</span>
-                            </div>
-                        </a>
-                        <a href="#" class="lookbook-item large">
-                            <img src="{{asset('assets/images/collection_image_03.jpg')}}" alt="">
-                            <div class="overlay">
-                                <h3>Luxury Edit</h3>
-                                <span>Explore Collection</span>
-                            </div>
-                        </a>
-                    </div>
-
-                </div>
-
-                <!-- Right Column -->
-                <div class="lookbook-column right">
-
-                    <a href="#" class="lookbook-item tall">
-                        <img src="{{asset("assets/images/category_image_02.png")}}" alt="">
-                        <div class="overlay">
-                            <h3>Co-Ord Set</h3>
-                            <span>Explore Collection</span>
-                        </div>
-                    </a>
-
-                    <a href="#" class="lookbook-item tall">
-                        <img src="{{asset("assets/images/category_image_10.png")}}" alt="">
-                        <div class="overlay">
-                            <h3>Festive Wear</h3>
-                            <span>Explore Collection</span>
-                        </div>
-                    </a>
-
-                </div>
-
+    <section class="shop-category-section pt-5" aria-label="Shop by category carousel">
+      <div class="page-container">
+        <h2>Shop By Category</h2>
+        <div class="shop-category-carousel" role="region" aria-label="Shop by category" aria-roledescription="carousel">
+          <button class="shop-category-control shop-category-prev" type="button" aria-label="Previous category"><svg
+              class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M19 12H5m6-6-6 6 6 6"></path>
+            </svg></button>
+          <div class="shop-category-stage" aria-live="off">
+            <div class="shop-category-slide">
+              <img src="assets/img/category-3.jpg" alt="Woman wearing a dark green kaftan">
+              <span>Kaftan</span>
             </div>
+            <div class="shop-category-slide">
+              <img src="assets/img/category-2.jpg" alt="Anarkali outfit in ivory">
+              <span>Anarkali</span>
+            </div>
+            <div class="shop-category-slide">
+              <img src="assets/img/category-4.jpg" alt="Woman wearing a neutral co-ord set">
+              <span>Co-ord Set</span>
+            </div>
+            <div class="shop-category-slide">
+              <img src="assets/img/category-5.jpg" alt="Woman wearing a neutral co-ord set">
+              <span>Anarkali</span>
+            </div>
+             <div class="shop-category-slide">
+              <img src="assets/img/category-6.jpg" alt="Woman wearing a neutral Anarkali">
+              <span>Kaftan</span>
+            </div>
+             <div class="shop-category-slide">
+              <img src="assets/img/category-7.jpg" alt="Woman wearing a neutral Anarkali">
+              <span>Anarkali</span>
+            </div>
+             <div class="shop-category-slide">
+              <img src="assets/img/category-8.jpg" alt="Woman wearing a neutral Anarkali">
+              <span>Co-ord Set</span>
+            </div>
+          </div>
+          <button class="shop-category-control shop-category-next" type="button" aria-label="Next category"><svg
+              class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M5 12h14m-6-6 6 6-6 6"></path>
+            </svg></button>
+          <div class="shop-category-dots" aria-label="Category navigation"></div>
         </div>
-    </section>
-    <section class="feature-category featured-category-inner">
-        <div class="comman-container">
-            <div class="sec-head text-center">
-                <span class="curated mb-2">Curated for You</span>
-                <h2 class="featured-title letter-spacing-2 fw-normal">Featured Categories</h2>
-            </div>
-            <div class="feature-category-wrapper">
-
-                <div class="feature-category-item">
-                    <div class="feature-cat-img">
-                        <img src="{{ asset('assets/images/category_image_01.png') }}" alt="Short Kurtis">
-                        <div class="collection-brd"></div>
-                    </div>
-                    <div class="feature-category-overlay">
-                        <h5><a href="#">Short Kurtis</a></h5>
-                    </div>
-                </div>
-
-                <div class="feature-category-item">
-                    <div class="feature-cat-img">
-                        <img src="{{ asset('assets/images/category_image_02.png') }}" alt="New Arrivals">
-                        <div class="collection-brd"></div>
-                    </div>
-                    <div class="feature-category-overlay">
-                        <h5><a href="#">New Arrivals</a></h5>
-                    </div>
-                </div>
-
-                <div class="feature-category-item">
-                    <div class="feature-cat-img">
-                        <img src="{{ asset('assets/images/category_image_03.png') }}" alt="Best Sellers">
-                        <div class="collection-brd"></div>
-                    </div>
-                    <div class="feature-category-overlay">
-                        <h5><a href="#">Best Sellers</a></h5>
-                    </div>
-                </div>
-
-                <div class="feature-category-item">
-                    <div class="feature-cat-img">
-                        <img src="{{ asset('assets/images/category_image_04.png') }}" alt="Kurtas">
-                        <div class="collection-brd"></div>
-                    </div>
-                    <div class="feature-category-overlay">
-                        <h5><a href="#">Kurtas</a></h5>
-                    </div>
-                </div>
-
-                <div class="feature-category-item">
-                    <div class="feature-cat-img">
-                        <img src="{{ asset('assets/images/category_image_05.png') }}" alt="Co-ords">
-                        <div class="collection-brd"></div>
-                    </div>
-                    <div class="feature-category-overlay">
-                        <h5><a href="#">Co-ords</a></h5>
-                    </div>
-                </div>
-
-                <div class="feature-category-item">
-                    <div class="feature-cat-img">
-                        <img src="{{ asset('assets/images/category_image_06.png') }}" alt="Dresses">
-                        <div class="collection-brd"></div>
-                    </div>
-                    <div class="feature-category-overlay">
-                        <h5><a href="#">Dresses</a></h5>
-                    </div>
-                </div>
-
-                <div class="feature-category-item">
-                    <div class="feature-cat-img">
-                        <img src="{{ asset('assets/images/category_image_07.png') }}" alt="Maternity Wear">
-                        <div class="collection-brd"></div>
-                    </div>
-                    <div class="feature-category-overlay">
-                        <h5><a href="#">Maternity Wear</a></h5>
-                    </div>
-                </div>
-
-                <div class="feature-category-item">
-                    <div class="feature-cat-img">
-                        <img src="{{ asset('assets/images/category_image_08.png') }}" alt="Kurta Set">
-                        <div class="collection-brd"></div>
-                    </div>
-                    <div class="feature-category-overlay">
-                        <h5><a href="#">Kurta Set</a></h5>
-                    </div>
-                </div>
-
-            </div>
+        <div class="text-center mt-3">
+          <a href="product-list.html" class="btn-dark-theme rounded">VIEW ALL THE COLLECTIONS</a>
         </div>
+      </div>
     </section>
 
-    <section class="make-it-sec-main" style="display: none;">
-        <div class="make-it-sec-main-inner">
-            <div class="make-it-sec-main-inner1">
-                <div class="make-it-sec-main-left">
-                    <div class="make-it-img-left">
-                        <img src="{{ asset('assets/images/category_image_08.png') }}" alt="Kurta Set">
-                    </div>
-                    <div class="make-it-img-left">
-                        <img src="{{ asset('assets/images/category_image_01.png') }}" alt="Kurta Set">
-                    </div>
-                    <div class="make-it-img-left">
-                        <img src="{{ asset('assets/images/category_image_02.png') }}" alt="Kurta Set">
-                    </div>
-                </div>
-                <div class="make-it-sec-main-right">
-                    <div class="make-it-img-right">
-                        <img src="{{ asset('assets/images/category_image_03.png') }}" alt="Kurta Set">
-                    </div>
-                    <div class="make-it-img-right-inner">
-                        <div class="make-it-img-center">
-                            <img src="{{ asset('assets/images/category_image_04.png') }}" alt="Kurta Set">
-                        </div>
-                        <div class="make-it-img-center">
-                            <img src="{{ asset('assets/images/category_image_05.png') }}" alt="Kurta Set">
-                        </div>
-                    </div>
-                    <div class="make-it-img-right">
-                        <img src="{{ asset('assets/images/category_image_06.png') }}" alt="Kurta Set">
-                    </div>
-                </div>
-            </div>
+    <section class="category-section" id="featured" aria-label="Shop by category">
+      <div class="page-container">
+
+        <div class="subsection-title">
+          <h2>Featured Categories</h2>
+          <div class="everyday-actions">
+            <a class="btn-dark-theme rounded" href="product-list.html">Explore Collection <svg class="svg-icon ms-2" aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M5 12h14m-6-6 6 6-6 6"></path>
+              </svg></a>
+          </div>
         </div>
-    </section>
-    <!-- Trending collection -->
-    <section class="trending-collection">
-        <div class="container">
-            <div class="sec-head text-center pb-4">
-                <span class="curated mb-2">Curated for You</span>
-                <h2 class="featured-title letter-spacing-2 fw-normal">Trending Collection</h2>
-            </div>
-            <div class="trending-collection-section">
-                <div class="collection_grid">
-                    <!-- One Item -->
-                    <div class="product_item">
-                        <div class="product_image">
-                            <img src="{{ asset('assets/images/collection_image_01.jpg') }}" alt="">
-
-                            <div class="product_hover">
-                                <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0,94 L0,82
-                                            C12,82 18,78 24,70
-                                            C32,58 45,48 68,48
-
-                                            C92,48 106,28 126,18
-                                            C144,9 162,12 184,18
-
-                                            C206,12 224,9 242,18
-                                            C262,28 276,48 300,48
-
-                                            C323,48 336,58 344,70
-                                            C350,78 356,82 368,82
-
-                                            L368,94
-                                            Z" fill="#f8f3ee" />
-                                </svg>
-                                <div class="product_colors">
-                                    <span style="background:#7A2E43"></span>
-                                    <span style="background:#87CEEB"></span>
-                                    <span style="background:#E8D5B5"></span>
-                                    <span style="background:#7A8F4D"></span>
-                                </div>
-
-                                <div class="product_sizes">
-                                    <span>S</span>
-                                    <span>M</span>
-                                    <span>L</span>
-                                    <span>XL</span>
-                                </div>
-
-                                <a href="#" class="btn_cart">
-                                    Add To Cart
-                                </a>
-                            </div>
-
-                            <!-- new tag -->
-                            <span class="product_tag">New</span>
-
-                            <!-- whishlist tag -->
-                            <div class="product_tag_wishlist">
-                                <span class="material-symbols-outlined">
-                                    favorite
-                                </span>
-                            </div>
-                        </div>
-                        <div class="product_data">
-                            <div class="product_title">
-                                <a href=""> Mizoya Green Cotton A Line Dress</a>
-                            </div>
-                            <div class="product_price"><span class="price_orignal">Rs. 3250</span> <span
-                                    class="price_old">4350</span></div>
-                        </div>
-                    </div>
-                    <!-- One Item -->
-                    <div class="product_item">
-                        <div class="product_image">
-                            <img src="images/collection_image_02.jpg" alt="">
-
-                            <div class="product_hover">
-                                <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0,94 L0,82
-                                            C12,82 18,78 24,70
-                                            C32,58 45,48 68,48
-
-                                            C92,48 106,28 126,18
-                                            C144,9 162,12 184,18
-
-                                            C206,12 224,9 242,18
-                                            C262,28 276,48 300,48
-
-                                            C323,48 336,58 344,70
-                                            C350,78 356,82 368,82
-
-                                            L368,94
-                                            Z" fill="#f8f3ee" />
-                                </svg>
-                                <div class="product_colors">
-                                    <span style="background:#7A2E43"></span>
-                                    <span style="background:#87CEEB"></span>
-                                    <span style="background:#E8D5B5"></span>
-                                    <span style="background:#7A8F4D"></span>
-                                </div>
-
-                                <div class="product_sizes">
-                                    <span>S</span>
-                                    <span>M</span>
-                                    <span>L</span>
-                                    <span>XL</span>
-                                </div>
-
-                                <a href="#" class="btn_cart">
-                                    Add To Cart
-                                </a>
-                            </div>
-
-                            <!-- new tag -->
-                            <span class="product_tag">New</span>
-
-                            <!-- whishlist tag -->
-                            <div class="product_tag_wishlist">
-                                <span class="material-symbols-outlined">
-                                    favorite
-                                </span>
-                            </div>
-                        </div>
-                        <div class="product_data">
-                            <div class="product_title">
-                                <a href=""> Mizoya Green Cotton A Line Dress</a>
-                            </div>
-                            <div class="product_price"><span class="price_orignal">Rs. 3250</span> <span
-                                    class="price_old">4350</span></div>
-                        </div>
-                    </div>
-                    <!-- One Item -->
-                    <div class="product_item">
-                        <div class="product_image">
-                            <img src="{{ asset('assets/images/collection_image_03.jpg') }}" alt="">
-
-                            <div class="product_hover">
-                                <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0,94 L0,82
-                                            C12,82 18,78 24,70
-                                            C32,58 45,48 68,48
-
-                                            C92,48 106,28 126,18
-                                            C144,9 162,12 184,18
-
-                                            C206,12 224,9 242,18
-                                            C262,28 276,48 300,48
-
-                                            C323,48 336,58 344,70
-                                            C350,78 356,82 368,82
-
-                                            L368,94
-                                            Z" fill="#f8f3ee" />
-                                </svg>
-                                <div class="product_colors">
-                                    <span style="background:#7A2E43"></span>
-                                    <span style="background:#87CEEB"></span>
-                                    <span style="background:#E8D5B5"></span>
-                                    <span style="background:#7A8F4D"></span>
-                                </div>
-
-                                <div class="product_sizes">
-                                    <span>S</span>
-                                    <span>M</span>
-                                    <span>L</span>
-                                    <span>XL</span>
-                                </div>
-
-                                <a href="#" class="btn_cart">
-                                    Add To Cart
-                                </a>
-                            </div>
-
-                            <!-- new tag -->
-                            <span class="product_tag">New</span>
-
-                            <!-- whishlist tag -->
-                            <div class="product_tag_wishlist">
-                                <span class="material-symbols-outlined">
-                                    favorite
-                                </span>
-                            </div>
-                        </div>
-                        <div class="product_data">
-                            <div class="product_title">
-                                <a href=""> Mizoya Green Cotton A Line Dress</a>
-                            </div>
-                            <div class="product_price"><span class="price_orignal">Rs. 3250</span> <span
-                                    class="price_old">4350</span></div>
-                        </div>
-                    </div>
-                    <!-- One Item -->
-                    <div class="product_item">
-                        <div class="product_image">
-                            <img src="{{ asset('assets/images/collection_image_04.jpg') }}" alt="">
-
-                            <div class="product_hover">
-                                <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0,94 L0,82
-                                            C12,82 18,78 24,70
-                                            C32,58 45,48 68,48
-
-                                            C92,48 106,28 126,18
-                                            C144,9 162,12 184,18
-
-                                            C206,12 224,9 242,18
-                                            C262,28 276,48 300,48
-
-                                            C323,48 336,58 344,70
-                                            C350,78 356,82 368,82
-
-                                            L368,94
-                                            Z" fill="#f8f3ee" />
-                                </svg>
-                                <div class="product_colors">
-                                    <span style="background:#7A2E43"></span>
-                                    <span style="background:#87CEEB"></span>
-                                    <span style="background:#E8D5B5"></span>
-                                    <span style="background:#7A8F4D"></span>
-                                </div>
-
-                                <div class="product_sizes">
-                                    <span>S</span>
-                                    <span>M</span>
-                                    <span>L</span>
-                                    <span>XL</span>
-                                </div>
-
-                                <a href="#" class="btn_cart">
-                                    Add To Cart
-                                </a>
-                            </div>
-
-                            <!-- new tag -->
-                            <span class="product_tag">New</span>
-
-                            <!-- whishlist tag -->
-                            <div class="product_tag_wishlist">
-                                <span class="material-symbols-outlined">
-                                    favorite
-                                </span>
-                            </div>
-                        </div>
-                        <div class="product_data">
-                            <div class="product_title">
-                                <a href=""> Mizoya Green Cotton A Line Dress</a>
-                            </div>
-                            <div class="product_price"><span class="price_orignal">Rs. 3250</span> <span
-                                    class="price_old">4350</span></div>
-                        </div>
-                    </div>
-                    <!-- One Item -->
-                    <div class="product_item">
-                        <div class="product_image">
-                            <img src="{{ asset('assets/images/collection_image_03.jpg') }}" alt="">
-
-                            <div class="product_hover">
-                                <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0,94 L0,82
-                                            C12,82 18,78 24,70
-                                            C32,58 45,48 68,48
-
-                                            C92,48 106,28 126,18
-                                            C144,9 162,12 184,18
-
-                                            C206,12 224,9 242,18
-                                            C262,28 276,48 300,48
-
-                                            C323,48 336,58 344,70
-                                            C350,78 356,82 368,82
-
-                                            L368,94
-                                            Z" fill="#f8f3ee" />
-                                </svg>
-                                <div class="product_colors">
-                                    <span style="background:#7A2E43"></span>
-                                    <span style="background:#87CEEB"></span>
-                                    <span style="background:#E8D5B5"></span>
-                                    <span style="background:#7A8F4D"></span>
-                                </div>
-
-                                <div class="product_sizes">
-                                    <span>S</span>
-                                    <span>M</span>
-                                    <span>L</span>
-                                    <span>XL</span>
-                                </div>
-
-                                <a href="#" class="btn_cart">
-                                    Add To Cart
-                                </a>
-                            </div>
-
-                            <!-- new tag -->
-                            <span class="product_tag">New</span>
-
-                            <!-- whishlist tag -->
-                            <div class="product_tag_wishlist">
-                                <span class="material-symbols-outlined">
-                                    favorite
-                                </span>
-                            </div>
-                        </div>
-                        <div class="product_data">
-                            <div class="product_title">
-                                <a href=""> Mizoya Green Cotton A Line Dress</a>
-                            </div>
-                            <div class="product_price"><span class="price_orignal">Rs. 3250</span> <span
-                                    class="price_old">4350</span></div>
-                        </div>
-                    </div>
+        <div class="category-panel">
+          <div class="category-copy">
+            <h2>Explore Our Featured Categories</h2>
+            <p>Discover styles made to elevate every occasion. From timeless classics to modern trends, find the perfect
+              outfit to express your unique style.</p>
+          </div>
+          <div class="category-carousel" role="region" aria-label="Featured categories" aria-roledescription="carousel">
+            <button class="category-control category-prev" type="button" aria-label="Previous category"><svg
+                class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M19 12H5m6-6-6 6 6 6"></path>
+              </svg></button>
+            <div class="category-grid" aria-live="off">
+              <div class="category-track">
+                <div class="category-card">
+                  <img src="assets/img/featured-1.jpg" alt="Woman wearing a neutral co-ord set">
+                  <span>Co-ord Sets</span>
                 </div>
-            </div>
-            <div class="d-flex align-items-center justify-content-center mt-50">
-                <a href="#" class="btn_secondary">
-                    View Collection
-                    <span class="material-symbols-outlined">
-                        arrow_right_alt
-                    </span>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Category Collection -->
-    <section class="category_collection pt-70 pb-70">
-        <div class="container">
-            <div class="ethnic_wrapper">
-                <div class="ethnic_gallery">
-                    <div class="column-one">
-                        <div class="galler-img-list">
-                            <img src="{{ asset('assets/images/large_cat1.jpg') }}">
-                        </div>
-                        <div class="ehtinic_content">
-                            <h2>Anarkali Gown Set</h2>
-                            <p>Gracefully crafted silhouettes with timeless ethnic charm.</p>
-                        </div>
-                    </div>
-
-                    <div class="column-one">
-                        <div class="galler-img-list">
-                            <img src="{{ asset('assets/images/large_cat2.jpeg') }}" alt="">
-                        </div>
-                        <div class="ehtinic_content">
-                            <h2>Ethnic Set</h2>
-                            <p>Gracefully crafted silhouettes with timeless ethnic charm.</p>
-                        </div>
-                    </div>
-
-                    <div class="column-one"> asset
-                        <div class="galler-img-list">
-                            <img src="{{ asset('assets/images/large_cat3.jpeg') }}" alt="">
-                        </div>
-                        <div class="ehtinic_content">
-                            <h2>Kurta Pant dupatta</h2>
-                            <p>Designed to make every occasion feel effortlessly special.</p>
-                        </div>
-                    </div>
-
-                    <div class="column-one">
-                        <div class="galler-img-list">
-                            <img src="{{ asset('assets/images/category_image_02.png') }}" alt="">
-                        </div>
-                        <div class="ehtinic_content">
-                            <h2>Ethnic Set</h2>
-                            <p>Gracefully crafted silhouettes with timeless ethnic charm.</p>
-                        </div>
-                    </div>
-
-                    <div class="column-one">
-                        <div class="galler-img-list">
-                            <img src="{{ asset('assets/images/category_image_05.png') }}" alt="">
-                        </div>
-                        <div class="ehtinic_content">
-                            <h2>Kurta Pant dupatta</h2>
-                            <p>Designed to make every occasion feel effortlessly special.</p>
-                        </div>
-                    </div>
-
-                    <div class="column-one">
-                        <div class="galler-img-list">
-                            <img src="{{ asset('assets/images/large_cat1.jpg') }}">
-                        </div>
-                        <div class="ehtinic_content">
-                            <h2>Anarkali Gown Set</h2>
-                            <p>Gracefully crafted silhouettes with timeless ethnic charm.</p>
-                        </div>
-                    </div>
-
-                    <div class="column-one">
-                        <div class="galler-img-list">
-                            <img src="{{ asset('assets/images/large_cat2.jpeg')}}" alt="">
-                        </div>
-                        <div class="ehtinic_content">
-                            <h2>Ethnic Set</h2>
-                            <p>Gracefully crafted silhouettes with asset('assets/imeless ethnic charm.</p>
-                    </div>
-                    </div>
-
-                    <div class="column-one">
-                        <div class="galler-img-list">
-                            <img src="{{ asset('assets/images/large_cat3.jpeg')}}" alt="">
-                        </div>
-                        <div class="ehtinic_content">
-                            <h2>Kurta Pant dupatta</h2>
-                            <p>Designed to make every occasion feel effortlessly special.</p>
-                        </div>
-                    </div>
+                <div class="category-card">
+                  <img src="assets/img/featured-2.jpg" alt="Anarkali outfit in ivory">
+                  <span>Anarkali</span>
                 </div>
+                <div class="category-card">
+                  <img src="assets/img/featured-3.jpg" alt="Woman wearing a dark green kaftan">
+                  <span>Kaftans</span>
+                </div>
+                <div class="category-card">
+                  <img src="assets/img/featured-1.jpg" alt="Woman wearing a dark green kaftan">
+                  <span>Kaftans</span>
+                </div>
+                <div class="category-card">
+                  <img src="assets/img/featured-2.jpg" alt="Anarkali outfit in ivory">
+                  <span>Anarkali</span>
+                </div>
+                <div class="category-card">
+                  <img src="assets/img/featured-3.jpg" alt="Woman wearing a dark green kaftan">
+                  <span>Kaftans</span>
+                </div>
+              </div>
             </div>
+            <button class="category-control category-next" type="button" aria-label="Next category"><svg
+                class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M5 12h14m-6-6 6 6-6 6"></path>
+              </svg></button>
+            <div class="category-dots" aria-label="Category navigation">
+            </div>
+          </div>
         </div>
+      </div>
     </section>
-
-    <section class="discover-section-main">
-        <div class="discover-section-main-inner">
-            <div class="discover-intro">
-                <h2>Discover The<br> Laxmi Fabtax<br> With Us</h2>
-                <div class="discover-cta">
-                    <span>Now available at the Callum</span>
-                    <a href="#" class="discover-arrow">
-                        <svg viewBox="0 0 24 24" fill="none">
-                            <path d="M5 12H19"></path>
-                            <path d="M13 6L19 12L13 18"></path>
+    <section class=" section-pad trending-collections-section">
+      <svg class="trending-collection-defs" aria-hidden="true" focusable="false">
+        <defs>
+          <clipPath id="trendingOptionsWave" clipPathUnits="objectBoundingBox">
+            <path
+              d="M0 .24C.12 .24 .16 .19 .24 .13C.31 .07 .38 .02 .46 .04C.53 .06 .54 0 .62 .01C.72 .02 .78 .12 .86 .18C.92 .23 .96 .24 1 .24V1H0Z">
+            </path>
+          </clipPath>
+          <clipPath id="trendingCollectionFrame" clipPathUnits="objectBoundingBox">
+            <path
+              d="M 0 1 V 0.356 C 0 0.315 0.045 0.28 0.1032 0.2648 C 0.082 0.25 0.09 0.2 0.1534 0.1789 C 0.138 0.16 0.16 0.125 0.2515 0.108 C 0.238 0.088 0.29 0.062 0.409 0.05 C 0.425 0.03 0.45 0.01 0.5 0 C 0.55 0.01 0.575 0.03 0.591 0.05 C 0.71 0.062 0.762 0.088 0.7485 0.108 C 0.84 0.125 0.862 0.16 0.8466 0.1789 C 0.91 0.2 0.918 0.25 0.8968 0.2648 C 0.955 0.28 1 0.315 1 0.356 V 1 H 0 Z">
+            </path>
+          </clipPath>
+        </defs>
+      </svg>
+      <div class="page-container">
+        <div class="section-heading">
+          <h2>Trending Collections</h2>
+          <p>The Trending Edit — Fresh styles, timeless elegance.</p>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-lg-3 col-6">
+            <div class="collections-item">
+              <div class="collections-img">
+                <div class="img-collections">
+                  <a href="product-details.html">
+                    <img src="assets/img/trending-1.jpg" alt="Pink embroidered outfit">
+                  </a>
+                </div>
+                <div class="card-btn-main">
+                  <div class="cart-list">
+                    <ul>
+                      <li>
+                        <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                          <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
                         </svg>
-                    </a>
+                      </li>
+                      <li>
+                        <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                          <path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.6h9.9a2 2 0 0 0 2-1.6L22 7H5"></path>
+      <circle cx="9" cy="21" r="1"></circle>
+      <circle cx="18" cy="21" r="1"></circle>
+                        </svg>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
+              </div>
+              <div class="collections-content">
+                <a href="product-details.html">
+                  <h4>Mizoya Green Cotton A Line Dress</h4>
+                  <div class="price-wist">
+                    <span class="Wishlist"><svg class="svg-icon" viewBox="0 0 24 24">
+                        <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
+                      </svg></span>
+                    <h6 class="collections-price text-center">
+
+                      <span class="collections-current-price">₹3500</span>
+                      <del class="collections-compare-price">₹4500</del>
+                      <span class="collections-discount">22% OFF</span>
+                    </h6>
+                  </div>
+                </a>
+
+                <div class="product-options">
+                  <div class="product-colors" aria-label="Available colors">
+                    <span class="option-label">Colors</span>
+                    <div class="color-swatches" aria-hidden="true">
+                      <span class="color-swatch swatch-wine"></span>
+                      <span class="color-swatch swatch-gold is-selected"></span>
+                      <span class="color-swatch swatch-black"></span>
+                      <span class="color-swatch swatch-teal"></span>
+                    </div>
+                  </div>
+                  <div class="product-sizes" aria-label="Available sizes">
+                    <span class="option-label">Size</span>
+                    <div class="size-options" aria-hidden="true">
+                      <span>S</span><span>M</span><span>L</span><span>XL</span>
+                    </div>
+                  </div>
+                  <button class="product-add-to-cart" type="button">Add To Cart</button>
+                </div>
+              </div>
             </div>
-            
-            <a href="#" class="jewellery-card">
-                <div class="jewellery-image">
-                    <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
+          </div>
+          <div class="col-md-4 col-lg-3 col-6">
+            <div class="collections-item">
+              <div class="collections-img">
+                <div class="img-collections">
+                  <a href="product-details.html">
+                    <img src="assets/img/trending-3.jpg" alt="Rust embroidered outfit">
+                  </a>
                 </div>
-                <h3>Fabtax 1</h3>
-            </a>
-            <a href="#" class="jewellery-card">
-                <div class="jewellery-image">
-                    <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
+                <div class="card-btn-main">
+                  <div class="cart-list">
+                    <ul>
+                      <li>
+                        <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                          <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
+                        </svg>
+                      </li>
+                      <li>
+                        <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                          <path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.6h9.9a2 2 0 0 0 2-1.6L22 7H5"></path>
+      <circle cx="9" cy="21" r="1"></circle>
+      <circle cx="18" cy="21" r="1"></circle>
+                        </svg>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-                <h3>Fabtax 2</h3>
-            </a>
-            <a href="#" class="jewellery-card">
-                <div class="jewellery-image">
-                    <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
+              </div>
+              <div class="collections-content">
+                <a href="product-details.html">
+                  <h4>Mizoya Green Cotton A Line Dress</h4>
+                  <div class="price-wist">
+                    <span class="Wishlist"><svg class="svg-icon" viewBox="0 0 24 24">
+                        <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
+                      </svg></span>
+                    <h6 class="collections-price text-center">
+
+                      <span class="collections-current-price">₹3500</span>
+                      <del class="collections-compare-price">₹4500</del>
+                      <span class="collections-discount">22% OFF</span>
+                    </h6>
+                  </div>
+                </a>
+                <div class="product-options">
+                  <div class="product-colors" aria-label="Available colors">
+                    <span class="option-label">Colors</span>
+                    <div class="color-swatches" aria-hidden="true">
+                      <span class="color-swatch swatch-wine"></span>
+                      <span class="color-swatch swatch-gold is-selected"></span>
+                      <span class="color-swatch swatch-black"></span>
+                      <span class="color-swatch swatch-teal"></span>
+                    </div>
+                  </div>
+                  <div class="product-sizes" aria-label="Available sizes">
+                    <span class="option-label">Size</span>
+                    <div class="size-options" aria-hidden="true">
+                      <span>S</span><span>M</span><span>L</span><span>XL</span>
+                    </div>
+                  </div>
+                  <button class="product-add-to-cart" type="button">Add To Cart</button>
                 </div>
-                <h3>Fabtax 3</h3>
-            </a>
-            <a href="#" class="jewellery-card">
-                <div class="jewellery-image">
-                    <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-3 col-6">
+            <div class="collections-item">
+              <div class="collections-img">
+                <div class="img-collections">
+                  <a href="product-details.html">
+                    <img src="assets/img/trending-4.jpg" alt="Magenta embroidered outfit">
+                  </a>
                 </div>
-                <h3>Fabtax 4</h3>
-            </a>
-            <a href="#" class="jewellery-card">
-                <div class="jewellery-image">
-                    <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
+                <div class="card-btn-main">
+                  <div class="cart-list">
+                    <ul>
+                      <li>
+                        <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                          <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
+                        </svg>
+                      </li>
+                      <li>
+                        <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                          <path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.6h9.9a2 2 0 0 0 2-1.6L22 7H5"></path>
+      <circle cx="9" cy="21" r="1"></circle>
+      <circle cx="18" cy="21" r="1"></circle>
+                        </svg>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-                <h3>Fabtax 5</h3>
-            </a>
-            <a href="#" class="jewellery-card">
-                <div class="jewellery-image">
-                    <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
+              </div>
+              <div class="collections-content">
+                <a href="product-details.html">
+                  <h4>Mizoya Green Cotton A Line Dress</h4>
+                  <div class="price-wist">
+                    <span class="Wishlist"><svg class="svg-icon" viewBox="0 0 24 24">
+                        <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
+                      </svg></span>
+                    <h6 class="collections-price text-center">
+
+                      <span class="collections-current-price">₹3500</span>
+                      <del class="collections-compare-price">₹4500</del>
+                      <span class="collections-discount">22% OFF</span>
+                    </h6>
+                  </div>
+                </a>
+                <div class="product-options">
+                  <div class="product-colors" aria-label="Available colors">
+                    <span class="option-label">Colors</span>
+                    <div class="color-swatches" aria-hidden="true">
+                      <span class="color-swatch swatch-wine"></span>
+                      <span class="color-swatch swatch-gold is-selected"></span>
+                      <span class="color-swatch swatch-black"></span>
+                      <span class="color-swatch swatch-teal"></span>
+                    </div>
+                  </div>
+                  <div class="product-sizes" aria-label="Available sizes">
+                    <span class="option-label">Size</span>
+                    <div class="size-options" aria-hidden="true">
+                      <span>S</span><span>M</span><span>L</span><span>XL</span>
+                    </div>
+                  </div>
+                  <button class="product-add-to-cart" type="button">Add To Cart</button>
                 </div>
-                <h3>Fabtax 6</h3>
-            </a>
-            <a href="#" class="jewellery-card">
-                <div class="jewellery-image">
-                    <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-3 col-6">
+            <div class="collections-item">
+              <div class="collections-img">
+                <div class="img-collections">
+                  <a href="product-details.html">
+                    <img src="assets/img/trending-2.jpg" alt="Magenta embroidered outfit">
+                  </a>
                 </div>
-                <h3>Fabtax 7</h3>
-            </a>
-            <a href="#" class="jewellery-card">
-                <div class="jewellery-image">
-                    <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
+                <div class="card-btn-main">
+                  <div class="cart-list">
+                    <ul>
+                      <li>
+                        <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                          <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
+                        </svg>
+                      </li>
+                      <li>
+                        <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                          <path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.6h9.9a2 2 0 0 0 2-1.6L22 7H5"></path>
+      <circle cx="9" cy="21" r="1"></circle>
+      <circle cx="18" cy="21" r="1"></circle>
+                        </svg>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-                <h3>Fabtax 8</h3>
-            </a>
-            <a href="#" class="jewellery-card">
-                <div class="jewellery-image">
-                    <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
+              </div>
+              <div class="collections-content">
+                <a href="product-details.html">
+                  <h4>Mizoya Green Cotton A Line Dress</h4>
+                  <div class="price-wist">
+                    <span class="Wishlist"><svg class="svg-icon" viewBox="0 0 24 24">
+                        <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
+                      </svg></span>
+                    <h6 class="collections-price text-center">
+
+                      <span class="collections-current-price">₹3500</span>
+                      <del class="collections-compare-price">₹4500</del>
+                      <span class="collections-discount">22% OFF</span>
+                    </h6>
+                  </div>
+                </a>
+                <div class="product-options">
+                  <div class="product-colors" aria-label="Available colors">
+                    <span class="option-label">Colors</span>
+                    <div class="color-swatches" aria-hidden="true">
+                      <span class="color-swatch swatch-wine"></span>
+                      <span class="color-swatch swatch-gold is-selected"></span>
+                      <span class="color-swatch swatch-black"></span>
+                      <span class="color-swatch swatch-teal"></span>
+                    </div>
+                  </div>
+                  <div class="product-sizes" aria-label="Available sizes">
+                    <span class="option-label">Size</span>
+                    <div class="size-options" aria-hidden="true">
+                      <span>S</span><span>M</span><span>L</span><span>XL</span>
+                    </div>
+                  </div>
+                  <button class="product-add-to-cart" type="button">Add To Cart</button>
                 </div>
-                <h3>Fabtax 9</h3>
-            </a>
-            <a href="#" class="jewellery-card">
-                <div class="jewellery-image">
-                    <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
-                </div>
-                <h3>Fabtax 10</h3>
-            </a>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
 
-    <section class="occasion-section">
-        <div class="occasion-container">
-
-            <!-- Occasion Cards -->
-            <div class="occasion-grid">
-                <a href="#" class="occasion-card">
-                    <div class="occasion-img">
-                        <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
-                    </div>
-                    <div class="occasion-name">Below 200</div>
-                </a>
-                <a href="#" class="occasion-card">
-                    <div class="occasion-img">
-                        <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
-                    </div>
-                    <div class="occasion-name">Below 599</div>
-                </a>
-                <a href="#" class="occasion-card">
-                    <div class="occasion-img">
-                        <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
-                    </div>
-                    <div class="occasion-name">Below 459</div>
-                </a>
-                <a href="#" class="occasion-card">
-                    <div class="occasion-img">
-                        <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
-                    </div>
-                    <div class="occasion-name">Below 325</div>
-                </a>
-                <a href="#" class="occasion-card">
-                    <div class="occasion-img">
-                        <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
-                    </div>
-                    <div class="occasion-name">Below 999</div>
-                </a>
-                <a href="#" class="occasion-card">
-                    <div class="occasion-img">
-                        <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
-                    </div>
-                    <div class="occasion-name">Below 2000</div>
-                </a>
-            </div>
-
-            <!-- Right Content -->
-            <div class="occasion-content">
-                <div class="occasion-content-inner">
-                    <h2>This is where your<br> Indian identity can<br> become very strong.</h2>
-                    <!-- <p>Sparkle up your style<br> with a piece of jewelry<br> from the glam collection</p> -->
-                    <div class="discover-cta">
-                        <span>Explore Now</span>
-                        <a href="#" class="discover-arrow">
-                            <svg viewBox="0 0 24 24" fill="none">
-                                <path d="M5 12H19"></path>
-                                <path d="M13 6L19 12L13 18"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
+    <section class="best-collections" aria-labelledby="collectionsTitle">
+      <div class="collection-heading">
+        <div class="collection-heading-inner page-container">
+          <div>
+            <h2 id="collectionsTitle">Our Best Collections</h2>
+            <p>Discover how our styles come to life. Tag us in your looks for a chance to be<br
+                class="collection-copy-break"> featured.</p>
+          </div>
+          <div class="collection-controls" aria-label="Collection slider controls">
+            <button class="collection-prev" type="button" aria-label="Previous collection"><svg class="svg-icon"
+                aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M19 12H5m6-6-6 6 6 6"></path>
+              </svg></button>
+            <button class="collection-next" type="button" aria-label="Next collection"><svg class="svg-icon"
+                aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M5 12h14m-6-6 6 6-6 6"></path>
+              </svg></button>
+          </div>
         </div>
+      </div>
+      <div class="collection-window " role="region" aria-label="Our best collections" aria-roledescription="carousel">
+        <div class="collection-track">
+          <a href="#featured" aria-label="Explore festive collection">
+            <img src="assets/img/Collections-1.jpg" alt="Woman wearing a magenta festive outfit">
+          </a>
+          <a href="#featured" aria-label="Explore celebration collection">
+            <img src="assets/img/Collections-2.jpg" alt="Women celebrating together in colourful festive outfits">
+          </a>
+          <a href="#featured" aria-label="Explore occasionwear collection">
+            <img src="assets/img/Collections-3.jpg" alt="Women wearing elegant pink occasionwear">
+          </a>
+          <a href="#featured" aria-label="Explore festive collection">
+            <img src="assets/img/Collections-1.jpg" alt="Woman wearing a magenta festive outfit">
+          </a>
+          <a href="#featured" aria-label="Explore celebration collection">
+            <img src="assets/img/Collections-2.jpg" alt="Women celebrating together in colourful festive outfits">
+          </a>
+          <a href="#featured" aria-label="Explore occasionwear collection">
+            <img src="assets/img/Collections-3.jpg" alt="Women wearing elegant pink occasionwear">
+          </a>
+        </div>
+      </div>
+    </section>
+    <section class="shop-look-section section-pad" aria-label="Featured products">
+      <div class="page-container">
+        <div class="section-heading">
+          <h2>Trending Bestseller</h2>
+          <p>The Trending Edit — Fresh styles, timeless elegance.</p>
+        </div>
+        <div class="row g-3 g-lg-4 ">
+          <div class="col-6 col-md-4 col-lg-3">
+            <article class="shop-look-card" tabindex="0"
+              aria-label="Mizoya Green Cotton A Line Dress, ₹3500, was ₹4500, 22% off">
+              <div class="shop-look-image">
+                <a href="product-details.html">
+                  <img src="assets/img/insta-3.jpg" alt="Woman wearing a mustard yellow printed kurta set">
+                </a>
+              </div>
+              <div class="shop-content">
+                <a href="product-details.html" class="shop-look-content">
+                  <h3>Mizoya Green Cotton A Line Dress</h3>
+                  <p class="shop-look-price">
+                    <span class="shop-look-current-price">₹3500</span>
+                    <del class="shop-look-compare-price">₹4500</del>
+                    <span class="shop-look-discount">22% OFF</span>
+                  </p>
+                </a>
+                <div class="shop-look-options" aria-label="Product options">
+                  <div class="shop-look-option-group">
+                    <div class="shop-look-swatches" aria-hidden="true">
+                      <span class="shop-look-swatch shop-look-swatch-wine"></span>
+                      <span class="shop-look-swatch shop-look-swatch-gold is-selected"></span>
+                      <span class="shop-look-swatch shop-look-swatch-black"></span>
+                      <span class="shop-look-swatch shop-look-swatch-teal"></span>
+                    </div>
+                  </div>
+                  <div class="shop-look-option-group">
+                    <div class="shop-look-sizes" aria-hidden="true">
+                      <span>S</span><span>M</span><span>L</span><span>XL</span>
+                    </div>
+                  </div>
+                  <button class="product-add-to-cart" type="button">Add To Cart</button>
+                </div>
+                <div class="shop-look-icons" aria-hidden="true">
+                  <span><svg class="svg-icon" viewBox="0 0 24 24">
+                      <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
+                    </svg></span>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div class="col-6 col-md-4 col-lg-3">
+            <article class="shop-look-card" tabindex="0"
+              aria-label="Mizoya Green Cotton A Line Dress, ₹3500, was ₹4500, 22% off">
+              <div class="shop-look-image">
+                <a href="product-details.html">
+                  <img src="assets/img/insta-4.jpg" alt="Woman wearing a mustard yellow printed kurta set">
+                </a>
+              </div>
+              <div class="shop-content">
+                <a href="product-details.html" class="shop-look-content">
+                  <h3>Mizoya Green Cotton A Line Dress</h3>
+                  <p class="shop-look-price">
+                    <span class="shop-look-current-price">₹3500</span>
+                    <del class="shop-look-compare-price">₹4500</del>
+                    <span class="shop-look-discount">22% OFF</span>
+                  </p>
+                </a>
+                <div class="shop-look-options" aria-label="Product options">
+                  <div class="shop-look-option-group">
+
+                    <div class="shop-look-swatches" aria-hidden="true">
+                      <span class="shop-look-swatch shop-look-swatch-wine"></span>
+                      <span class="shop-look-swatch shop-look-swatch-gold is-selected"></span>
+                      <span class="shop-look-swatch shop-look-swatch-black"></span>
+                      <span class="shop-look-swatch shop-look-swatch-teal"></span>
+                    </div>
+                  </div>
+                  <div class="shop-look-option-group">
+
+                    <div class="shop-look-sizes" aria-hidden="true">
+                      <span>S</span><span>M</span><span>L</span><span>XL</span>
+                    </div>
+                  </div>
+                  <button class="product-add-to-cart" type="button">Add To Cart</button>
+                </div>
+                <div class="shop-look-icons" aria-hidden="true">
+                  <span><svg class="svg-icon" viewBox="0 0 24 24">
+                      <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
+                    </svg></span>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div class="col-6 col-md-4 col-lg-3">
+            <article class="shop-look-card" tabindex="0"
+              aria-label="Mizoya Green Cotton A Line Dress, ₹3500, was ₹4500, 22% off">
+              <div class="shop-look-image">
+                <a href="product-details.html">
+                  <img src="assets/img/insta-2.jpg" alt="Woman wearing a mustard yellow printed kurta set">
+                </a>
+              </div>
+              <div class="shop-content">
+                <a href="product-details.html" class="shop-look-content">
+                  <h3>Mizoya Green Cotton A Line Dress</h3>
+                  <p class="shop-look-price">
+                    <span class="shop-look-current-price">₹3500</span>
+                    <del class="shop-look-compare-price">₹4500</del>
+                    <span class="shop-look-discount">22% OFF</span>
+                  </p>
+                </a>
+                <div class="shop-look-options" aria-label="Product options">
+                  <div class="shop-look-option-group">
+
+                    <div class="shop-look-swatches" aria-hidden="true">
+                      <span class="shop-look-swatch shop-look-swatch-wine"></span>
+                      <span class="shop-look-swatch shop-look-swatch-gold is-selected"></span>
+                      <span class="shop-look-swatch shop-look-swatch-black"></span>
+                      <span class="shop-look-swatch shop-look-swatch-teal"></span>
+                    </div>
+                  </div>
+                  <div class="shop-look-option-group">
+
+                    <div class="shop-look-sizes" aria-hidden="true">
+                      <span>S</span><span>M</span><span>L</span><span>XL</span>
+                    </div>
+                  </div>
+                  <button class="product-add-to-cart" type="button">Add To Cart</button>
+                </div>
+                <div class="shop-look-icons" aria-hidden="true">
+                  <span><svg class="svg-icon" viewBox="0 0 24 24">
+                      <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
+                    </svg></span>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div class="col-6 col-md-4 col-lg-3">
+            <article class="shop-look-card" tabindex="0"
+              aria-label="Mizoya Green Cotton A Line Dress, ₹3500, was ₹4500, 22% off">
+              <div class="shop-look-image">
+                <a href="product-details.html">
+                  <img src="assets/img/insta-1.jpg" alt="Woman wearing a mustard yellow printed kurta set">
+                </a>
+              </div>
+              <div class="shop-content">
+                <a href="product-details.html" class="shop-look-content">
+                  <h3>Mizoya Green Cotton A Line Dress</h3>
+                  <p class="shop-look-price">
+                    <span class="shop-look-current-price">₹3500</span>
+                    <del class="shop-look-compare-price">₹4500</del>
+                    <span class="shop-look-discount">22% OFF</span>
+                  </p>
+                </a>
+                <div class="shop-look-options" aria-label="Product options">
+                  <div class="shop-look-option-group">
+
+                    <div class="shop-look-swatches" aria-hidden="true">
+                      <span class="shop-look-swatch shop-look-swatch-wine"></span>
+                      <span class="shop-look-swatch shop-look-swatch-gold is-selected"></span>
+                      <span class="shop-look-swatch shop-look-swatch-black"></span>
+                      <span class="shop-look-swatch shop-look-swatch-teal"></span>
+                    </div>
+                  </div>
+                  <div class="shop-look-option-group">
+
+                    <div class="shop-look-sizes" aria-hidden="true">
+                      <span>S</span><span>M</span><span>L</span><span>XL</span>
+                    </div>
+                  </div>
+                  <button class="product-add-to-cart" type="button">Add To Cart</button>
+                </div>
+                <div class="shop-look-icons" aria-hidden="true">
+                  <span><svg class="svg-icon" viewBox="0 0 24 24">
+                      <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
+                    </svg></span>
+                </div>
+              </div>
+            </article>
+          </div>
+
+        </div>
+      </div>
     </section>
 
-    <section class="bridal-hero">
 
-    <!-- Background -->
-    <div class="bridal-bg"></div>
-    <div class="bridal-overlay"></div>
-
-    <div class="bridal-container">
-
-        <!-- Image 1 -->
-        <div class="bridal-img bridal-img-1">
-            <!-- <div class="shape-image">
-                <img src="images/large_cat1.jpg" alt="image1">
-            </div> -->
-
-            <div class="hex-img">
-                <img src="{{ asset('assets/images/large_cat1.jpg') }}" alt="image1">
-
-                <!-- Outer border -->
-                <svg class="hex-border" viewBox="0 0 240 240">
-                    <polygon points="
-                        65,8
-                        170,22
-                        230,95
-                        205,185
-                        125,232
-                        30,195
-                        8,105
-                    " />
-                </svg>
-
-                <!-- Inner decorative border -->
-                <svg class="hex-border hex-border-inner" viewBox="0 0 240 240">
-                    <polygon points="
-                        65,8
-                        170,22
-                        230,95
-                        205,185
-                        125,232
-                        30,195
-                        8,105
-                    " />
-                </svg>
+    <section class="craft-process-section" aria-labelledby="craftProcessTitle">
+      <div class="page-container craft-process-layout">
+        <div class="craft-process-gallery" role="region" aria-label="Our craft process photos"
+          aria-roledescription="carousel">
+          <img class="craft-process-gallery-backdrop" src="assets/img/create-bg.jpg" alt="" aria-hidden="true">
+          <div class="craft-process-gallery-images" aria-live="polite">
+            <div class="craft-process-gallery-track">
+              <img class="craft-process-gallery-image" src="assets/img/create-right-1.jpg"
+                alt="Artisan carefully stitching an embroidered garment">
+              <img class="craft-process-gallery-image" src="assets/img/create-right-3.jpg"
+                alt="Artisan hand-embroidering a colorful textile">
             </div>
+          </div>
+          <button class="craft-process-gallery-control craft-process-gallery-prev" type="button"
+            aria-label="Previous craft process photos"><svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M19 12H5m6-6-6 6 6 6"></path>
+            </svg></button>
+          <button class="craft-process-gallery-control craft-process-gallery-next" type="button"
+            aria-label="Next craft process photos"><svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M5 12h14m-6-6 6 6-6 6"></path>
+            </svg></button>
         </div>
 
-
-        <!-- Image 2 -->
-        <div class="bridal-img bridal-img-2">
-            <!-- <div class="shape-image">
-                <img src="images/large_cat2.jpeg" alt="image2">
-            </div> -->
-
-            <div class="hex-img">
-                <img src="{{ asset('assets/images/large_cat2.jpeg') }}" alt="image2">
-
-                <!-- Outer border -->
-                <svg class="hex-border" viewBox="0 0 240 240">
-                    <polygon points="
-                        65,8
-                        170,22
-                        230,95
-                        205,185
-                        125,232
-                        30,195
-                        8,105
-                    " />
+        <div class="craft-process-content">
+          <h2 id="craftProcessTitle">How We Create</h2>
+          <p class="craft-process-intro">From carefully selected fabrics to skilled stitching and refined finishing,
+            every detail is thoughtfully considered.</p>
+          <div class="craft-process-grid" aria-label="Steps in our craft process">
+            <article class="craft-process-card" tabindex="0">
+              <img src="assets/img/create-6.jpg" alt="">
+              <div class="craft-process-card-content">
+                <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                  <path
+        d="M12 3a9 9 0 1 0 0 18h1.2a2 2 0 0 0 1.5-3.3 1.8 1.8 0 0 1 1.4-3h1.4A4.5 4.5 0 0 0 22 10.2C21.2 6.1 17.1 3 12 3Z">
+      </path>
+      <circle cx="7.5" cy="10" r="1"></circle>
+      <circle cx="11" cy="7" r="1"></circle>
+      <circle cx="15.5" cy="8" r="1"></circle>
                 </svg>
-
-                <!-- Inner decorative border -->
-                <svg class="hex-border hex-border-inner" viewBox="0 0 240 240">
-                    <polygon points="
-                        65,8
-                        170,22
-                        230,95
-                        205,185
-                        125,232
-                        30,195
-                        8,105
-                    " />
+                <h3>Fabric Selection</h3>
+                <p>We begin with thoughtfully selected fabrics chosen for their feel, quality and lasting comfort. Every
+                  fabric is carefully considered to complement the design and bring it to life with elegance.</p>
+              </div>
+            </article>
+            <article class="craft-process-card" tabindex="0">
+              <img src="assets/img/create-5.jpg" alt="">
+              <div class="craft-process-card-content">
+                <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                  <circle cx="6" cy="6" r="3"></circle>
+      <circle cx="6" cy="18" r="3"></circle>
+      <path d="m8.2 8.2 12.3 12.3M8.2 15.8 20.5 3.5M14 10l-2 2"></path>
                 </svg>
-            </div>
+                <h3>Stitching</h3>
+                <p>Our skilled artisans bring each design together with careful stitching and a thoughtful eye for
+                  detail.</p>
+              </div>
+            </article>
+            <article class="craft-process-card" tabindex="0">
+              <img src="assets/img/create-4.jpg" alt="">
+              <div class="craft-process-card-content">
+                <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="9"></circle>
+      <path d="m8 12 2.5 2.5L16.5 9"></path>
+                </svg>
+                <h3>Quality Check</h3>
+                <p>Every piece is reviewed for its fit, finish and fine details before it moves to the next step.</p>
+              </div>
+            </article>
+            <article class="craft-process-card" tabindex="0">
+              <img src="assets/img/create-3.jpg" alt="">
+              <div class="craft-process-card-content">
+                <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                  <rect x="5" y="5" width="14" height="16" rx="2"></rect>
+      <path d="M9 5.5V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5M8.5 13l2.2 2.2 4.8-4.8"></path>
+                </svg>
+                <h3>Finishing</h3>
+                <p>Careful finishing gives each garment a polished look and makes it ready to wear and cherish.</p>
+              </div>
+            </article>
+            <article class="craft-process-card" tabindex="0">
+              <img src="assets/img/create-2.jpg" alt="">
+              <div class="craft-process-card-content">
+                <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="m12 3 9 4.5v9L12 21l-9-4.5v-9L12 3Z"></path>
+      <path d="m3.5 7.7 8.5 4.5 8.5-4.5M12 12.2V21m-4.5-16 9 4.5"></path>
+                </svg>
+                <h3>Packaging</h3>
+                <p>We wrap every order with care so your S4K piece arrives beautifully presented.</p>
+              </div>
+            </article>
+            <article class="craft-process-card" tabindex="0">
+              <img src="assets/img/create-1.jpg" alt="">
+              <div class="craft-process-card-content">
+                <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="M14 4h6v6m0-6-9 9"></path>
+      <path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"></path>
+                </svg>
+                <h3>Dispatch</h3>
+                <p>Once everything is ready, your order is carefully prepared for its journey to you.</p>
+              </div>
+            </article>
+          </div>
         </div>
-
-
-        <!-- Image 3 -->
-        <div class="bridal-img bridal-img-3">
-            <!-- <div class="shape-image">
-                <img src="images/large_cat3.jpeg" alt="image3">
-            </div> -->
-
-            <div class="hex-img">
-                <img src="{{ asset('assets/images/large_cat3.jpeg') }}" alt="image3">
-
-                <!-- Outer border -->
-                <svg class="hex-border" viewBox="0 0 240 240">
-                    <polygon points="
-                        65,8
-                        170,22
-                        230,95
-                        205,185
-                        125,232
-                        30,195
-                        8,105
-                    " />
-                </svg>
-
-                <!-- Inner decorative border -->
-                <svg class="hex-border hex-border-inner" viewBox="0 0 240 240">
-                    <polygon points="
-                        65,8
-                        170,22
-                        230,95
-                        205,185
-                        125,232
-                        30,195
-                        8,105
-                    " />
-                </svg>
-            </div>
-        </div>
-
-
-        <!-- Image 4 -->
-        <div class="bridal-img bridal-img-4">
-            <!-- <div class="shape-image">
-                <img src="images/category_image_02.png" alt="image4">
-            </div> -->
-
-            <div class="hex-img">
-                <img src="{{ asset('assets/images/category_image_02.png') }}" alt="image4">
-
-                <!-- Outer border -->
-                <svg class="hex-border" viewBox="0 0 240 240">
-                    <polygon points="
-                        65,8
-                        170,22
-                        230,95
-                        205,185
-                        125,232
-                        30,195
-                        8,105
-                    " />
-                </svg>
-
-                <!-- Inner decorative border -->
-                <svg class="hex-border hex-border-inner" viewBox="0 0 240 240">
-                    <polygon points="
-                        65,8
-                        170,22
-                        230,95
-                        205,185
-                        125,232
-                        30,195
-                        8,105
-                    " />
-                </svg>
-            </div>
-        </div>
-
-
-        <!-- Image 5 -->
-        <div class="bridal-img bridal-img-5">
-<!--             <div class="shape-image">
-                <img src="images/category_image_05.png" alt="image5">
-            </div> -->
-
-            <div class="hex-img">
-                <img src="{{ asset('assets/images/category_image_05.png') }}" alt="image5">
-
-                <!-- Outer border -->
-                <svg class="hex-border" viewBox="0 0 240 240">
-                    <polygon points="
-                        65,8
-                        170,22
-                        230,95
-                        205,185
-                        125,232
-                        30,195
-                        8,105
-                    " />
-                </svg>
-
-                <!-- Inner decorative border -->
-                <svg class="hex-border hex-border-inner" viewBox="0 0 240 240">
-                    <polygon points="
-                        65,8
-                        170,22
-                        230,95
-                        205,185
-                        125,232
-                        30,195
-                        8,105
-                    " />
-                </svg>
-            </div>
-        </div>
-
-        <!-- Image 6 -->
-        <div class="bridal-img bridal-img-6">
-<!--             <div class="shape-image">
-                <img src="images/collection_image_02.jpg" alt="image6">
-            </div> -->
-
-            <div class="hex-img">
-                <img src="{{ asset('assets/images/collection_image_02.jpg') }}" alt="image6">
-
-                <!-- Outer border -->
-                <svg class="hex-border" viewBox="0 0 240 240">
-                    <polygon points="
-                        65,8
-                        170,22
-                        230,95
-                        205,185
-                        125,232
-                        30,195
-                        8,105
-                    " />
-                </svg>
-
-                <!-- Inner decorative border -->
-                <svg class="hex-border hex-border-inner" viewBox="0 0 240 240">
-                    <polygon points="
-                        65,8
-                        170,22
-                        230,95
-                        205,185
-                        125,232
-                        30,195
-                        8,105
-                    " />
-                </svg>
-            </div>
-        </div>
-
-        <!-- Content -->
-        <div class="bridal-content">
-            <h1>THE BRIDAL EDIT</h1>
-            <p>Discover beautifully crafted Anarkali Gown Sets, Kaftan Dresses and Co-Ord collections designed for modern women who appreciate tradition.</p>
-            <a href="#" class="bridal-btn">
-                <span>EXPLORE BRIDAL</span>
-                <span class="btn-arrow">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M4 12h15"></path>
-                        <path d="M13 6l6 6-6 6"></path>
-                    </svg>
-                </span>
-            </a>
-        </div>
-    </div>
-</section>
-
-    <!-- BIG IMAGE SECTION -->
-    <section class="big-image-section">
-        <div class="left-card">
-            <img src="{{ asset('assets/images/left-image.png') }}" alt="">
-            <div class="content">
-                <h2>LUXE EDIT</h2>
-                <p>Timeless silhouettes, crafted to leave a lasting impression.</p>
-                <a href="">Shop Now <span class="material-symbols-outlined">
-                        arrow_right_alt
-                    </span></a>
-            </div>
-        </div>
-        <div class="right-card">
-            <div class="column">
-                <a href="" class="image-card">
-                    <img src="{{asset('assets/images/category_image_02.png')}}" alt="">
-                    <div class="title">Ethnic Set</div>
-                </a>
-                <a href="" class="image-card">
-                    <img src="{{asset('assets/images/category_image_03.png')}}" alt="">
-                    <div class="title">Ethnic Set</div>
-                </a>
-            </div>
-            <div class="column">
-                <a href="" class="image-card">
-                    <img src="{{asset('assets/images/category_image_04.png')}}" alt="">
-                    <div class="title">Ethnic Set</div>
-                </a>
-                <a href="" class="image-card">
-                    <img src="{{asset('assets/images/category_image_05.png')}}" alt="">
-                    <div class="title">Ethnic Set</div>
-                </a>
-            </div>
-        </div>
+      </div>
     </section>
 
-    <section class="our-best-seller-main">
-        <div class="our-best-seller-inner">
-            <div class="our-best-seller-inner1">
-                <div class="our-best-seller-left">
-                    <div class="sec-img-best-left">
-                        <img src="{{asset('assets/images/category_image_02.png')}}" alt="img">
-                    </div>
-                    <div class="sec-img-best-left">
-                        <img src="{{asset('assets/images/category_image_03.png')}}" alt="img">
-                    </div>
-                </div>
-                <div class="our-best-seller-center">
-                    <div class="sec-img-best-center">
-                        <img src="{{asset('assets/images/category_image_05.png')}}" alt="img">
-                    </div>
-                    <div class="sec-head text-center">
-                        <span class="curated mb-2">Curated for You</span>
-                        <h2 class="featured-title letter-spacing-2 fw-normal">Our Bestseller</h2>
-                        <p>Gracefully crafted silhouettes with timeless.</p>
-                    </div>
-                    <div class="sec-img-best-center">
-                        <img src="{{ asset('assets/images/large_cat3.jpeg') }}" alt="img">
-                    </div>
-                </div>
-                <div class="our-best-seller-right">
-                    <div class="sec-img-best-right">
-                        <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
-                    </div>
-                    <div class="sec-img-best-right">
-                        <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
-                    </div>
-                </div>
-            </div>
+
+    <section class="best-selling-section section-pad">
+      <div class="page-container">
+        <div class="section-heading">
+          <h2>Best-Selling Styles</h2>
+          <p>Discover the pieces everyone is loving right now.</p>
         </div>
+        <div class="best-selling-carousel carousel slide" id="bestSellingCarousel" data-bs-ride="carousel"
+          data-bs-interval="4500" data-bs-pause="false">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="row align-items-center g-5">
+                <div class="col-md-6">
+                  <div class="best-selling-image">
+                    <img src="assets/img/meet.jpg" alt="Woman wearing a flowing pink collection look">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="best-selling-copy">
+                    <h3>Meet the<br>New S4K<br>Collection</h3>
+                    <a class="btn-dark-theme-2" href="product-list.html">Explore Now</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <div class="best-selling-image">
+                    <img src="assets/img/Collections-2.jpg"
+                      alt="Women celebrating together in colourful festive outfits">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="best-selling-copy">
+                    <h3>Made for<br>Your Moments</h3>
+                    <a class="btn-dark-theme-2" href="product-list.html">Explore Now</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <div class="best-selling-image">
+                    <img src="assets/img/Collections-3.jpg" alt="Women wearing elegant pink occasionwear">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="best-selling-copy">
+                    <h3>The Festive<br>Edit</h3>
+                    <a class="btn-dark-theme-2" href="product-list.html">Explore Now</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="best-selling-control best-selling-control-prev" type="button"
+            data-bs-target="#bestSellingCarousel" data-bs-slide="prev" aria-label="Previous collection">
+            <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M19 12H5m6-6-6 6 6 6"></path>
+            </svg>
+          </button>
+          <button class="best-selling-control best-selling-control-next" type="button"
+            data-bs-target="#bestSellingCarousel" data-bs-slide="next" aria-label="Next collection">
+            <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M5 12h14m-6-6 6 6-6 6"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
     </section>
 
-    <!-- ETHINIC SHOWCASE  -->
-    <section class="ethnic-showcase">
-        <div class="ethnic-pattern"></div>
-        <div class="container">
-            <div class="ethnic-main-grid">
-                <div class="ethnic-image-wrap">
-                    <div class="ethnic-card">
-                        <div class="ethnic-image">
-                            <img src="{{ asset('assets/images/category_image_01.png') }}" alt="">
-                            <svg class="frame-border" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 700">
-                                <path
-                                    d="         M40 700         L40 250         Q40 200 85 190         Q65 145 105 130         Q95 85 145 80         Q150 40 210 40         Q235 0 250 0         Q265 0 290 40         Q350 40 355 80         Q405 85 395 130         Q435 145 415 190         Q460 200 460 250         L460 700         Z"
-                                    fill="none" stroke="#E91E63" stroke-width="4" />
-                            </svg>
-                        </div>
-                        <div class="ethnic-content mt-20">
-                            <h3>Anarkali Gown</h3>
-                            <span class="link"><a href="">Shop Collection</a></span>
-                        </div>
-                    </div>
-                    <div class="ethnic-card">
-                        <div class="ethnic-image">
-                            <img src="{{ asset('assets/images/category_image_06.png') }}" alt="">
-                            <svg class="frame-border" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 700">
-                                <path
-                                    d="         M40 700         L40 250         Q40 200 85 190         Q65 145 105 130         Q95 85 145 80         Q150 40 210 40         Q235 0 250 0         Q265 0 290 40         Q350 40 355 80         Q405 85 395 130         Q435 145 415 190         Q460 200 460 250         L460 700         Z"
-                                    fill="none" stroke="#ffeb7c" stroke-width="4" />
-                            </svg>
-                        </div>
-                        <div class="ethnic-content  mt-20">
-                            <h3>Ethinic Set</h3>
-                            <span class="link"><a href=""> Shop Collection</a></span>
-                        </div>
-                    </div>
-                    <div class="ethnic-card">
-                        <div class="ethnic-image">
-                            <img src="{{ asset('assets/images/category_image_01.png') }}" alt="">
-                            <svg class="frame-border" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 700">
-                                <path
-                                    d="         M40 700         L40 250         Q40 200 85 190         Q65 145 105 130         Q95 85 145 80         Q150 40 210 40         Q235 0 250 0         Q265 0 290 40         Q350 40 355 80         Q405 85 395 130         Q435 145 415 190         Q460 200 460 250         L460 700         Z"
-                                    fill="none" stroke="#E91E63" stroke-width="4" />
-                            </svg>
-                        </div>
-                        <div class="ethnic-content mt-20">
-                            <h3>Anarkali Gown</h3>
-                            <span class="link"><a href="">Shop Collection</a></span>
-                        </div>
-                    </div>
-                    <div class="ethnic-card">
-                        <div class="ethnic-image">
-                            <img src="{{ asset('assets/images/category_image_06.png') }}" alt="">
-                            <svg class="frame-border" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 700">
-                                <path
-                                    d="         M40 700         L40 250         Q40 200 85 190         Q65 145 105 130         Q95 85 145 80         Q150 40 210 40         Q235 0 250 0         Q265 0 290 40         Q350 40 355 80         Q405 85 395 130         Q435 145 415 190         Q460 200 460 250         L460 700         Z"
-                                    fill="none" stroke="#ffeb7c" stroke-width="4" />
-                            </svg>
-                        </div>
-                        <div class="ethnic-content  mt-20">
-                            <h3>Ethinic Set</h3>
-                            <span class="link"><a href=""> Shop Collection</a></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="ethnic-content-btn">
-                <a href="#" class="btn_secondary">
-                    Explore Collection <span class="material-symbols-outlined">
-                        arrow_right_alt
-                    </span>
-                </a>
-            </div>
+    <section class="customer-feedback-section" aria-labelledby="customerFeedbackTitle">
+      <div class="customer-feedback-layout page-container">
+        <div class="customer-feedback-copy">
+          <h2 id="customerFeedbackTitle"><span>Customer</span> Feedback</h2>
+          <p class="customer-feedback-subtitle">What Our Customers Say</p>
+          <p class="customer-feedback-description">Real experiences from women who chose S4K<br
+              class="customer-feedback-break"> for their special moments.</p>
         </div>
+        <div class="customer-feedback-slider" role="region" aria-label="Customer feedback"
+          aria-roledescription="carousel">
+          <span class="feedback-sparkle feedback-sparkle-one" aria-hidden="true"><svg class="svg-icon" viewBox="0 0 24 24">
+              <path d="m12 2 2.8 7.2L22 12l-7.2 2.8L12 22l-2.8-7.2L2 12l7.2-2.8L12 2Z"></path>
+            </svg></span>
+          <span class="feedback-sparkle feedback-sparkle-two" aria-hidden="true"><svg class="svg-icon" viewBox="0 0 24 24">
+              <path d="m12 2 2.8 7.2L22 12l-7.2 2.8L12 22l-2.8-7.2L2 12l7.2-2.8L12 2Z"></path>
+            </svg></span>
+          <span class="feedback-lines" aria-hidden="true"></span>
+          <article class="customer-feedback-card" aria-live="polite" aria-atomic="true">
+            <img class="customer-feedback-avatar" src="assets/img/feedback-1.jpg" alt="">
+            <p class="customer-feedback-quote">““The Anarkali was absolutely beautiful. The fabric, fitting, and
+              detailing were even better than I expected”</p>
+            <div class="customer-feedback-author">
+              <strong>Priya Singh</strong>
+              <span class="customer-feedback-location">Mumbai, India</span>
+            </div>
+          </article>
+          <article class="customer-feedback-card" aria-hidden="true">
+            <img class="customer-feedback-avatar" src="assets/img/feedback-2.jpg" alt="">
+            <p class="customer-feedback-quote">“On the Windows talking painted pasture yet its express parties use. Sure
+              last upon he same as knew next. Of believed or diverted no.”</p>
+            <div class="customer-feedback-author">
+              <strong>Ramesh sood</strong>
+              <span class="customer-feedback-location">Pune, India</span>
+            </div>
+          </article>
+          <article class="customer-feedback-card" aria-hidden="true">
+            <img class="customer-feedback-avatar" src="assets/img/featured-3.jpg" alt="">
+            <p class="customer-feedback-quote">“On the Windows talking painted pasture yet its express parties use. Sure
+              last upon he same as knew next. Of believed or diverted no.”</p>
+            <div class="customer-feedback-author">
+              <strong>Mayank das</strong>
+              <span class="customer-feedback-location">Delhi, India</span>
+            </div>
+          </article>
+          <div class="customer-feedback-dots" role="group" aria-label="Choose a customer review"></div>
+        </div>
+      </div>
     </section>
 
-    <!-- Best Seller -->
-    <section class="trending-collection best-seller" style="display: none;">
-        <div class="container">
-            <div class="heading">
-                <h2 class="section-title">Best Seller</h2>
+    <section class="instagram-journey" aria-labelledby="instagramJourneyTitle">
+      <div class="instagram-journey-heading">
+        <h2 id="instagramJourneyTitle">Follow Our Journey</h2>
+        <p>Discover how our styles come to life. Tag us in your looks for a chance to be<br
+            class="instagram-copy-break"> featured.</p>
+      </div>
+      <div class="page-container instagram-carousel" role="region" aria-label="S4K on Instagram"
+        aria-roledescription="carousel">
+        <div class="instagram-track">
+          <article class="instagram-card">
+            <div class="instagram-card-header">
+              <span>@s4klakshmi</span>
+              <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+      <circle cx="12" cy="12" r="4"></circle>
+      <circle cx="18" cy="6" r=".8" fill="currentColor" stroke="none"></circle>
+              </svg>
             </div>
-            <div class="trending-collection-section">
-                <div class="collection_section">
-                    <!-- One Item -->
-                    <div class="product_item">
-                        <div class="product_image">
-                            <img src="{{ asset('assets/images/collection_image_01.jpg') }}" alt="">
-
-                            <div class="product_hover">
-                                <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0,94 L0,82
-                                            C12,82 18,78 24,70
-                                            C32,58 45,48 68,48
-
-                                            C92,48 106,28 126,18
-                                            C144,9 162,12 184,18
-
-                                            C206,12 224,9 242,18
-                                            C262,28 276,48 300,48
-
-                                            C323,48 336,58 344,70
-                                            C350,78 356,82 368,82
-
-                                            L368,94
-                                            Z" fill="#f8f3ee" />
-                                </svg>
-                                <div class="product_colors">
-                                    <span style="background:#7A2E43"></span>
-                                    <span style="background:#87CEEB"></span>
-                                    <span style="background:#E8D5B5"></span>
-                                    <span style="background:#7A8F4D"></span>
-                                </div>
-
-                                <div class="product_sizes">
-                                    <span>S</span>
-                                    <span>M</span>
-                                    <span>L</span>
-                                    <span>XL</span>
-                                </div>
-
-                                <a href="#" class="btn_cart">Add To Cart</a>
-                            </div>
-
-                            <!-- new tag -->
-                            <span class="product_tag">New</span>
-
-                            <!-- whishlist tag -->
-                            <div class="product_tag_wishlist">
-                                <span class="material-symbols-outlined">favorite</span>
-                            </div>
-                        </div>
-                        <div class="product_data">
-                            <div class="product_title">
-                                <a href=""> Mizoya Green Cotton A Line Dress</a>
-                            </div>
-                            <div class="product_price">
-                                <span class="price_orignal">Rs. 3250</span>
-                                <span class="price_old">4350</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- One Item -->
-                    <div class="product_item">
-                        <div class="product_image">
-                            <img src="{{ asset('assets/images/collection_image_02.jpg') }}" alt="">
-
-                            <div class="product_hover">
-                                <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0,94 L0,82
-                                            C12,82 18,78 24,70
-                                            C32,58 45,48 68,48
-
-                                            C92,48 106,28 126,18
-                                            C144,9 162,12 184,18
-
-                                            C206,12 224,9 242,18
-                                            C262,28 276,48 300,48
-
-                                            C323,48 336,58 344,70
-                                            C350,78 356,82 368,82
-
-                                            L368,94
-                                            Z" fill="#f8f3ee" />
-                                </svg>
-                                <div class="product_colors">
-                                    <span style="background:#7A2E43"></span>
-                                    <span style="background:#87CEEB"></span>
-                                    <span style="background:#E8D5B5"></span>
-                                    <span style="background:#7A8F4D"></span>
-                                </div>
-
-                                <div class="product_sizes">
-                                    <span>S</span>
-                                    <span>M</span>
-                                    <span>L</span>
-                                    <span>XL</span>
-                                </div>
-
-                                <a href="#" class="btn_cart">Add To Cart</a>
-                            </div>
-
-                            <!-- new tag -->
-                            <span class="product_tag">New</span>
-
-                            <!-- whishlist tag -->
-                            <div class="product_tag_wishlist">
-                                <span class="material-symbols-outlined">favorite</span>
-                            </div>
-                        </div>
-                        <div class="product_data">
-                            <div class="product_title">
-                                <a href=""> Mizoya Green Cotton A Line Dress</a>
-                            </div>
-                            <div class="product_price">
-                                <span class="price_orignal">Rs. 3250</span>
-                                <span class="price_old">4350</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- One Item -->
-                    <div class="product_item">
-                        <div class="product_image">
-                            <img src="{{ asset('assets/images/collection_image_03.jpg') }}" alt="">
-
-                            <div class="product_hover">
-                                <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0,94 L0,82
-                                            C12,82 18,78 24,70
-                                            C32,58 45,48 68,48
-
-                                            C92,48 106,28 126,18
-                                            C144,9 162,12 184,18
-
-                                            C206,12 224,9 242,18
-                                            C262,28 276,48 300,48
-
-                                            C323,48 336,58 344,70
-                                            C350,78 356,82 368,82
-
-                                            L368,94
-                                            Z" fill="#f8f3ee" />
-                                </svg>
-                                <div class="product_colors">
-                                    <span style="background:#7A2E43"></span>
-                                    <span style="background:#87CEEB"></span>
-                                    <span style="background:#E8D5B5"></span>
-                                    <span style="background:#7A8F4D"></span>
-                                </div>
-
-                                <div class="product_sizes">
-                                    <span>S</span>
-                                    <span>M</span>
-                                    <span>L</span>
-                                    <span>XL</span>
-                                </div>
-
-                                <a href="#" class="btn_cart">Add To Cart</a>
-                            </div>
-
-                            <!-- new tag -->
-                            <span class="product_tag">New</span>
-
-                            <!-- whishlist tag -->
-                            <div class="product_tag_wishlist">
-                                <span class="material-symbols-outlined">favorite</span>
-                            </div>
-                        </div>
-                        <div class="product_data">
-                            <div class="product_title">
-                                <a href=""> Mizoya Green Cotton A Line Dress</a>
-                            </div>
-                            <div class="product_price">
-                                <span class="price_orignal">Rs. 3250</span>
-                                <span class="price_old">4350</span></div>
-                        </div>
-                    </div>
-                    <!-- One Item -->
-                    <div class="product_item">
-                        <div class="product_image">
-                            <img src="{{ asset('assets/images/collection_image_04.jpg') }}" alt="">
-
-                            <div class="product_hover">
-                                <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0,94 L0,82
-                                            C12,82 18,78 24,70
-                                            C32,58 45,48 68,48
-
-                                            C92,48 106,28 126,18
-                                            C144,9 162,12 184,18
-
-                                            C206,12 224,9 242,18
-                                            C262,28 276,48 300,48
-
-                                            C323,48 336,58 344,70
-                                            C350,78 356,82 368,82
-
-                                            L368,94
-                                            Z" fill="#f8f3ee" />
-                                </svg>
-                                <div class="product_colors">
-                                    <span style="background:#7A2E43"></span>
-                                    <span style="background:#87CEEB"></span>
-                                    <span style="background:#E8D5B5"></span>
-                                    <span style="background:#7A8F4D"></span>
-                                </div>
-
-                                <div class="product_sizes">
-                                    <span>S</span>
-                                    <span>M</span>
-                                    <span>L</span>
-                                    <span>XL</span>
-                                </div>
-
-                                <a href="#" class="btn_cart">Add To Cart</a>
-                            </div>
-
-                            <!-- new tag -->
-                            <span class="product_tag">New</span>
-
-                            <!-- whishlist tag -->
-                            <div class="product_tag_wishlist">
-                                <span class="material-symbols-outlined">favorite</span>
-                            </div>
-                        </div>
-                        <div class="product_data">
-                            <div class="product_title">
-                                <a href=""> Mizoya Green Cotton A Line Dress</a>
-                            </div>
-                            <div class="product_price">
-                                <span class="price_orignal">Rs. 3250</span>
-                                <span class="price_old">4350</span></div>
-                        </div>
-                    </div>
-                    <!-- One Item -->
-                    <div class="product_item">
-                        <div class="product_image">
-                            <img src="{{ asset('assets/images/collection_image_03.jpg') }}" alt="">
-
-                            <div class="product_hover">
-                                <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0,94 L0,82
-                                            C12,82 18,78 24,70
-                                            C32,58 45,48 68,48
-
-                                            C92,48 106,28 126,18
-                                            C144,9 162,12 184,18
-
-                                            C206,12 224,9 242,18
-                                            C262,28 276,48 300,48
-
-                                            C323,48 336,58 344,70
-                                            C350,78 356,82 368,82
-
-                                            L368,94
-                                            Z" fill="#f8f3ee" />
-                                </svg>
-                                <div class="product_colors">
-                                    <span style="background:#7A2E43"></span>
-                                    <span style="background:#87CEEB"></span>
-                                    <span style="background:#E8D5B5"></span>
-                                    <span style="background:#7A8F4D"></span>
-                                </div>
-
-                                <div class="product_sizes">
-                                    <span>S</span>
-                                    <span>M</span>
-                                    <span>L</span>
-                                    <span>XL</span>
-                                </div>
-
-                                <a href="#" class="btn_cart">Add To Cart</a>
-                            </div>
-
-                            <!-- new tag -->
-                            <span class="product_tag">New</span>
-
-                            <!-- whishlist tag -->
-                            <div class="product_tag_wishlist">
-                                <span class="material-symbols-outlined">favorite</span>
-                            </div>
-                        </div>
-                        <div class="product_data">
-                            <div class="product_title">
-                                <a href=""> Mizoya Green Cotton A Line Dress</a>
-                            </div>
-                            <div class="product_price">
-                                <span class="price_orignal">Rs. 3250</span>
-                                <span class="price_old">4350</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- One Item -->
-                    <div class="product_item">
-                        <div class="product_image">
-                            <img src="{{ asset('assets/images/collection_image_03.jpg') }}" alt="">
-
-                            <div class="product_hover">
-                                <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0,94 L0,82
-                                            C12,82 18,78 24,70
-                                            C32,58 45,48 68,48
-
-                                            C92,48 106,28 126,18
-                                            C144,9 162,12 184,18
-
-                                            C206,12 224,9 242,18
-                                            C262,28 276,48 300,48
-
-                                            C323,48 336,58 344,70
-                                            C350,78 356,82 368,82
-
-                                            L368,94
-                                            Z" fill="#f8f3ee" />
-                                </svg>
-                                <div class="product_colors">
-                                    <span style="background:#7A2E43"></span>
-                                    <span style="background:#87CEEB"></span>
-                                    <span style="background:#E8D5B5"></span>
-                                    <span style="background:#7A8F4D"></span>
-                                </div>
-
-                                <div class="product_sizes">
-                                    <span>S</span>
-                                    <span>M</span>
-                                    <span>L</span>
-                                    <span>XL</span>
-                                </div>
-
-                                <a href="#" class="btn_cart">Add To Cart</a>
-                            </div>
-
-                            <!-- new tag -->
-                            <span class="product_tag">New</span>
-
-                            <!-- whishlist tag -->
-                            <div class="product_tag_wishlist">
-                                <span class="material-symbols-outlined">favorite</span>
-                            </div>
-                        </div>
-                        <div class="product_data">
-                            <div class="product_title">
-                                <a href=""> Mizoya Green Cotton A Line Dress</a>
-                            </div>
-                            <div class="product_price">
-                                <span class="price_orignal">Rs. 3250</span>
-                                <span class="price_old">4350</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- One Item -->
-                    <div class="product_item">
-                        <div class="product_image">
-                            <img src="{{ asset('assets/images/collection_image_04.jpg') }}" alt="">
-
-                            <div class="product_hover">
-                                <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0,94 L0,82
-                                            C12,82 18,78 24,70
-                                            C32,58 45,48 68,48
-
-                                            C92,48 106,28 126,18
-                                            C144,9 162,12 184,18
-
-                                            C206,12 224,9 242,18
-                                            C262,28 276,48 300,48
-
-                                            C323,48 336,58 344,70
-                                            C350,78 356,82 368,82
-
-                                            L368,94
-                                            Z" fill="#f8f3ee" />
-                                </svg>
-                                <div class="product_colors">
-                                    <span style="background:#7A2E43"></span>
-                                    <span style="background:#87CEEB"></span>
-                                    <span style="background:#E8D5B5"></span>
-                                    <span style="background:#7A8F4D"></span>
-                                </div>
-
-                                <div class="product_sizes">
-                                    <span>S</span>
-                                    <span>M</span>
-                                    <span>L</span>
-                                    <span>XL</span>
-                                </div>
-
-                                <a href="#" class="btn_cart">Add To Cart</a>
-                            </div>
-
-                            <!-- new tag -->
-                            <span class="product_tag">New</span>
-
-                            <!-- whishlist tag -->
-                            <div class="product_tag_wishlist">
-                                <span class="material-symbols-outlined">favorite</span>
-                            </div>
-                        </div>
-                        <div class="product_data">
-                            <div class="product_title">
-                                <a href=""> Mizoya Green Cotton A Line Dress</a>
-                            </div>
-                            <div class="product_price">
-                                <span class="price_orignal">Rs. 3250</span>
-                                <span class="price_old">4350</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- One Item -->
-                    <div class="product_item">
-                        <div class="product_image">
-                            <img src="{{ asset('assets/images/collection_image_03.jpg') }}" alt="">
-
-                            <div class="product_hover">
-                                <svg class="svg_shape" viewBox="0 0 368 94" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0,94 L0,82
-                                            C12,82 18,78 24,70
-                                            C32,58 45,48 68,48
-
-                                            C92,48 106,28 126,18
-                                            C144,9 162,12 184,18
-
-                                            C206,12 224,9 242,18
-                                            C262,28 276,48 300,48
-
-                                            C323,48 336,58 344,70
-                                            C350,78 356,82 368,82
-
-                                            L368,94
-                                            Z" fill="#f8f3ee" />
-                                </svg>
-                                <div class="product_colors">
-                                    <span style="background:#7A2E43"></span>
-                                    <span style="background:#87CEEB"></span>
-                                    <span style="background:#E8D5B5"></span>
-                                    <span style="background:#7A8F4D"></span>
-                                </div>
-
-                                <div class="product_sizes">
-                                    <span>S</span>
-                                    <span>M</span>
-                                    <span>L</span>
-                                    <span>XL</span>
-                                </div>
-
-                                <a href="#" class="btn_cart">Add To Cart</a>
-                            </div>
-
-                            <!-- new tag -->
-                            <span class="product_tag">New</span>
-
-                            <!-- whishlist tag -->
-                            <div class="product_tag_wishlist">
-                                <span class="material-symbols-outlined">favorite</span>
-                            </div>
-                        </div>
-                        <div class="product_data">
-                            <div class="product_title">
-                                <a href=""> Mizoya Green Cotton A Line Dress</a>
-                            </div>
-                            <div class="product_price">
-                                <span class="price_orignal">Rs. 3250</span>
-                                <span class="price_old">4350</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="slider-nav">
-                    <button class="prev-btn">
-                        <span class="material-symbols-outlined">arrow_back</span>
-                    </button>
-
-                    <button class="next-btn">
-                        <span class="material-symbols-outlined">arrow_forward</span>
-                    </button>
-                </div>
-
+            <img src="assets/img/insta-4.jpg" alt="Model wearing a purple embroidered S4K outfit">
+            <div class="instagram-card-details">
+              <div class="instagram-card-stats">
+                <span><svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                    <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
+                  </svg> 4.8 k</span>
+                <span><svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                    <path
+        d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.8 8.8 0 0 1-3.6-.8L4 20l1.5-3.6A7.2 7.2 0 0 1 4 11.5 7.5 7.5 0 0 1 12 4a7.5 7.5 0 0 1 8 7.5Z">
+      </path>
+                  </svg> 132</span>
+                <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="M6 4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17l-6-4-6 4V4Z"></path>
+                </svg>
+              </div>
+              <p>Grace in every detail</p>
+              <span class="instagram-hashtag">#s4kbyLakshmi</span>
             </div>
+          </article>
+          <article class="instagram-card">
+            <div class="instagram-card-header">
+              <span>@s4klakshmi</span>
+              <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+      <circle cx="12" cy="12" r="4"></circle>
+      <circle cx="18" cy="6" r=".8" fill="currentColor" stroke="none"></circle>
+              </svg>
+            </div>
+            <img src="assets/img/insta-3.jpg" alt="Model wearing a yellow floral S4K outfit">
+            <div class="instagram-card-details">
+              <div class="instagram-card-stats">
+                <span><svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                    <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
+                  </svg> 4.8 k</span>
+                <span><svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                    <path
+        d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.8 8.8 0 0 1-3.6-.8L4 20l1.5-3.6A7.2 7.2 0 0 1 4 11.5 7.5 7.5 0 0 1 12 4a7.5 7.5 0 0 1 8 7.5Z">
+      </path>
+                  </svg> 132</span>
+                <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="M6 4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17l-6-4-6 4V4Z"></path>
+                </svg>
+              </div>
+              <p>Grace in every detail</p>
+              <span class="instagram-hashtag">#s4kbyLakshmi</span>
+            </div>
+          </article>
+          <article class="instagram-card">
+            <div class="instagram-card-header">
+              <span>@s4klakshmi</span>
+              <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+      <circle cx="12" cy="12" r="4"></circle>
+      <circle cx="18" cy="6" r=".8" fill="currentColor" stroke="none"></circle>
+              </svg>
+            </div>
+            <img src="assets/img/insta-2.jpg" alt="Model wearing a pink embroidered S4K outfit">
+            <div class="instagram-card-details">
+              <div class="instagram-card-stats">
+                <span><svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                    <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
+                  </svg> 4.8 k</span>
+                <span><svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                    <path
+        d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.8 8.8 0 0 1-3.6-.8L4 20l1.5-3.6A7.2 7.2 0 0 1 4 11.5 7.5 7.5 0 0 1 12 4a7.5 7.5 0 0 1 8 7.5Z">
+      </path>
+                  </svg> 132</span>
+                <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="M6 4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17l-6-4-6 4V4Z"></path>
+                </svg>
+              </div>
+              <p>Grace in every detail</p>
+              <span class="instagram-hashtag">#s4kbyLakshmi</span>
+            </div>
+          </article>
+          <article class="instagram-card">
+            <div class="instagram-card-header">
+              <span>@s4klakshmi</span>
+              <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+      <circle cx="12" cy="12" r="4"></circle>
+      <circle cx="18" cy="6" r=".8" fill="currentColor" stroke="none"></circle>
+              </svg>
+            </div>
+            <img src="assets/img/insta-1.jpg" alt="Model wearing a yellow embroidered S4K outfit">
+            <div class="instagram-card-details">
+              <div class="instagram-card-stats">
+                <span><svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                    <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path>
+                  </svg> 4.8 k</span>
+                <span><svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                    <path
+        d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.8 8.8 0 0 1-3.6-.8L4 20l1.5-3.6A7.2 7.2 0 0 1 4 11.5 7.5 7.5 0 0 1 12 4a7.5 7.5 0 0 1 8 7.5Z">
+      </path>
+                  </svg> 132</span>
+                <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="M6 4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17l-6-4-6 4V4Z"></path>
+                </svg>
+              </div>
+              <p>Grace in every detail</p>
+              <span class="instagram-hashtag">#s4kbyLakshmi</span>
+            </div>
+          </article>
         </div>
+      </div>
+      <div class="instagram-carousel-dots" aria-label="Instagram carousel positions"></div>
+      <a class="instagram-follow-button" href="https://www.instagram.com/s4kbylaxmi/" target="_blank"
+        rel="noopener noreferrer">
+        <span>follow us now</span>
+        <svg class="svg-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+      <circle cx="12" cy="12" r="4"></circle>
+      <circle cx="18" cy="6" r=".8" fill="currentColor" stroke="none"></circle>
+        </svg>
+        <strong>@s4kbylaxmi</strong>
+      </a>
     </section>
 
-    <!-- TESTIMONIAL -->
-    <section class="ethnic-testimonial" style="display: none;">
-        <div class="container">
-            <div class="section-head text-center">
-                <span class="small-heading">Customer Stories</span>
-                <h2 class="section-title">Loved By Women Across India</h2>
-            </div>
-            <div class="testimonial-rope"></div>
-            <div class="testimonial-slider">
-                <div class="hanging-card rotate-left">
-                    <div class="clip"></div>
-                    <div class="card-image">
-                        <img src="{{ asset('assets/images/category_image_01.png') }}" alt="">
-                    </div>
-                    <div class="card-content">
-                        <div class="stars">★★★★★</div>
-                        <p>Beautiful fabric quality and elegant finishing. Received countless compliments.</p>
-                        <h4>Priya Sharma</h4>
-                        <span>Delhi</span>
-                    </div>
-                </div>
-
-                <div class="hanging-card rotate-right">
-                    <div class="clip"></div>
-                    <div class="card-image">
-                        <img src="{{ asset('assets/images/category_image_03.png') }}" alt="">
-                    </div>
-                    <div class="card-content">
-                        <div class="stars">★★★★★</div>
-                        <p>Perfect fitting and exactly as shown in pictures.</p>
-                        <h4>Neha Jain</h4>
-                        <span>Jaipur</span>
-                    </div>
-                </div>
-
-                <div class="hanging-card rotate-left">
-                    <div class="clip"></div>
-                    <div class="card-image">
-                        <img src="{{ asset('assets/images/category_image_05.png') }}" alt="">
-                    </div>
-                    <div class="card-content">
-                        <div class="stars">★★★★★</div>
-                        <p>Premium embroidery and luxurious feel.</p>
-                        <h4>Riya Kapoor</h4>
-                        <span>Mumbai</span>
-                    </div>
-                </div>
-
-                <div class="hanging-card rotate-right">
-                    <div class="clip"></div>
-                    <div class="card-image">
-                        <img src="{{ asset('assets/images/category_image_08.png') }}" alt="">
-                    </div>
-                    <div class="card-content">
-                        <div class="stars">★★★★★</div>
-                        <p>Beautiful collection and fast delivery.</p>
-                        <h4>Ananya Verma</h4>
-                        <span>Lucknow</span>
-                    </div>
-                </div>
-
-                <div class="hanging-card rotate-left">
-                    <div class="clip"></div>
-                    <div class="card-image">
-                        <img src="{{ asset('assets/images/category_image_01.png') }}" alt="">
-                    </div>
-                    <div class="card-content">
-                        <div class="stars">★★★★★</div>
-                        <p>Beautiful fabric quality and elegant finishing. Received countless compliments.</p>
-                        <h4>Priya Sharma</h4>
-                        <span>Delhi</span>
-                    </div>
-                </div>
-
-                <div class="hanging-card rotate-right">
-                    <div class="clip"></div>
-                    <div class="card-image">
-                        <img src="{{ asset('assets/images/category_image_03.png') }}" alt="">
-                    </div>
-                    <div class="card-content">
-                        <div class="stars">★★★★★</div>
-                        <p>Perfect fitting and exactly as shown in pictures.</p>
-                        <h4>Neha Jain</h4>
-                        <span>Jaipur</span>
-                    </div>
-                </div>
-
-                <div class="hanging-card rotate-left">
-                    <div class="clip"></div>
-                    <div class="card-image">
-                        <img src="{{ asset('assets/images/category_image_05.png') }}" alt="">
-                    </div>
-                    <div class="card-content">
-                        <div class="stars">★★★★★</div>
-                        <p>Premium embroidery and luxurious feel.</p>
-                        <h4>Riya Kapoor</h4>
-                        <span>Mumbai</span>
-                    </div>
-                </div>
-
-                <div class="hanging-card rotate-right">
-                    <div class="clip"></div>
-                    <div class="card-image">
-                        <img src="{{ asset('assets/images/category_image_08.png') }}" alt="">
-                    </div>
-                    <div class="card-content">
-                        <div class="stars">★★★★★</div>
-                        <p>Beautiful collection and fast delivery.</p>
-                        <h4>Ananya Verma</h4>
-                        <span>Lucknow</span>
-                    </div>
-                </div>
-            </div>
+    <section class="fashion-journal-section" aria-labelledby="fashionJournalTitle">
+      <div class="fashion-journal-heading">
+        <h2 id="fashionJournalTitle">Fashion Journal</h2>
+        <p>Latest Style Stories</p>
+      </div>
+      <div class="fashion-journal-layout page-container">
+        <div class="fashion-journal-trending">
+          <h3>Trending Blogs</h3>
+          <div class="fashion-journal-stories">
+            <article class="fashion-journal-story">
+              <img src="assets/img/blog-3.jpg" alt="Models wearing colourful kurta sets">
+              <div class="fashion-journal-story-copy">
+                <a class="fashion-journal-read-more" href="#">Read More</a>
+                <h4>5 Ways to Style Your Favourite Kurta Set</h4>
+                <p>Discover the pieces our customers love the most.</p>
+              </div>
+            </article>
+            <article class="fashion-journal-story">
+              <img src="assets/img/blog-1.jpg" alt="Models wearing colourful festive outfits">
+              <div class="fashion-journal-story-copy">
+                <a class="fashion-journal-read-more" href="#">Read More</a>
+                <h4>Timeless Styles That Belong In Every Wardrobe</h4>
+                <p>Explore versatile silhouettes and classic pieces that effortlessly transition from everyday dressing
+                  to special occasions.</p>
+              </div>
+            </article>
+            <article class="fashion-journal-story">
+              <img src="assets/img/blog-2.jpg" alt="Model wearing a green embroidered outfit">
+              <div class="fashion-journal-story-copy">
+                <a class="fashion-journal-read-more" href="#">Read More</a>
+                <h4>The Ultimate Guide to Festive Dressing</h4>
+                <p>Discover thoughtful styling ideas, colour combinations, and finishing touches to create a memorable
+                  festive look.</p>
+              </div>
+            </article>
+          </div>
         </div>
+        <article class="fashion-journal-feature">
+          <img src="assets/img/Collections-2.jpg" alt="Models in elegant S4K festive collections">
+          <span class="fashion-journal-feature-label">MOST LOVED</span>
+          <div class="fashion-journal-feature-copy">
+            <a class="fashion-journal-read-more" href="#">Read More</a>
+            <h3>DISCOVER THE WORLD OF<br class="fashion-journal-title-break"> S4K BY LAXMI!</h3>
+          </div>
+        </article>
+      </div>
     </section>
 
-    <!-- NEWSLETTER SECION -->
-    <section class="newsletter-section">
-        <div class="newsletter-pattern"></div>
-        <div class="container">
-            <div class="social-connect">
-                <span class="heading">Follow Us</span>
-                <a href="#" class="social-link instagram">
-                    <i class="fa-brands fa-instagram"></i>
-                    <span>Instagram</span>
-                </a>
-                <a href="#" class="social-link facebook">
-                    <i class="fa-brands fa-facebook-f"></i>
-                    <span>Facebook</span>
-                </a>
-                <a href="#" class="social-link pinterest">
-                    <i class="fa-brands fa-pinterest-p"></i>
-                    <span>Pinterest</span>
-                </a>
-                <a href="#" class="social-link youtube">
-                    <i class="fa-brands fa-youtube"></i>
-                    <span>YouTube</span>
-                </a>
-            </div>
-            <div class="newsletter-content">
-                <span class="newsletter-tag">Stay Connected</span>
-                <h2>Join The <span>SK4</span> Family</h2>
-                <p>Get early access to exclusive launches, festive offers, handcrafted collections and style inspiration delivered directly to your inbox.</p>
-                <form class="newsletter-form">
-                    <input type="email" placeholder="Enter your email address">
-                    <button type="submit">Subscribe</button>
-                </form>
-                <ul class="newsletter-benefits">
-                    <li>Exclusive Launches</li>
-                    <li>Festive Offers</li>
-                    <li>Style Inspiration</li>
-                </ul>
-            </div>
+    <section class="faq-section section-pad" aria-labelledby="faqTitle">
+      <div class="page-container">
+        <h2 class="faq-title" id="faqTitle">Frequently Asked Questions</h2>
+        <div class="faq-layout">
+          <div class="faq-list" role="group" aria-label="Frequently asked questions">
+            <button class="faq-question is-active" type="button" aria-pressed="true"
+              data-answer-title="What fabrics are your Anarkalis made from?"
+              data-answer="Our Anarkalis use thoughtfully selected fabrics. Check the fabric details on each product page for the materials used in that particular style.">
+              <span class="faq-question-dot" aria-hidden="true"></span>
+              <span>What fabrics are your Anarkalis made from?</span>
+              <svg class="svg-icon faq-question-arrow" aria-hidden="true" viewBox="0 0 24 24">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </button>
+            <button class="faq-question" type="button" aria-pressed="false"
+              data-answer-title="How do I choose the right size?"
+              data-answer="Use the size guide on the product page and compare it with your measurements. If you are between sizes, our customer care team can help you choose.">
+              <span class="faq-question-dot" aria-hidden="true"></span>
+              <span>How do I choose the right size?</span>
+              <svg class="svg-icon faq-question-arrow" aria-hidden="true" viewBox="0 0 24 24">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </button>
+            <button class="faq-question" type="button" aria-pressed="false"
+              data-answer-title="Are the colours exactly as shown in the pictures?"
+              data-answer="We do our best to show every colour accurately. The appearance of a shade can vary slightly with lighting, photography, and your screen settings.">
+              <span class="faq-question-dot" aria-hidden="true"></span>
+              <span>Are the colours exactly as shown in the pictures?</span>
+              <svg class="svg-icon faq-question-arrow" aria-hidden="true" viewBox="0 0 24 24">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </button>
+            <button class="faq-question" type="button" aria-pressed="false"
+              data-answer-title="How long will my order take to arrive?"
+              data-answer="Delivery time depends on your location and the item ordered. Check the estimated delivery details at checkout or in your order confirmation.">
+              <span class="faq-question-dot" aria-hidden="true"></span>
+              <span>How long will my order take to arrive?</span>
+              <svg class="svg-icon faq-question-arrow" aria-hidden="true" viewBox="0 0 24 24">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </button>
+            <button class="faq-question" type="button" aria-pressed="false"
+              data-answer-title="Can I cancel or modify my order?"
+              data-answer="Please contact customer care as soon as possible with your order number. Changes may depend on whether your order has already been processed or dispatched.">
+              <span class="faq-question-dot" aria-hidden="true"></span>
+              <span>Can I cancel or modify my order?</span>
+              <svg class="svg-icon faq-question-arrow" aria-hidden="true" viewBox="0 0 24 24">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="faq-note" id="faqAnswer" aria-live="polite" aria-atomic="true">
+            <h3 class="faq-note-title">What fabrics are your Anarkalis made from?</h3>
+            <p class="faq-note-copy">Our Anarkalis use thoughtfully selected fabrics. Check the fabric details on each
+              product page for the materials used in that particular style.</p>
+          </div>
         </div>
-    </section>
-    <section class="process-section">
-        <div class="process-container">
-            <div class="sec-head text-center">
-                <span class="curated mb-2">HOW WE CREATE</span>
-                <h2 class="featured-title letter-spacing-2 fw-normal">Our Process</h2>
-                <p>From carefully selected fabrics to the final delivery, every piece passes through a thoughtful process.</p>
-            </div>
-            
-            <div class="bridal-slider">
-                <div class="bridal-slide">
-                    <img src="{{ asset('assets/images/s4k-1.jpeg') }}" alt="img">
-                </div>
-                <div class="bridal-slide">
-                    <img src="{{ asset('assets/images/s4k-2.jpeg') }}" alt="img">
-                </div>
-                <div class="bridal-slide">
-                    <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
-                </div>
-                <div class="bridal-slide">
-                    <img src="{{ asset('assets/images/s4k-4.jpeg') }}" alt="img">
-                </div>
-                <div class="bridal-slide">
-                    <img src="{{ asset('assets/images/s4k-5.jpeg') }}" alt="img">
-                </div>
-                <div class="bridal-slide">
-                    <img src="{{ asset('assets/images/s4k-6.jpeg') }}" alt="img">
-                </div>
-                <div class="bridal-slide">
-                    <img src="{{ asset('assets/images/s4k-7.jpeg') }}" alt="img">
-                </div>
-                <div class="bridal-slide">
-                    <img src="{{ asset('assets/images/s4k-8.jpeg') }}" alt="img">
-                </div>
-            </div>
-
-            <div class="process-main-inner">
-                <div class="process-main-inner1">
-                    <div class="process-grid-list">
-                        <div class="process-grid-left">
-                            <div class="process-grid-left-img">
-                                <div class="process-grid-left-img1">
-                                    <img src="{{ asset('assets/images/s4k-3.jpeg') }}" alt="img">
-                                    <div class="process-overlay">
-                                        <div class="process-top1">
-                                            <div class="process-icon1">
-                                                <span class="material-symbols-outlined">styler</span>
-                                            </div>
-                                        </div>
-                                        <div class="process-content1">
-                                            <h3>Fabric Selection</h3>
-                                            <p>Premium quality fabrics carefully chosen for comfort and elegance.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="process-grid-left-img1">
-                                    <img src="{{ asset('assets/images/s4k-4.jpeg') }}" alt="img">
-                                    <div class="process-overlay">
-                                        <div class="process-top1">
-                                            <div class="process-icon1">
-                                                <span class="material-symbols-outlined">iron</span>
-                                            </div>
-                                        </div>
-                                        <div class="process-content1">
-                                            <h3>Stitching</h3>
-                                            <p>Skilled craftsmanship ensuring perfect fitting and finish.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="process-grid-center">
-                            <div class="process-grid-center-img">
-                                <img src="{{ asset('assets/images/s4k-7.jpeg') }}" alt="img">
-                                <div class="process-overlay">
-                                    <div class="process-top1">
-                                        <div class="process-icon1">
-                                            <span class="material-symbols-outlined">fact_check</span>
-                                        </div>
-                                    </div>
-                                    <div class="process-content1">
-                                        <h3>Quality Check</h3>
-                                        <p>Every piece undergoes strict quality inspection before approval.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="process-grid-right">
-                            <div class="process-grid-right-img">
-                                <div class="process-grid-right-img1">
-                                    <img src="{{ asset('assets/images/s4k-5.jpeg') }}" alt="img">
-                                    <div class="process-overlay">
-                                        <div class="process-top1">
-                                            <div class="process-icon1">
-                                                <span class="material-symbols-outlined">local_laundry_service</span>
-                                            </div>
-                                        </div>
-                                        <div class="process-content1">
-                                            <h3>Finishing</h3>
-                                            <p>Ironing, detailing and finishing touches for a premium look.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="process-grid-right-img1">
-                                    <img src="{{ asset('assets/images/s4k-6.jpeg') }}" alt="img">
-                                    <div class="process-overlay">
-                                        <div class="process-top1">
-                                            <div class="process-icon1">
-                                                <span class="material-symbols-outlined">package_2</span>
-                                            </div>
-                                        </div>
-                                        <div class="process-content1">
-                                            <h3>Packing & Dispatch</h3>
-                                            <p>Secure packaging and timely dispatch to your doorstep.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- INSTAGRAM SECTION -->
-    <section class="instagram-section-main">
-        <div class="sec-head text-center">
-            <span class="curated mb-2">FOLLOW OUR JOURNEY</span>
-            <h2 class="featured-title letter-spacing-2 fw-normal">Inspired by Instagram</h2>
-            <p>Discover our latest designs, stories and moments. Follow us for daily inspiration.</p>
-            <a href="#" class="instagram-follow">
-                <span class="instagram-icon">
-                    <svg viewBox="0 0 24 24" fill="none">
-                        <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.8"/>
-                        <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/>
-                        <circle cx="17.3" cy="6.8" r="1" fill="currentColor"/>
-                    </svg>
-                </span> Follow us on Instagram <span class="insta-arrow">↗</span>
-            </a>
-        </div>
-
-        <!-- TWO ROW INSTAGRAM -->
-        <div class="instagram-gallery">
-
-            <!-- ROW 1 -->
-            <div class="instagram-row instagram-row-one">
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_05.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_06.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_07.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_08.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_05.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_06.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_07.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_08.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_05.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_06.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_07.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_08.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-            </div>
-
-            <!-- ROW 2 -->
-            <div class="instagram-row instagram-row-two">
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_09.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_10.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_01.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_02.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_09.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_10.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_01.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_02.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_09.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_10.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_01.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_02.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-                <a href="#" class="instagram-card">
-                    <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
-                    <div class="instagram-overlay"><span>♡</span></div>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- BLOG SECTION -->
-    <section class="blog-section-main">
-        <div class="blog-container">
-            <div class="sec-head text-center">
-                <span class="curated mb-2">Fashion Journal</span>
-                <h2 class="featured-title letter-spacing-2 fw-normal">Latest Style Stories</h2>
-            </div>
-
-            <div class="blog-section-inner">
-                <div class="blog-item-main">
-                    <div class="blog-image-main">
-                        <span class="image-border"></span>
-                        <img src="{{ asset('assets/images/category_image_05.png') }}" alt="img">
-                    </div>
-
-                    <div class="blog-content-main">
-                        <h3>How To Style Anarkali Gowns For Wedding Season</h3>
-                        <p>Mesmerising jewellery collection that encapsulates the essence of timeless elegance & sophistication</p>
-                        <a href="#" class="blog-btn-main">
-                            VIEW DETAILS
-                            <span class="material-symbols-outlined">arrow_right_alt</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="blog-item-main reverse">
-                    <div class="blog-image-main">
-                        <span class="image-border"></span>
-                        <img src="{{ asset('assets/images/category_image_04.png') }}" alt="img">
-                    </div>
-
-                    <div class="blog-content-main">
-                        <h3>How To Style Anarkali Gowns For Wedding Season</h3>
-                        <p>Enchanting jewellery collection that echoes the untamed spirit of the wild.</p>
-                        <a href="#" class="blog-btn-main">
-                            VIEW DETAILS
-                            <span class="material-symbols-outlined">arrow_right_alt</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="blog-item-main text-first">
-                    <div class="blog-content-main">
-                        <h3>How To Style Anarkali Gowns For Wedding Season</h3>
-                        <p>Captivating jewellery collection that celebrates the eternal bond of love.</p>
-                        <a href="#" class="blog-btn-main">
-                            VIEW DETAILS
-                            <span class="material-symbols-outlined">arrow_right_alt</span>
-                        </a>
-                    </div>
-
-                    <div class="blog-image-main">
-                        <span class="image-border"></span>
-                        <img src="{{ asset('assets/images/category_image_03.png') }}" alt="img">
-                    </div>
-                </div>
-                <div class="blog-item-main reverse">
-                    <div class="blog-image-main">
-                        <span class="image-border"></span>
-                        <img src="{{ asset('assets/images/category_image_06.png') }}" alt="img">
-                    </div>
-
-                    <div class="blog-content-main">
-                        <h3>How To Style Anarkali Gowns For Wedding Season</h3>
-                        <p>Radiant jewellery collection that captures the essence of molten gold.</p>
-                        <a href="#" class="blog-btn-main">
-                            VIEW DETAILS
-                            <span class="material-symbols-outlined">arrow_right_alt</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </section>
 
 @endsection

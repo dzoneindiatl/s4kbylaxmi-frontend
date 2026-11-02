@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\Country;
 use App\Models\Wishlist;
 use App\Models\OrderItem;
+use App\Models\Product;
 use App\Models\UserReview;
 use App\Models\UserAddress;
 use Illuminate\Http\Request;
@@ -35,44 +36,65 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        try {
-
-        if (Auth::guard('customer')->check()) {
-            $user = User::where('id', Auth::guard('customer')->user()->id)->first();
-            $redeemedamount = WalletHistory::where('user_id', $user->id)->where('type', 'debit')->sum('amount');
-            $totalrefund = WalletHistory::where('user_id', $user->id)
-                ->where('type', 'credit')
-                ->where('description', 'like', '%refund%')
-                ->sum('amount');
-            $userAddressDetails = UserAddress::where('user_id', Auth::guard('customer')->user()->id)->get();
-            $countries = Country::where('is_active', 1)->pluck('name', 'id');
-            $states = State::where('country_id', 101)->where('is_active', 1)->pluck('name', 'id');
-            $allStatuses = OrderStatus::orderBy('step')->where('active', 1)->get();
-            $referralLink = url('?referral=' . Auth::guard('customer')->user()->user_referral_code);
-
-            $orderDetails = Order::with('items', 'items.productGraphics')->where('user_id', Auth::guard('customer')->user()->id)->orderBy('id', 'desc')->get();
-            $orderCurentDetails = Order::with('items', 'items.productGraphics')->where('user_id', Auth::guard('customer')->user()->id)->whereNotIn('status',array('delivered','cancelled','cancelled_by_customer','return-rejected'))->orderBy('id', 'desc')->get();
-            $orderPastDetails = Order::with('items', 'items.productGraphics')->where('user_id', Auth::guard('customer')->user()->id)
-            ->whereIn('status',array('delivered','cancelled','cancelled_by_customer','return-rejected'))->orderBy('id', 'desc')->get();
-
-            $shareTitle = 'Join me on Vasvi! Use my referral link.';
-
-            $share_buttons = \Jorenvh\Share\ShareFacade::page($referralLink, $shareTitle)
-                ->facebook()
-                ->twitter()
-                ->linkedin()
-                ->whatsapp()
-                ->telegram()
-                ->reddit();
-
-            return view('front.modules.dashboard.index', compact('user', 'userAddressDetails', 'countries', 'states', 'orderDetails','orderCurentDetails','orderPastDetails', 'share_buttons', 'allStatuses', 'redeemedamount', 'totalrefund'));
-        } else {
-            return redirect()->route('home.index');
+        $user = Auth::guard('customer')->user();
+        if (!$user) {
+            return redirect()->route('front-user.login');
         }
-        } catch (Exception $e) {
-            Log::error($e);
-            return redirect()->back()->with(['error' => 'Somethig went wrong', 'error_msg' => $e->getMessage()]);
+
+        $userAddressDetails = UserAddress::with(['country', 'state', 'city'])
+            ->where('user_id', $user->id)
+            ->orderByDesc('is_primary')
+            ->latest()
+            ->get();
+        $countries = Country::where('is_active', 1)->orderBy('name')->get(['id', 'name']);
+        $orderDetails = Order::with('items')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->get();
+        $combinationIds = $orderDetails->flatMap(function ($order) {
+            return $order->items->pluck('product_id');
+        })->filter()->unique()->values();
+        $combinations = ProductVariantCombination::whereIn('id', $combinationIds)
+            ->get(['id', 'product_id'])
+            ->keyBy('id');
+        $products = Product::whereIn('id', $combinations->pluck('product_id')->unique())
+            ->get(['id', 'name', 'slug', 'sku', 'selling_price'])
+            ->keyBy('id');
+        $orderImages = ProductVariantCombinationImage::whereIn('product_variant_combination_id', $combinationIds)
+            ->get(['product_variant_combination_id', 'image_name'])
+            ->groupBy('product_variant_combination_id')
+            ->map(function ($images) {
+                return $images->first()->image_name;
+            });
+
+        foreach ($orderDetails as $order) {
+            foreach ($order->items as $item) {
+                $combination = $combinations->get($item->product_id);
+                $itemProduct = $combination ? $products->get($combination->product_id) : null;
+                $item->product_name = $itemProduct->name ?? 'Product';
+                $imageName = $orderImages->get($item->product_id);
+                $item->image_url = $imageName
+                    ? config('constant.PRODUCT_IMAGE_URL') . $imageName
+                    : config('constant.IMAGE_URL') . 'noimage.png';
+            }
         }
+
+        $wishlistData = Wishlist::with('getProduct')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->get()
+            ->filter(function ($wishlistItem) {
+                return $wishlistItem->getProduct !== null;
+            })
+            ->values();
+
+        return view('front.modules.dashboard.index', compact(
+            'user',
+            'userAddressDetails',
+            'countries',
+            'orderDetails',
+            'wishlistData'
+        ));
     }
 
 
@@ -98,150 +120,36 @@ class DashboardController extends Controller
     }
     public function addresses(Request $request)
     {
-        try {
-            $userAddresses = UserAddress::where('user_id', Auth::guard('customer')->user()->id)->get();
-
-            return view('front.modules.dashboard.addresses', compact('userAddresses'));
-        } catch (Exception $e) {
-            Log::error($e);
-            return redirect()->back()->with(['error' => 'Somethig went wrong', 'error_msg' => $e->getMessage()]);
-        }
+        return redirect()->route('user.dashboard')->withFragment('address');
     }
     public function orders(Request $request)
     {
-        // try {
-        $active_orders = OrderItem::whereNotIn('status', ['delivered', 'cancelled', 'returned'])
-            ->leftjoin('orders', 'orders.id', 'order_items.order_id')
-            ->leftjoin('product_variant_combinations', 'product_variant_combinations.id', 'order_items.product_id')
-            ->leftjoin('products', 'product_variant_combinations.product_id', 'products.id')
-            ->leftjoin('user_addresses', 'user_addresses.id', 'orders.address_id')
-            ->where('orders.user_id', Auth::guard('customer')->user()->id)
-            ->select('order_items.*', 'orders.order_number', 'orders.currency_code', 'products.name', 'user_addresses.name', 'user_addresses.email', 'user_addresses.phone_number', 'user_addresses.country_id_id', 'user_addresses.address', 'user_addresses.postal_code', 'user_addresses.city_id', 'user_addresses.state_id', 'user_addresses.landmark')
-            ->get();
-        $active_orders_count = $active_orders->count();
-        $active_orders = $active_orders->toArray();
-
-        if (!empty($active_orders)) {
-            foreach ($active_orders as &$active_order) {
-                $active_order['product_image'] = ProductVariantCombinationImage::where('product_variant_combination_images.product_variant_combination_id', $active_order['product_id'])->leftJoin('product_images', 'product_images.id', 'product_variant_combination_images.product_image_id')->select('product_images.image')->first();
-                if (!empty($active_order['product_image'])) {
-                    $productImage = (!empty($active_order['product_image'])) ? Config('constant.PRODUCT_IMAGE_URL') . $active_order['product_image']['image'] : Config('constant.IMAGE_URL') . "noimage.png";
-                    $active_order['product_image'] = $productImage;
-                }
-            }
-        }
-
-        $delivered_orders = OrderItem::where('status', 'delivered')
-            ->leftjoin('orders', 'orders.id', 'order_items.order_id')
-            ->leftjoin('product_variant_combinations', 'product_variant_combinations.id', 'order_items.product_id')
-            ->leftjoin('products', 'product_variant_combinations.product_id', 'products.id')
-            ->leftjoin('user_addresses', 'user_addresses.id', 'orders.address_id')
-            ->where('orders.user_id', Auth::guard('customer')->user()->id)
-            ->select('order_items.*', 'orders.order_number', 'orders.currency_code', 'products.name', 'user_addresses.name', 'user_addresses.email', 'user_addresses.phone_number', 'user_addresses.country_id', 'user_addresses.address', 'user_addresses.postal_code', 'user_addresses.city_id', 'user_addresses.state_id', 'user_addresses.landmark')
-            ->get();
-        $delivered_orders_count = $delivered_orders->count();
-        $delivered_orders = $delivered_orders->toArray();
-
-        if (!empty($delivered_orders)) {
-            foreach ($delivered_orders as &$delivered_order) {
-                $delivered_order['product_image'] = ProductVariantCombinationImage::where('product_variant_combination_images.product_variant_combination_id', $delivered_order['product_id'])->leftJoin('product_images', 'product_images.id', 'product_variant_combination_images.product_image_id')->select('product_images.image')->first();
-                if (!empty($delivered_order['product_image'])) {
-                    $productImage = (!empty($delivered_order['product_image'])) ? Config('constant.PRODUCT_IMAGE_URL') . $delivered_order['product_image']['image'] : Config('constant.IMAGE_URL') . "noimage.png";
-                    $delivered_order['product_image'] = $productImage;
-                }
-            }
-        }
-
-        $cancelled_orders = OrderItem::where('status', 'cancelled')
-            ->leftjoin('orders', 'orders.id', 'order_items.order_id')
-            ->leftjoin('product_variant_combinations', 'product_variant_combinations.id', 'order_items.product_id')
-            ->leftjoin('products', 'product_variant_combinations.product_id', 'products.id')
-            ->leftjoin('user_addresses', 'user_addresses.id', 'orders.address_id')
-            ->where('orders.user_id', Auth::guard('customer')->user()->id)
-            ->select('order_items.*', 'orders.order_number', 'orders.currency_code', 'products.name', 'user_addresses.name', 'user_addresses.email', 'user_addresses.phone_number', 'user_addresses.country_id', 'user_addresses.address', 'user_addresses.postal_code', 'user_addresses.city_id', 'user_addresses.state_id', 'user_addresses.landmark')
-            ->get();
-        $cancelled_orders_count = $cancelled_orders->count();
-        $cancelled_orders = $cancelled_orders->toArray();
-
-        if (!empty($cancelled_orders)) {
-            foreach ($cancelled_orders as &$cancelled_order) {
-                $cancelled_order['product_image'] = ProductVariantCombinationImage::where('product_variant_combination_images.product_variant_combination_id', $cancelled_order['product_id'])->leftJoin('product_images', 'product_images.id', 'product_variant_combination_images.product_image_id')->select('product_images.image')->first();
-                if (!empty($cancelled_order['product_image'])) {
-                    $productImage = (!empty($cancelled_order['product_image'])) ? Config('constant.PRODUCT_IMAGE_URL') . $cancelled_order['product_image']['image'] : Config('constant.IMAGE_URL') . "noimage.png";
-                    $cancelled_order['product_image'] = $productImage;
-                }
-            }
-        }
-        // echo "<pre>"; print_r($active_orders); die;
-        return view('front.modules.dashboard.orders', compact('active_orders', 'delivered_orders', 'cancelled_orders', 'cancelled_orders_count', 'active_orders_count', 'delivered_orders_count'));
-        // } catch (Exception $e) {
-        //     Log::error($e);
-        //     return redirect()->back()->with(['error' => 'Somethig went wrong', 'error_msg' => $e->getMessage()]);
-        // }
+        return redirect()->route('user.dashboard')->withFragment('orders');
     }
 
     public function updateProfile(Request $request)
     {
-        $formData = $request->all();
-        if (!empty($formData)) {
-            $validator = Validator::make(
-                $request->all(),
-                array(
-                   // 'image'      => 'nullable|mimes:jpg,jpeg,png,webp',
-                    'name' => ['required', 'string', 'max:255'],
-                    'email' => ['required', 'email', Rule::unique('users')->ignore(auth()->guard('customer')->user()->id)->where('user_role_id', config('constant.ROLE_ID.CUSTOMER_ROLE_ID'))],
-                    'phone_number' =>  ['required', 'numeric', Rule::unique('users')->ignore(auth()->guard('customer')->user()->id)->where('user_role_id', config('constant.ROLE_ID.CUSTOMER_ROLE_ID')), 'digits:10'],
-                    'new_password' => ['required', Password::min(8)],
-                    'confirm_password' => 'required|required_with:new_password|min:8|same:new_password'
-                ),
-                array(
-                    //"image.mimes" => trans("The image field must be a file of type jpg jpeg png"),
-                    "phone_number.required" => trans("The phone number field is required"),
-                    "new_password.required" => trans("The new password field is required"),
-                    "new_password.min" => trans("The new password must be atleast 8 characters"),
-                    "confirm_password.required" => trans("The confirm password field is required"),
-                    "confirm_password.same" => trans("The confirm password should be same as new password")
-                )
-            );
-            if ($validator->fails()) {
-                return Redirect::back()->withErrors($validator)->withInput();
-            } else {
-                DB::beginTransaction();
-                $obj   = User::find(Auth::guard('customer')->user()->id);
-                $obj->name = $request->name;
-                $obj->phone_number = $request->phone_number;
-                $obj->email = $request->email;
-                $obj->gender = $request->gender;
-               // $obj->date_of_birth = $request->date_of_birth;
+        $user = Auth::guard('customer')->user();
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->ignore($user->id)->where('user_role_id', config('constant.ROLE_ID.CUSTOMER_ROLE_ID')),
+            ],
+            'phone_number' => [
+                'required',
+                'digits:10',
+                Rule::unique('users')->ignore($user->id)->where('user_role_id', config('constant.ROLE_ID.CUSTOMER_ROLE_ID')),
+            ],
+        ]);
 
-                // if ($request->hasFile('image')) {
-                //     $extension = $request->file('image')->getClientOriginalExtension();
-                //     $originalName = $request->file('image')->getClientOriginalName();
-                //     $fileName = time() . '-image.' . $extension;
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        $user->phone_number = $validated['phone_number'];
+        $user->save();
 
-                //     $folderName = strtoupper(date('M') . date('Y')) . "/";
-                //     $folderPath = Config('constant.USER_IMAGE_ROOT_PATH') . $folderName;
-                //     if (!File::exists($folderPath)) {
-                //         File::makeDirectory($folderPath, $mode = 0777, true);
-                //     }
-                //     if ($request->file('image')->move($folderPath, $fileName)) {
-                //         $obj->image = $folderName . $fileName;
-                //     }
-                // }
-                $obj->password = Hash::make($request->new_password);
-                $obj->save();
-                $lastId = $obj->id;
-                if (empty($lastId)) {
-                    DB::rollback();
-                    return Redirect::back()->with('error', 'Something went wrong');
-                }
-                DB::commit();
-
-                return Redirect::back()->with('success', 'Your Profile has been updated successfully');
-            }
-        } else {
-           return Redirect::back()->with('error', 'Invalid Request');
-        }
+        return redirect()->back()->with('success', 'Your profile has been updated successfully.');
     }
 
     public function changePassword(Request $request)
@@ -441,37 +349,39 @@ class DashboardController extends Controller
 
     public function deleteAddress(Request $request, $addressId)
     {
-        $checkIfAddressExists = UserAddress::where('id', $addressId)->first();
+        $checkIfAddressExists = UserAddress::where('user_id', Auth::guard('customer')->id())
+            ->where('id', $addressId)
+            ->first();
         if (!empty($checkIfAddressExists)) {
-
-            UserAddress::where('id', $addressId)->delete();
+            $checkIfAddressExists->delete();
             if ($checkIfAddressExists->is_primary == 1) {
-                $addressCount = UserAddress::where('user_id', $checkIfAddressExists->user_id)->count();
-                if ($addressCount > 0) {
-
-                    UserAddress::where('user_id', $checkIfAddressExists->user_id)->first()->update(['is_primary' => 1]);
-                }
+                UserAddress::where('user_id', $checkIfAddressExists->user_id)
+                    ->orderBy('id')
+                    ->first()
+                    ?->update(['is_primary' => 1]);
             }
             Session()->flash('flash_notice', 'Address deleted successfully');
-            return Redirect::route('front-user.addresses');
+            return Redirect::route('user.dashboard')->withFragment('address');
         } else {
             Session()->flash('error', 'Invalid Request');
-            return Redirect::route('front-user.addresses');
+            return Redirect::route('user.dashboard')->withFragment('address');
         }
     }
     public function makeAddressPrimary(Request $request, $addressId)
     {
-        $checkIfAddressExists = UserAddress::where('id', $addressId)->first();
+        $checkIfAddressExists = UserAddress::where('user_id', Auth::guard('customer')->id())
+            ->where('id', $addressId)
+            ->first();
         if (!empty($checkIfAddressExists)) {
 
             UserAddress::where('user_id', $checkIfAddressExists->user_id)->update(['is_primary' => 0]);
             UserAddress::where('id', $addressId)->update(['is_primary' => 1]);
 
             Session()->flash('flash_notice', 'Address status changed successfully');
-            return Redirect::route('front-user.addresses');
+            return Redirect::route('user.dashboard')->withFragment('address');
         } else {
             Session()->flash('error', 'Invalid Request');
-            return Redirect::route('front-user.addresses');
+            return Redirect::route('user.dashboard')->withFragment('address');
         }
     }
     public function addReview(Request $request)
@@ -524,7 +434,10 @@ class DashboardController extends Controller
     public function toggle(Request $request)
     {
         $user = Auth::guard('customer')->user();
-        $productId = $request->product_id;
+        $validated = $request->validate([
+            'product_id' => ['required', 'integer', 'exists:products,id'],
+        ]);
+        $productId = $validated['product_id'];
         $wishlist = Wishlist::where('user_id', $user->id)
             ->where('product_id', $productId)
             ->first();
@@ -762,19 +675,16 @@ class DashboardController extends Controller
     {
         try {
             if ($request->ajax()) {
-                $count = Wishlist::where('user_id', auth()->guard('customer')->user()->id)->count();
-                $wishlistData = Wishlist::where('user_id', auth()->guard('customer')->user()->id)
+                $wishlistData = Wishlist::with('getProduct')
+                    ->where('user_id', auth()->guard('customer')->user()->id)
                     ->get();
-                $html = view('front.modules.dashboard.wishlist', compact('wishlistData'))->render();
                 return response()->json([
                     'status' => true,
-                    'wishlistData' => $html,
-                    'data' => $count
+                    'wishlistData' => $wishlistData,
+                    'data' => $wishlistData->count()
                 ]);
             } else {
-                  $wishlistData = Wishlist::where('user_id', auth()->guard('customer')->user()->id)
-                    ->get();
-                 return view('front.modules.dashboard.wishlist', compact('wishlistData'));
+                return redirect()->route('user.dashboard')->withFragment('wishlist');
             }
         } catch (Exception $e) {
             Log::error($e);

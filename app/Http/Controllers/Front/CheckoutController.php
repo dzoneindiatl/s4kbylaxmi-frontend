@@ -15,6 +15,7 @@ use App\Models\Coupon;
 use App\Models\Country;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\CategoryTax;
 
 use App\Models\Currency;
 use App\Models\Pincodes;
@@ -36,6 +37,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use App\Models\ProductVariantCombination;
+use App\Models\VariantValue;
 use App\Models\ProductVariantCombinationImage;
 use App\Models\{OrderNotifications, OrderAddress, CouponUse};
 use App\Service\MailService;
@@ -84,55 +86,120 @@ class CheckoutController extends Controller
 
     public function saveAddress(Request $request)
     {
-        $postData = $request->all();
         $user = Auth::guard('customer')->user();
-        $address = new UserAddress();
-        $address->type = $postData['address_type'];
-        $address->user_id = $user->id;
-        $address->name = $postData['firstname'] . ' ' . $postData['lastname'];
-        $address->email = $user->email;
-        $address->phone_number = $postData['phone'];
-        $address->alternate_number = $postData['phone'];
-        $address->country_id = $postData['country'];
-        $address->state_id = $postData['state'];
-        $address->city_id = $postData['city'];
-        $address->postal_code = $postData['pinCode'];
-        $address->landmark = $postData['addressSecond'];
-        $address->address = $postData['address'];
-        $address->address_type = $postData['address_place_type'];
-        $address->save();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Please sign in to save a delivery address.'], 401);
+        }
 
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'phone_number' => ['required', 'string', 'max:30'],
+            'country_id' => ['required', 'integer', 'exists:countries,id'],
+            'state_id' => ['required', 'integer', 'exists:states,id'],
+            'city_id' => ['required', 'integer', 'exists:cities,id'],
+            'postal_code' => ['required', 'string', 'max:20'],
+            'address' => ['required', 'string', 'max:1000'],
+            'landmark' => ['nullable', 'string', 'max:255'],
+            'address_type' => ['required', 'in:1,2,3'],
+        ]);
+
+        $countryIsActive = Country::where('id', $validated['country_id'])
+            ->where('is_active', 1)
+            ->exists();
+        $state = State::where('id', $validated['state_id'])
+            ->where('country_id', $validated['country_id'])
+            ->where('is_active', 1)
+            ->first();
+        $city = City::where('id', $validated['city_id'])
+            ->where('state_id', $validated['state_id'])
+            ->where('country_id', $validated['country_id'])
+            ->where('is_active', 1)
+            ->first();
+        if (!$countryIsActive || !$state || !$city) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Select a valid state and city for the chosen country.',
+            ], 422);
+        }
+
+        $address = new UserAddress();
+        $address->user_id = $user->id;
+        $address->type = 'shipping';
+        $address->name = $validated['name'];
+        $address->email = $user->email;
+        $address->phone_number = $validated['phone_number'];
+        $address->alternate_number = $validated['phone_number'];
+        $address->country_id = $validated['country_id'];
+        $address->state_id = $validated['state_id'];
+        $address->city_id = $validated['city_id'];
+        $address->postal_code = $validated['postal_code'];
+        $address->address = $validated['address'];
+        $address->landmark = $validated['landmark'] ?? null;
+        $address->address_type = $validated['address_type'];
+        $address->is_primary = !UserAddress::where('user_id', $user->id)->where('is_primary', 1)->exists();
+        $address->save();
 
         return response()->json([
             'success' => true,
-            'message' => 'Your address has been successfully saved.',
-            'redirect_url' => url('/checkout')
+            'message' => 'Delivery address saved.',
+            'address' => [
+                'id' => $address->id,
+                'label' => $address->name . ' — ' . $address->address . ', ' . $address->postal_code,
+            ],
         ]);
     }
 
     public function updateAddress(Request $request)
     {
         $user = Auth::guard('customer')->user();
+        abort_unless($user, 401);
 
-        $postData = $request->all();
-        if(isset($postData['addressId']) && !empty($postData['addressId'])){
-            $address = UserAddress::where('id', $postData['addressId'])->firstOrFail();
-        } else {
-            $address = new UserAddress();
+        $validated = $request->validate([
+            'address_id' => ['required', 'integer'],
+            'name' => ['required', 'string', 'max:255'],
+            'phone_number' => ['required', 'string', 'max:30'],
+            'country_id' => ['required', 'integer', 'exists:countries,id'],
+            'state_id' => ['required', 'integer', 'exists:states,id'],
+            'city_id' => ['required', 'integer', 'exists:cities,id'],
+            'postal_code' => ['required', 'string', 'max:20'],
+            'address' => ['required', 'string', 'max:1000'],
+            'landmark' => ['nullable', 'string', 'max:255'],
+            'address_type' => ['required', 'in:1,2,3'],
+        ]);
+        $address = UserAddress::where('user_id', $user->id)
+            ->findOrFail($validated['address_id']);
+        $countryIsActive = Country::where('id', $validated['country_id'])
+            ->where('is_active', 1)
+            ->exists();
+        $state = State::where('id', $validated['state_id'])
+            ->where('country_id', $validated['country_id'])
+            ->where('is_active', 1)
+            ->exists();
+        $city = City::where('id', $validated['city_id'])
+            ->where('state_id', $validated['state_id'])
+            ->where('country_id', $validated['country_id'])
+            ->where('is_active', 1)
+            ->exists();
+        if (!$countryIsActive || !$state || !$city) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Select a valid state and city for the chosen country.',
+            ], 422);
         }
-        $address->name = $postData['firstname'] . ' ' . $postData['lastname'];
-        $address->type = $postData['type'];
+
+        $address->type = 'shipping';
         $address->user_id = $user->id;
         $address->email = $user->email;
-        $address->phone_number = $postData['phone'];
-        $address->alternate_number = $postData['phone'];
-        $address->country_id = $postData['country'];
-        $address->state_id = $postData['state'];
-        $address->city_id = $postData['city'];
-        $address->postal_code = $postData['pinCode'];
-        $address->landmark = $postData['landmark'] ?? null;
-        $address->address = $postData['address'];
-        $address->address_type = $postData['address_place_type'];
+        $address->name = $validated['name'];
+        $address->phone_number = $validated['phone_number'];
+        $address->alternate_number = $validated['phone_number'];
+        $address->country_id = $validated['country_id'];
+        $address->state_id = $validated['state_id'];
+        $address->city_id = $validated['city_id'];
+        $address->postal_code = $validated['postal_code'];
+        $address->landmark = $validated['landmark'] ?? null;
+        $address->address = $validated['address'];
+        $address->address_type = $validated['address_type'];
         $address->save();
 
         return response()->json(['success' => true, 'message' => 'Address updated successfully.']);
@@ -140,10 +207,27 @@ class CheckoutController extends Controller
 
     public function placeOrder(Request $request)
     {
+        $request->validate([
+            'payment_mode' => ['required', 'in:cod'],
+            'shipping_id' => ['required', 'integer'],
+            'billing_id' => ['required', 'integer'],
+            'cartItems' => ['required', 'array', 'min:1'],
+        ]);
+
         $resp = [];
-        info("-----------request-all--------",[$request->all()]); 
-        // Backend Order validation 
-        $login_user_id =  Auth::guard('customer')->user()->id;
+        $user = Auth::guard('customer')->user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Please sign in before placing your order.'], 401);
+        }
+        foreach (['shipping_id', 'billing_id'] as $addressField) {
+            $addressExists = UserAddress::where('id', $request->input($addressField))
+                ->where('user_id', $user->id)->exists();
+            if (!$addressExists) {
+                return response()->json(['success' => false, 'message' => 'Select a valid delivery address.'], 422);
+            }
+        }
+
+        $login_user_id = $user->id;
         $userAvailableWalletAmount = $this->getuserWallet($login_user_id);
 
         $codMaxLimit = 12000;
@@ -152,96 +236,159 @@ class CheckoutController extends Controller
             $codMaxLimit = $invoiceSetting->cash_on_limit;
         }
 
-        $validation_error = '';
-        if(count($request->cartItems)==0){
-            $validation_error .= " </br> You should be alteast add 1 item in cart";
-        } 
-        if($request->sub_total < 1 && $request->payment_mode != 'wallet'){
-            $validation_error .= " </br>Your order amount should be greater than zero";
+        $validationErrors = [];
+        $canonicalItems = [];
+        $cartRows = Cart::with(['product', 'productVariantCombination'])
+            ->where('user_id', $login_user_id)->get();
+        if ($cartRows->isEmpty()) {
+            $validationErrors[] = 'Your cart is empty.';
         }
-        
-        if($request->wallet_amount > $userAvailableWalletAmount){
-            $validation_error .= " </br> You dont have exact amount in wallet";
-        } 
-        if($request->payment_mode =='cod' && $request->sub_total > $codMaxLimit){
-            $validation_error .= " </br> You have reached maximum amount for COD order.";
-        } 
 
-        if(!empty($request->cartItems)){
-            foreach($request->cartItems as $cart){
-                $productId = $cart['product_id'];
-                $quantity = $cart['quantity'];
+        $orderSubtotal = 0;
+        $exclusiveTaxTotal = 0;
+        foreach ($cartRows as $cartRow) {
+            $product = $cartRow->product;
+            $combination = $cartRow->productVariantCombination;
+            if (!$product || (int) $product->is_active !== 1 || (int) $product->is_deleted === 1) {
+                $validationErrors[] = 'A product in your cart is no longer available.';
+                continue;
+            }
 
-                $product = Product::where('id', $productId)->first();
-                if(!empty($product)){
-                    if($product->in_stock == 0){
-                        $validation_error .= ' </br> You have some out of stock product into order items';
-                    }
+            if ($product->product_type != 1 && !$combination) {
+                $validationErrors[] = $product->name . ' has an incomplete variation selection. Remove it and add it again.';
+                continue;
+            }
 
-                    $product_valient_sku = '';
-                    if(!empty($product_sku = $product->sku)){
-                        $product_valient_sku .= strtolower($product_sku = $product->sku);
-                    }
-                    if(!empty($request->cartItems['selectedVariants']) && !empty($request->cartItems['selectedVariants']['colour'])){
-                        $product_valient_sku .= '_'. strtolower($request->cartItems['selectedVariants']['colour']);
-                    }
-                    if(!empty($request->cartItems['selectedVariants']) && !empty($request->cartItems['selectedVariants']['size'])){
-                        $product_valient_sku .= '_'. strtolower($request->cartItems['selectedVariants']['size']);
-                    }
-                    $qtyVarient = ProductVariantCombination::where('product_id', $productId)->where('sku', $product_valient_sku)->select('qty')->first();
-                    if(!empty($qtyVarient)){
-                        if($qtyVarient->qty==0){
-                            $validation_error .= ' </br> You have some out of stock product varient into order items';
-                        } else if($qtyVarient->qty < $quantity){
-                            $validation_error .= ' </br> Product does not have suffcient quantity.';
-                        }
-                    }
-                    if(!empty($product->max_selling_units) && $product->max_selling_units!=0 &&  $quantity > $product->max_selling_units){
-                        $validation_error .= ' </br> You have reached maximum quantity for product.';
-                    }
+            $quantity = (int) $cartRow->quantity;
+            $stock = max((int) ($combination->qty ?? $product->qty ?? 0), 0);
+            $minimum = max((int) ($product->min_selling_units ?? 1), 1);
+            $productMaximum = max((int) ($product->max_selling_units ?? 0), 0);
+            $maximum = $productMaximum > 0 ? min($stock, $productMaximum) : $stock;
+            if ($quantity < $minimum || $quantity > $maximum || $maximum < $minimum) {
+                $validationErrors[] = $product->name . " quantity must be between {$minimum} and {$maximum} based on current stock.";
+                continue;
+            }
 
-                } else {
-                    $validation_error .= ' </br> Your order product does not activated';
+            $variantIds = $combination
+                ? array_map('intval', json_decode($combination->combination_id, true) ?: [])
+                : [];
+            $variantValues = $variantIds
+                ? VariantValue::with('variant')->whereIn('id', $variantIds)->get()
+                : collect();
+            $selectedVariants = [];
+            foreach ($variantValues as $variantValue) {
+                if ($variantValue->variant) {
+                    $selectedVariants[lcfirst($variantValue->variant->name)] = $variantValue->name;
                 }
+            }
+
+            $price = (float) ($combination->price ?? $product->buying_price ?? 0);
+            $sellingPrice = (float) ($combination->selling_price ?? $product->selling_price ?? 0);
+            $taxes = CategoryTax::where('category_taxes.category_id', $product->main_category_id ?? 0)
+                ->leftJoin('taxes', 'taxes.id', '=', 'category_taxes.tax_id')
+                ->get([
+                    'category_taxes.id',
+                    'taxes.tax_type',
+                    'taxes.tax_option',
+                    'taxes.tax_from',
+                    'taxes.tax_to',
+                    'taxes.tax_rate',
+                ]);
+            $taxId = null;
+            $taxRate = 0;
+            $taxOption = 'inclusive';
+            $taxType = 'flat';
+            $unitTax = 0;
+            foreach ($taxes as $tax) {
+                if ($tax->tax_type === 'floating'
+                    && ($sellingPrice < (float) $tax->tax_from || $sellingPrice > (float) $tax->tax_to)) {
+                    continue;
+                }
+                $taxId = $tax->id;
+                $taxRate = max((float) ($tax->tax_rate ?? 0), 0);
+                $taxOption = $tax->tax_option ?: 'inclusive';
+                $taxType = $tax->tax_type ?: 'flat';
+                if ($taxRate > 0) {
+                    $unitTax = $taxOption === 'inclusive'
+                        ? $sellingPrice - ($sellingPrice / (1 + ($taxRate / 100)))
+                        : $sellingPrice * $taxRate / 100;
+                }
+                break;
+            }
+
+            $item = [
+                'productId' => $product->id,
+                'product_id' => $product->id,
+                'combinationId' => $combination->id ?? null,
+                'quantity' => $quantity,
+                'price' => $price,
+                'sellingPrice' => $sellingPrice,
+                'sku' => $combination->sku ?? $product->sku,
+                'selectedVariants' => $selectedVariants,
+                'tax_id' => $taxId,
+                'tax_rate' => $taxRate,
+                'tax_option' => $taxOption,
+                'tax_type' => $taxType,
+                'tax_price' => $unitTax * $quantity,
+                'rawTaxArr' => $taxes->toJson(),
+            ];
+            $canonicalItems[] = $item;
+            $orderSubtotal += $sellingPrice * $quantity;
+            if ($taxOption === 'exclusive') {
+                $exclusiveTaxTotal += $unitTax * $quantity;
             }
         }
 
-        // Apply Coupon VAlidation 
-        if(!empty($request->coupon_id)){
-            $couponDetail = Coupon::where('id', $request->coupon_id)->where('is_active', 1)->first();
-            if(empty($couponDetail)){
-                    $validation_error .= ' </br> Your coupon does not activated';
-            } else {
-                $couponStatus = $this->applyCoupon($couponDetail->coupon_code, $request->sub_total, $request->cart_items);
-                if($couponStatus->original['status']==false){
-                    $validation_error .=   " </br> " . $couponStatus->original['message'];
-                }
-                // Apply Coupon VAlidation 
+        if ($validationErrors) {
+            return response()->json([
+                'success' => false,
+                'message' => implode(' ', $validationErrors),
+            ], 422);
+        }
+
+        $couponDiscount = 0;
+        if ($request->filled('coupon_id')) {
+            $couponDetail = Coupon::where('id', $request->input('coupon_id'))
+                ->where('is_active', 1)->first();
+            if (!$couponDetail) {
+                return response()->json(['success' => false, 'message' => 'The selected coupon is no longer active.'], 422);
             }
+            $couponStatus = $this->applyCoupon($couponDetail->coupon_code, $orderSubtotal, $canonicalItems);
+            if (!$couponStatus->original['status']
+                || (int) ($couponStatus->original['coupon']['id'] ?? 0) !== (int) $couponDetail->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $couponStatus->original['message'] ?? 'The selected coupon is not valid for this cart.',
+                ], 422);
+            }
+            $couponDiscount = (float) $couponStatus->original['discount'];
         }
 
-        if (!empty($validation_error)) {
-            $responseError['success'] = false;
-            $responseError['data'] = [];
-            $responseError['product_order_id'] = false;
-            $responseError['message'] = $validation_error;
-            return response()->json($responseError);
+        $orderAmount = max(0, $orderSubtotal + $exclusiveTaxTotal - $couponDiscount);
+        if ($orderAmount < 1) {
+            return response()->json(['success' => false, 'message' => 'Order amount must be greater than zero.'], 422);
         }
-        // Backend Order validation 
+        if ($orderAmount > $codMaxLimit) {
+            return response()->json(['success' => false, 'message' => 'Cash on delivery is not available above the maximum order amount.'], 422);
+        }
 
-        
+        $request->merge([
+            'cartItems' => $canonicalItems,
+            'coupon_discount' => $couponDiscount,
+            'sub_total' => $orderAmount,
+        ]);
 
         $ip_address = $request->ip(); 
         if ($request->payment_mode == 'cod') {
             $order_id = $this->createOrder(
                 $ip_address,
                 'cod',
-                $request->sub_total,
+                $orderAmount,
                 'unpaid',
                 $request->coupon_id,
-                $request->coupon_discount,
+                $couponDiscount,
                 0,
-                $request->shippingcharge,
+                $request->input('shippingcharge', 0),
                 $request->billing_id,
                 $request->shipping_id,
                 $request->cartItems
@@ -249,6 +396,12 @@ class CheckoutController extends Controller
             $resp['success'] = true;
             $resp['message'] = "Success";
             $resp['url'] = route('front-order.success', ['order_id' => encrypt($order_id)]);
+            $order = Order::find($order_id);
+            $resp['order'] = [
+                'order_number' => $order->order_number,
+                'created_at' => optional($order->created_at)->format('F d, Y'),
+                'total' => $order->total,
+            ];
             return response()->json($resp);
         } elseif ($request->payment_mode == 'razorpay') {
             $cartNotes = $request->cartItems;
@@ -423,6 +576,8 @@ class CheckoutController extends Controller
         $order->order_number = generateOrderNumber();
         $ordernumber = $order->order_number;
         $order->user_id = $user_id;
+        $order->billing_address_id = $billing_id;
+        $order->shipping_address_id = $shipping_id;
         $order->billing_address = json_encode($billAddress);
         $order->shipping_address = json_encode($shipAddress);
         $order->shippingcharge = floor($shippingcharge);
@@ -520,8 +675,13 @@ class CheckoutController extends Controller
             $order_items->selling_price = $item['sellingPrice'];
             $order_items->discount_amount = $total_discount;
             $order_items->tax_amount = $item['tax_price'];
-            $order_items->sub_total = (($item['quantity'] * $item['sellingPrice']) - ($item['tax_price'] +  $total_discount));
-            $order_items->total = (($item['quantity'] * $item['sellingPrice']) - $total_discount);
+            if (($item['tax_option'] ?? 'inclusive') === 'exclusive') {
+                $order_items->sub_total = ($item['quantity'] * $item['sellingPrice']) - $total_discount;
+                $order_items->total = ($item['quantity'] * $item['sellingPrice']) + $item['tax_price'] - $total_discount;
+            } else {
+                $order_items->sub_total = ($item['quantity'] * $item['sellingPrice']) - ($item['tax_price'] + $total_discount);
+                $order_items->total = ($item['quantity'] * $item['sellingPrice']) - $total_discount;
+            }
             $order_items->combination =  json_encode($item['selectedVariants']);
             $order_items->order_status_id = 1; // Pending
             $order_items->status = 'pending';
@@ -543,29 +703,23 @@ class CheckoutController extends Controller
             $orderStatusHistory->order_status = 'pending';
             $orderStatusHistory->save();
 
-            $orderitemvari = json_decode($order_items->combination, true);
-            $valueIds = [];
-
-            foreach ($orderitemvari as $variantName => $variantValue) {
-
-                $valueId = DB::table('variant_values')
-                    ->where('name', $variantValue)
-                    ->value('id');
-                $valueIds[] = $valueId;
-            }
-            $combinations = json_encode($valueIds);
-
             $productids = $order_items->product_id;
-            $productcomb = ProductVariantCombination::where('combination_id', $combinations)->where('product_id', $productids)->first();
+            $productcomb = !empty($item['combinationId'])
+                ? ProductVariantCombination::where('product_id', $productids)
+                    ->where('id', $item['combinationId'])->first()
+                : null;
             if ($productcomb) {
                 $productcomb->qty = $productcomb->qty - $order_items->qty;
                 $productcomb->save();
                 $order_items->product_variant_combination_id = $productcomb->id; // Pending
                 $order_items->save();
+            } else {
+                $product = Product::where('id', $productids)->first();
+                if ($product) {
+                    $product->qty = max((int) $product->qty - (int) $order_items->qty, 0);
+                    $product->save();
+                }
             }
-            $product = Product::where('id', $productids)->first();
-            $product->qty = $product->qty - $order_items->qty;
-            $product->save();
         }
 
         if ($wallet_amount > 0) {

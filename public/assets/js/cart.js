@@ -40,14 +40,21 @@ function getSelectedVariants(cartItems = [], checkDuplicate = true) {
     return exists ? null : selected;
 }
 
+function getSelectedVariantIds() {
+    return $('.s-variant.active[data-type]').map(function() {
+        return String($(this).attr('data-vid') || '');
+    }).get().filter(Boolean);
+}
+
 $(document).on('click', '.addToCartBtn', function() {
 
     let button = $(this);
     if (button.text() === 'Go To Cart') {
-        window.location.href = goTocartUrl;
+        window.location.href = viewCartUrl;
         return;
     }
-    let productId = button.data('id');
+    let productId = button.attr('data-id');
+    let productSku = button.attr('data-product-sku');
     let productName = button.data('name');
     let productType = button.data('producttype');
     let sku = button.data('sku');
@@ -57,70 +64,71 @@ $(document).on('click', '.addToCartBtn', function() {
     let discountAmount = button.data('discount');
     let rawTaxArr = button.attr('data-tax-arr');
     let quantity = parseInt($('#quantity').val()) || 1;
+    const minQuantity = parseInt($('#quantity').attr('min'), 10) || 1;
+    const maxQuantity = parseInt($('#quantity').attr('max'), 10) || 1;
+    const selectedVariantIds = getSelectedVariantIds();
 
-    if (isLoggedIn) {
+    if (quantity < minQuantity || quantity > maxQuantity) {
+        showFlashMessage('Please choose a quantity between ' + minQuantity + ' and ' + maxQuantity + '.');
+        return;
+    }
+
+    if (window.isCustomerLoggedIn) {
         let selectedVariants = getSelectedVariants([], false);
         console.log('Logged-in selectedVariants:', selectedVariants);
-        isLoginUser(productId,quantity,selectedVariants);
+        isLoginUser(productId,quantity,selectedVariants,'add',null,selectedVariantIds,productSku);
         return;
     }
 
     let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    let selectedVariants = getSelectedVariants(cartItems, true);
-    console.log('Guest selectedVariants:', selectedVariants);
-    // Same product + same variant already exists
-    if (selectedVariants === null) {
-        showFlashMessage(
-            "This product with selected options is already in your cart."
-        );
-        openCartDropdown();
-        return;
-    }
-
+    let selectedVariants = getSelectedVariants([], false);
     let productData = {
         randomId: 'prod_' + Date.now() + '_' + Math.floor(Math.random() * 10000),
         productId: productId,
         name: productName,
+        slug: button.data('slug') || '',
         productType: productType,
         sku: sku,
         quantity: quantity,
+        minQuantity: minQuantity,
+        maxQuantity: maxQuantity,
+        stockQuantity: maxQuantity,
         price: price,
         sellingPrice: sellingPrice,
         discountType: discountType,
         discountAmount: discountAmount,
         image: document.querySelector('.default-image')?.src || '',
         selectedVariants: selectedVariants,
+        selectedVariantIds: selectedVariantIds,
         rawTaxArr: rawTaxArr
     };
 
-    let isExist = cartItems.some(function(item) {
-        if (item.productId != productId) {
-            return false;
+    const existingIndex = cartItems.findIndex(function(item) {
+        if (String(item.productId) !== String(productId)) return false;
+        const existingIds = (item.selectedVariantIds || []).map(String).sort();
+        const nextIds = selectedVariantIds.map(String).sort();
+        if (existingIds.length || nextIds.length) {
+            return existingIds.length === nextIds.length
+                && existingIds.every((id, index) => id === nextIds[index]);
         }
-
-        let oldVariants = item.selectedVariants || {};
-        let newVariants = selectedVariants || {};
-
-        let oldKeys = Object.keys(oldVariants);
-        let newKeys = Object.keys(newVariants);
-
-        if (oldKeys.length !== newKeys.length) {
-            return false;
-        }
-
-        return oldKeys.every(function(key) {
-            return oldVariants[key] === newVariants[key];
-        });
+        return JSON.stringify(item.selectedVariants || {}) === JSON.stringify(selectedVariants || {});
     });
 
-    if (isExist) {
-        showFlashMessage("This product with selected options is already in your cart.");
-        openCartDropdown();
-        return;
+    if (existingIndex >= 0) {
+        const existing = cartItems[existingIndex];
+        const combinedQuantity = (parseInt(existing.quantity, 10) || minQuantity) + quantity;
+        if (combinedQuantity > maxQuantity) {
+            showFlashMessage('Only ' + maxQuantity + ' items are available for this product option.');
+            return;
+        }
+        existing.quantity = combinedQuantity;
+        existing.maxQuantity = maxQuantity;
+        existing.stockQuantity = maxQuantity;
+    } else {
+        cartItems.push(productData);
     }
 
-    cartItems.push(productData);
-    localStorage.setItem('cartItems',JSON.stringify(cartItems));
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
     console.log('Guest cart saved:',JSON.parse(localStorage.getItem('cartItems')));
 
     updateHeaderCart();
@@ -130,7 +138,7 @@ $(document).on('click', '.addToCartBtn', function() {
 });
 
 $(document).ready(function () {
-    if (!isLoggedIn) {
+    if (!window.isCustomerLoggedIn) {
         updateHeaderCart();
     }
 });
@@ -241,7 +249,7 @@ function displayCartItems(notRequiredQtyAjaxClickonQtyBtn) {
    
      let cartItems = [];
 
-    if (isLoggedIn) {
+    if (window.isCustomerLoggedIn) {
         cartItems = window.dbCartItems || [];
     } else {
         cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
@@ -484,7 +492,7 @@ function priceCalculation() {
             image: window.buyNowData.image || '',
             rawTaxArr: window.buyNowData.tax_arr || ''
         }];
-    } else if (isLoggedIn) {
+    } else if (window.isCustomerLoggedIn) {
         cartItems = (window.dbCartItems || []).map(item => ({
             ...item,
             product_id: item.product_id,
@@ -604,7 +612,7 @@ function priceCalculation() {
    
     if (window.buyNowData) {
         cartItems = cartData;
-    } else if (isLoggedIn) {
+    } else if (window.isCustomerLoggedIn) {
         cartItems = cartData;
     } else {
         localStorage.setItem('cartItems', JSON.stringify(cartData));
@@ -747,7 +755,7 @@ $(document).off('click','.addToNewQtyBtn, .addToDecQtyBtn').on('click','.addToNe
         e.preventDefault();
         var input =$(this).closest('.input-increment').find('.quantityInputs');
         var randomId =input.data('randomid');
-        if (isLoggedIn) {
+        if (window.isCustomerLoggedIn) {
             var productId =input.data('productid');
             var selectedVariants =input.data('variants') || {};
             var currentQty =parseInt(input.val()) || 1;
@@ -800,19 +808,21 @@ $(document).off('click','.addToNewQtyBtn, .addToDecQtyBtn').on('click','.addToNe
     }
 );
 
-function isLoginUser(productId, quantity, selectedVariants, type = null, cartId = null) {
-    if (!isLoggedIn) {
+function isLoginUser(productId, quantity, selectedVariants, type = null, cartId = null, selectedVariantIds = [], productSku = null) {
+    if (!window.isCustomerLoggedIn) {
         return;
     }
 
     $.ajax({
-        url: addToCart,
+        url: window.addToCartUrl || addToCart,
         type: 'POST',
         data: {
             _token: $('meta[name="csrf-token"]').attr('content'),
             product_id: productId,
+            product_sku: productSku,
             quantity: quantity,
             selected_variants: selectedVariants,
+            selected_variant_ids: selectedVariantIds,
             addType: type,
             cart_id: cartId
         },
@@ -833,7 +843,9 @@ function isLoginUser(productId, quantity, selectedVariants, type = null, cartId 
         },
         error: function(error) {
             console.log('Logged-in cart error:', error);
-            showFlashMessage("Unable to update cart. Please try again.");
+            const message = error.responseJSON?.message
+                || "Unable to update cart. Please try again.";
+            showFlashMessage(message, 'error');
         }
     });
 }
@@ -914,4 +926,3 @@ function getCoupon() {
         }
     });
 }
-

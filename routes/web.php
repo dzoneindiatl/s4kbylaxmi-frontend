@@ -36,7 +36,9 @@ Route::get('/contact-us', [HomeController::class, 'contactUs'])->name('contact.i
 Route::get('/store-locator', [HomeController::class, 'storeLocator'])->name('store-locator');
 Route::get('/franchise-enquiry', [HomeController::class, 'franchiseEnquiry'])->name('franchiseEnquiry');
 Route::get('/wholesale-enquiry', [HomeController::class, 'wholesaleEnquiry'])->name('wholesaleEnquiry');
-Route::get('/dashboard', [\App\Http\Controllers\Front\DashboardController::class, 'index'])->name('user.dashboard');
+Route::get('/dashboard', [\App\Http\Controllers\Front\DashboardController::class, 'index'])
+    ->middleware('AuthCustomer')
+    ->name('user.dashboard');
 Route::post('/subscribe', [HomeController::class, 'subscribe'])->name('subscribe');
 Route::get('/product/product-sort-filter', [ShopController::class, 'productSortFilter'])->name('sort.filter');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -46,7 +48,10 @@ Route::post('/apply-coupons', [CartController::class, 'applyCoupon'])->name('app
 Route::post('/get-coupons', [CartController::class, 'getCoupon'])->name('get.coupon');
 Route::get('/filter-new-arrivals/{categoryId}', [HomeController::class, 'filterNewArrivals'])->name('filter.new.arrivals');
 Route::get('/best-seller-filter', [HomeController::class, 'bestSellerFilter'])->name('front.best.seller.filter');
-Route::get('/cart/view', [HomeController::class, 'viewBag'])->name('product.viewBag');
+Route::get('/cart/view', [CartController::class, 'viewPage'])->name('product.viewBag');
+Route::post('/cart/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.update.quantity');
+Route::post('/cart/remove-item', [CartController::class, 'removeCartItem'])->name('cart.remove.item');
+Route::post('/cart/guest-sync', [CartController::class, 'syncGuestCart'])->name('cart.guest-sync');
 Route::post('/product/recently-viewed-products', [ShopController::class, 'getRecentlyViewed']);
 Route::post('/submit-bulk-order', [BulkOrderController::class, 'submitBulkOrder'])->name('bulk.order.submit');
 Route::post('/wholesale-enquiry', [App\Http\Controllers\Front\WholesaleEnquiryController::class, 'store'])->name('wholesale-enquiry');
@@ -66,8 +71,8 @@ Route::post('subscribers/create',[HomeController::class,'storeNewsletterRecord']
 Route::post('/set-currency', [HomeController::class, 'setCurrency'])->name('set-currency');
 Route::match(['get', 'post'], 'variant-combination/prices', [HomeController::class, 'variantCombinationPrices'])->name('variant.combination.prices');
 
-Route::get('/get-states/{country_id}', [App\Http\Controllers\Front\HomeController::class, 'getStates']);
-Route::get('/get-cities/{state_id}', [App\Http\Controllers\Front\HomeController::class, 'getCities']);
+Route::get('/get-states', [App\Http\Controllers\Front\HomeController::class, 'getStates'])->name('address.states');
+Route::get('/get-cities', [App\Http\Controllers\Front\HomeController::class, 'getCities'])->name('address.cities');
 Route::name('front-')->group(function () {
     Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index'])->name('home.index');
     Route::get('/shop/{categoryId?}/{subCategoryId?}/{childCategoryId?}', [App\Http\Controllers\Front\ShopController::class, 'index'])->name('shop.index');
@@ -126,7 +131,7 @@ Route::name('front-')->group(function () {
         Route::post('/update-address', [App\Http\Controllers\Front\CheckoutController::class, 'updateAddress'])->name('user.update_user_address');
         Route::get('/get-user-wallet/{user_id}', [App\Http\Controllers\Front\CheckoutController::class, 'getuserWallet']);
 
-        Route::POST('/place-order', [App\Http\Controllers\Front\CheckoutController::class, 'placeOrder']);
+        Route::POST('/place-order', [App\Http\Controllers\Front\CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
         Route::any('/checkout-callback', [App\Http\Controllers\Front\CheckoutController::class, 'checkout_callback'])->name('product.checkout.callback');
         Route::get('/order-details/{orderId}', [App\Http\Controllers\Front\OrderController::class, 'orderDetails']);
         //Route::get('/order-confirm/{id}', [App\Http\Controllers\Front\HomeController::class, 'order_confirm'])->name('user.order.confirm');
@@ -157,5 +162,3 @@ Route::name('front-')->group(function () {
 Route::post('/checkVarientStock', [App\Http\Controllers\Front\HomeController::class, 'variantStockCheck'])->name('variant.stock.check');
 Route::get('product/collection/{slug}', [HomeController::class, 'collectionListing'])->name('collections.show');
 Route::get('{path}', [HomeController::class, 'productListing'])->where('path', '.*')->name('category.show');
-
-

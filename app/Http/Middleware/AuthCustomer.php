@@ -33,6 +33,7 @@ class AuthCustomer
         if(Auth::guard('customer')->user()->is_deleted == 1 || Auth::guard('customer')->user()->is_active == 0){
             Session()->flash('error', trans("your account has been deactivated please contact to admin for more details"));
             Auth::guard('customer')->logout();
+            return Redirect()->route('front-user.login');
         }
         
 

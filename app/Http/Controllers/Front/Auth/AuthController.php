@@ -25,7 +25,7 @@ use Session, Config, DB, Response, Str;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
-use App\Models\{User, Cart, VariantValue, ProductVariantCombination};
+use App\Models\{User, Cart, Product, ProductVariantValue, VariantValue, ProductVariantCombination};
 
 
 class AuthController extends Controller
@@ -33,7 +33,9 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-            return view('front.auth.login');
+            return view('front.auth.login', [
+                'returnTo' => $request->input('return_to') === 'checkout' ? 'checkout' : '',
+            ]);
         } catch (Exception $e) {
             Log::error($e);
             return redirect()->back()->with(['error' => 'Somethig went wrong', 'error_msg' => $e->getMessage()]);
@@ -289,59 +291,138 @@ class AuthController extends Controller
             Cookie::queue('auto_login',encrypt($loggedInUser->id),60 * 24 * 30);
         }
 
-        if ($request->filled('cartItems')) {
+        $cartItems = session('guest_cart_items', []);
+        if (!$cartItems && $request->filled('cartItems')) {
+            $cartItems = json_decode($request->cartItems, true) ?: [];
+        }
 
-            $cartItems = json_decode($request->cartItems, true);
-            info("--------cartitems--------",[$cartItems]); 
-            if (is_array($cartItems)) {
-                $this->cartItems($cartItems);
+        if ($cartItems) {
+            try {
+                $mergeWarnings = $this->cartItems($cartItems);
+                session()->forget('guest_cart_items');
+                session()->flash('guest_cart_merged', true);
+                if ($mergeWarnings) {
+                    session()->flash('cart_merge_warning', implode(' ', array_unique($mergeWarnings)));
+                }
+            } catch (\Throwable $exception) {
+                Log::error('Unable to merge guest cart after login', [
+                    'user_id' => $loggedInUser->id,
+                    'message' => $exception->getMessage(),
+                ]);
+                return redirect()->route('product.viewBag')
+                    ->with('cart_merge_error', 'We could not restore your cart items. Please review your cart and try again.');
             }
         }
-        return Redirect::route('user.dashboard')
-            ->with('success', trans('Login successfully'));
+
+        if ($request->input('return_to') === 'checkout') {
+            return redirect()->to(route('product.viewBag') . '?step=checkout&cart_merged=1')
+                ->with('success', trans('Login successfully'));
+        }
+
+        if ($cartItems) {
+            return redirect()->to(route('product.viewBag') . '?cart_merged=1')
+                ->with('success', trans('Login successfully'));
+        }
+
+        return Redirect::route('user.dashboard')->with('success', trans('Login successfully'));
     }
 
     private function cartItems($cartItems)
     {
-        $insertData = [];
+        if (!is_array($cartItems)) {
+            throw new \InvalidArgumentException('Guest cart must be a list of items.');
+        }
 
-        foreach ($cartItems as $item) {
-            $variantValueNames = array_values($item["selectedVariants"]);
-            $nameToId = VariantValue::whereIn('name', $variantValueNames)
-                ->get()
-                ->pluck('id', 'name');
+        $warnings = [];
+        DB::transaction(function () use ($cartItems, &$warnings) {
+            $userId = Auth::guard('customer')->id();
+            foreach ($cartItems as $item) {
+                $product = Product::find($item['productId'] ?? null);
+                if (!$product || (int) $product->is_active !== 1 || (int) ($product->is_deleted ?? 0) === 1) {
+                    Log::warning('Skipped unavailable product while merging guest cart', [
+                        'user_id' => $userId,
+                        'product_id' => $item['productId'] ?? null,
+                    ]);
+                    $warnings[] = 'One or more items were not restored because the products are no longer available.';
+                    continue;
+                }
 
-            $variantValueIds = collect($variantValueNames)
-                ->map(fn($name) => (int) ($nameToId[$name] ?? null))
-                ->toArray();
-            $valueIds = array_map('intval', $variantValueIds);
-            $jsonCombo = json_encode($valueIds);
+                $valueIds = array_values(array_unique(array_map(
+                    'intval',
+                    $item['selectedVariantIds'] ?? []
+                )));
+                if (!$valueIds && !empty($item['selectedVariants'])) {
+                    $productValues = ProductVariantValue::with('variant_value.variant')
+                        ->where('product_id', $product->id)
+                        ->get();
+                    foreach ($item['selectedVariants'] as $variantName => $valueName) {
+                        $matchingValue = $productValues->first(function ($productValue) use ($variantName, $valueName) {
+                            return $productValue->variant_value
+                                && strcasecmp((string) $productValue->variant_value->name, (string) $valueName) === 0
+                                && strcasecmp((string) ($productValue->variant_value->variant->name ?? ''), (string) $variantName) === 0;
+                        });
+                        if (!$matchingValue) {
+                            throw new \RuntimeException('A selected product option is no longer available.');
+                        }
+                        $valueIds[] = (int) $matchingValue->variant_value_id;
+                    }
+                }
 
-            $combination = ProductVariantCombination::where('product_id', $item['productId'])
-                ->where('combination_id', $jsonCombo)
-                ->first();
+                $productValueIds = ProductVariantValue::where('product_id', $product->id)
+                    ->pluck('variant_value_id')->map(fn ($id) => (int) $id)->all();
+                if (array_diff($valueIds, $productValueIds)) {
+                    throw new \RuntimeException('A selected product option is invalid.');
+                }
 
-            if ($combination) {
-                $alreadyExists = Cart::where('user_id', Auth::guard('customer')->id())
-                    ->where('product_id', $item['productId'])
-                    ->where('product_variant_combination_id', $combination->id)
-                    ->exists();
+                $combination = null;
+                if ($valueIds) {
+                    $requestedIds = $valueIds;
+                    sort($requestedIds, SORT_NUMERIC);
+                    $query = ProductVariantCombination::where('product_id', $product->id);
+                    foreach ($valueIds as $valueId) {
+                        $query->whereJsonContains('combination_id', $valueId);
+                    }
+                    $combination = $query->get()->first(function ($candidate) use ($requestedIds) {
+                        $candidateIds = json_decode($candidate->combination_id, true);
+                        if (!is_array($candidateIds)) return false;
+                        $candidateIds = array_map('intval', $candidateIds);
+                        sort($candidateIds, SORT_NUMERIC);
+                        return $candidateIds === $requestedIds;
+                    });
+                    if (!$combination) {
+                        throw new \RuntimeException('A selected product combination is no longer available.');
+                    }
+                }
 
-                if (!$alreadyExists) {
-                    $insertData[] = [
-                        'user_id'                        => Auth::guard('customer')->id(),
-                        'product_id'                     => $item['productId'],
-                        'product_variant_combination_id' => $combination->id,
-                        'quantity'                       => $item['quantity'],
-                    ];
+                $stock = max((int) ($combination->qty ?? $product->qty ?? 0), 0);
+                $min = max((int) ($product->min_selling_units ?? 1), 1);
+                $productMax = max((int) ($product->max_selling_units ?? 0), 0);
+                $max = $productMax > 0 ? min($stock, $productMax) : $stock;
+                $quantity = (int) ($item['quantity'] ?? 0);
+                $existing = Cart::where('user_id', $userId)
+                    ->where('product_id', $product->id)
+                    ->where('product_variant_combination_id', $combination->id ?? null)
+                    ->first();
+                $newQuantity = $quantity + (int) ($existing->quantity ?? 0);
+                if ($quantity < $min || $newQuantity > $max || $max < $min) {
+                    throw new \RuntimeException('Cart quantity exceeds the available stock or selling limit for ' . $product->name . '.');
+                }
+
+                if ($existing) {
+                    $existing->quantity = $newQuantity;
+                    $existing->save();
+                } else {
+                    Cart::create([
+                        'user_id' => $userId,
+                        'product_id' => $product->id,
+                        'product_variant_combination_id' => $combination->id ?? null,
+                        'quantity' => $quantity,
+                    ]);
                 }
             }
-        }
+        });
 
-
-        if (!empty($insertData)) {
-            Cart::insert($insertData);
-        }
+        return $warnings;
     }
 
 
