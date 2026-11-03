@@ -452,11 +452,14 @@ class CartController extends Controller
                 $minimum = max((int) ($product->min_selling_units ?? 1), 1);
                 $productMaximum = max((int) ($product->max_selling_units ?? 0), 0);
                 $maximum = $productMaximum > 0 ? min($stock, $productMaximum) : $stock;
-                if ($quantity < $minimum || $quantity > $maximum || $maximum < $minimum) {
+                if ((int) ($combination->is_out_of_stock ?? 0) === 1
+                    || $quantity < $minimum
+                    || $quantity > $maximum
+                    || $maximum < $minimum) {
                     return response()->json([
                         'success' => false,
-                        'message' => $maximum < $minimum
-                            ? 'This option is currently unavailable.'
+                        'message' => (int) ($combination->is_out_of_stock ?? 0) === 1 || $maximum < $minimum
+                            ? 'This option is currently out of stock.'
                             : "Quantity must be between {$minimum} and {$maximum}.",
                     ], 422);
                 }

@@ -23,112 +23,108 @@
         <div class="collapse navbar-collapse" id="mainNavigation">
 
             {{-- Navigation Menu --}}
-            <ul class="navbar-nav">
+   
 
-                {{-- Home --}}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/') }}">
-                        Home
-                    </a>
-                </li>
+<ul class="navbar-nav">
 
-                {{-- Dynamic Categories --}}
-                @foreach($categories->whereNull('parent_id')->where('category_type_id', 2)->where('show_on_menu', 1) as $cat)
+    {{-- HOME --}}
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url('/') }}">
+            Home
+        </a>
+    </li>
 
-                    <li class="nav-item dropdown mega-dropdown">
 
-                        <a class="nav-link dropdown-toggle"
-                            href="{{ route('category.show', ['path' => $cat->slug]) }}"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
+    {{-- DYNAMIC PARENT CATEGORIES --}}
+    @foreach($categories->whereNull('parent_id')->where('category_type_id', 2)->where('show_on_menu', 1) as $cat)
 
-                            {{ $cat->name }}
-                        </a>
+        <li class="nav-item dropdown">
 
-                        <div class="dropdown-menu mega-menu">
+            {{-- PARENT CATEGORY --}}
+            <button class="nav-link dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
 
-                            <div class="mega-menu-inner">
+                {{ $cat->name }}
 
-                                @foreach($subCategories as $sub)
+            </button>
 
-                                    @if($sub->parent_id == $cat->id)
 
-                                        <div class="mega-column">
+            {{-- CHILD CATEGORY DROPDOWN --}}
+            <ul class="dropdown-menu">
 
-                                            <a class="mega-heading"
-                                                href="{{ route('category.show', ['path' => $cat->slug.'/'.$sub->slug]) }}">
-                                                {{ $sub->name }}
-                                            </a>
+          
 
-                                            @foreach($childCategories as $child)
 
-                                                @if($child->parent_id == $sub->id)
+                {{-- CHILD CATEGORIES --}}
+                @foreach($subCategories as $sub)
 
-                                                    <a class="mega-item"
-                                                        href="{{ route('category.show', ['path' => $cat->slug.'/'.$sub->slug.'/'.$child->slug]) }}">
+                    @if($sub->parent_id == $cat->id)
 
-                                                        <svg viewBox="0 0 14 10" fill="none"
-                                                            aria-hidden="true"
-                                                            xmlns="http://www.w3.org/2000/svg">
-                                                            <path
-                                                                d="M8.537.808a.5.5 0 01.817-.162l4 4a.5.5 0 010 .708l-4 4a.5.5 0 11-.708-.708L11.793 5.5H1a.5.5 0 010-1h10.793L8.646 1.354a.5.5 0 01-.109-.546z"
-                                                                fill="currentColor">
-                                                            </path>
-                                                        </svg>
+                        <li class="dropdown-submenu">
 
-                                                        {{ $child->name }}
-                                                    </a>
+                            {{-- CHILD CATEGORY LINK --}}
+                            <a class="dropdown-item"
+                               href="{{ route('category.show', [
+                                   'path' => $cat->slug.'/'.$sub->slug
+                               ]) }}">
 
-                                                @endif
+                                <span>{{ $sub->name }}</span>
 
-                                            @endforeach
+                                {{-- Show arrow only if sub-child exists --}}
+                                @if($childCategories->where('parent_id', $sub->id)->isNotEmpty())
+                                    <span class="submenu-arrow" aria-hidden="true"></span>
+                                @endif
 
-                                        </div>
+                            </a>
 
-                                    @endif
 
-                                @endforeach
+                            {{-- SUB-CHILD CATEGORY DROPDOWN --}}
+                            @if($childCategories->where('parent_id', $sub->id)->isNotEmpty())
 
-                            </div>
+                                <ul class="dropdown-menu dropdown-submenu-menu">
 
-                        </div>
-                    </li>
+                             
+
+
+                                    {{-- SUB-CHILD CATEGORIES --}}
+                                    @foreach($childCategories as $child)
+
+                                        @if($child->parent_id == $sub->id)
+
+                                            <li>
+                                                <a class="dropdown-item"
+                                                   href="{{ route('category.show', [
+                                                       'path' => $cat->slug.'/'.$sub->slug.'/'.$child->slug
+                                                   ]) }}">
+
+                                                    {{ $child->name }}
+
+                                                </a>
+                                            </li>
+
+                                        @endif
+
+                                    @endforeach
+
+                                </ul>
+
+                            @endif
+
+                        </li>
+
+                    @endif
 
                 @endforeach
 
-                {{-- Dynamic Collections --}}
-                <li class="nav-item dropdown">
-
-                    <a class="nav-link dropdown-toggle"
-                        href="#"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false">
-
-                        Collections
-                    </a>
-
-                    <ul class="dropdown-menu">
-
-                        @foreach($categories->where('category_type_id', 1)->where('show_on_menu', 1) as $collection)
-
-                            <li>
-                                <a class="dropdown-item"
-                                    href="{{ route('category.show', ['path' => $collection->slug]) }}">
-
-                                    {{ $collection->name }}
-
-                                </a>
-                            </li>
-
-                        @endforeach
-
-                    </ul>
-
-                </li>
-
             </ul>
+
+        </li>
+
+    @endforeach
+
+</ul>
 
             {{-- Search Form --}}
             <form class="search-form" role="search" action="{{ url('/search') }}" method="GET">

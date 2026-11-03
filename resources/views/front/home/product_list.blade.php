@@ -18,7 +18,7 @@
                 <div class="filter-heading">
                     <h1 id="filterTitle">Filters</h1>
 
-                    <button type="reset" form="productFilters">
+                    <button class="filter-clear-button" type="button" data-filter-action="{{ url()->current() }}">
                         Clear all
                     </button>
 
@@ -29,7 +29,7 @@
                     </button>
                 </div>
 
-                <form id="productFilters">
+                <form id="productFilters" action="{{ url()->current() }}" method="GET">
 
                     {{-- PRICE FILTER --}}
                     <details class="filter-group filter-price-group" open>
@@ -38,15 +38,15 @@
                         <div class="filter-price-content">
 
                             <div class="filter-range-values" aria-hidden="true">
-                                <span>&#8377;<span class="filter-range-min-value">500</span></span>
-                                <span>&#8377;<span class="filter-range-max-value">10000</span></span>
+                                <span>&#8377;<span class="filter-range-min-value">{{ $selectedMinPrice }}</span></span>
+                                <span>&#8377;<span class="filter-range-max-value">{{ $selectedMaxPrice }}</span></span>
                             </div>
 
                             <div class="filter-range-slider">
-                                <input type="range" class="filter-price-min-range" min="500" max="10000" value="500"
+                                <input type="range" class="filter-price-min-range" min="{{ $priceFloor }}" max="{{ $priceCeiling }}" value="{{ $selectedMinPrice }}"
                                     aria-label="Minimum price slider">
 
-                                <input type="range" class="filter-price-max-range" min="500" max="10000" value="10000"
+                                <input type="range" class="filter-price-max-range" min="{{ $priceFloor }}" max="{{ $priceCeiling }}" value="{{ $selectedMaxPrice }}"
                                     aria-label="Maximum price slider">
                             </div>
 
@@ -54,12 +54,12 @@
 
                                 <label>
                                     Min Price
-                                    <input type="number" name="price-min" value="500" min="500" max="10000">
+                                    <input type="number" name="price_min" value="{{ $selectedMinPrice }}" min="{{ $priceFloor }}" max="{{ $priceCeiling }}">
                                 </label>
 
                                 <label>
                                     Max Price
-                                    <input type="number" name="price-max" value="10000" min="500" max="10000">
+                                    <input type="number" name="price_max" value="{{ $selectedMaxPrice }}" min="{{ $priceFloor }}" max="{{ $priceCeiling }}">
                                 </label>
 
                             </div>
@@ -71,37 +71,44 @@
                         <summary>Select category</summary>
 
                         <div class="filter-options filter-category-options">
-
                             <label>
-                                <input type="checkbox" name="category" value="kurta">
-                                Kurta
+                                Parent category
+                                <select name="category_id" class="filter-category-parent">
+                                    <option value="">All categories</option>
+                                    @foreach($filterCategories as $filterCategory)
+                                        <option value="{{ $filterCategory->id }}"
+                                            {{ (int) $selectedCategoryId === (int) $filterCategory->id ? 'selected' : '' }}>
+                                            {{ $filterCategory->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </label>
-
                             <label>
-                                <input type="checkbox" name="category" value="kurti">
-                                Kurti
+                                Subcategory
+                                <select name="sub_category_id" class="filter-category-child"
+                                    data-selected="{{ $selectedSubCategoryId }}">
+                                    <option value="">All subcategories</option>
+                                    @foreach($allSubCategory as $filterCategory)
+                                        <option value="{{ $filterCategory->id }}" data-parent="{{ $filterCategory->parent_id }}"
+                                            {{ (int) $selectedSubCategoryId === (int) $filterCategory->id ? 'selected' : '' }}>
+                                            {{ $filterCategory->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </label>
-
                             <label>
-                                <input type="checkbox" name="category" value="kurta-pant">
-                                Kurta-pant
+                                Sub-child category
+                                <select name="sub_child_category_id" class="filter-category-grandchild"
+                                    data-selected="{{ $selectedChildCategoryId }}">
+                                    <option value="">All sub-child categories</option>
+                                    @foreach($allChildCategory as $filterCategory)
+                                        <option value="{{ $filterCategory->id }}" data-parent="{{ $filterCategory->parent_id }}"
+                                            {{ (int) $selectedChildCategoryId === (int) $filterCategory->id ? 'selected' : '' }}>
+                                            {{ $filterCategory->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </label>
-
-                            <label>
-                                <input type="checkbox" name="category" value="kaftan">
-                                Kaftan
-                            </label>
-
-                            <label>
-                                <input type="checkbox" name="category" value="co-ord-set">
-                                Co-ord set
-                            </label>
-
-                            <label>
-                                <input type="checkbox" name="category" value="new-arrivals">
-                                New arrivals
-                            </label>
-
                         </div>
                     </details>
 
@@ -111,42 +118,16 @@
 
                         <div class="filter-options filter-color-options">
 
-                            <label><input type="checkbox" name="color" value="purple"><span
-                                    class="filter-color-swatch color-purple"></span><span>Purple</span></label>
-
-                            <label><input type="checkbox" name="color" value="black"><span
-                                    class="filter-color-swatch color-black"></span><span>Black</span></label>
-
-                            <label><input type="checkbox" name="color" value="red"><span
-                                    class="filter-color-swatch color-red"></span><span>Red</span></label>
-
-                            <label><input type="checkbox" name="color" value="orange"><span
-                                    class="filter-color-swatch color-orange"></span><span>Orange</span></label>
-
-                            <label><input type="checkbox" name="color" value="navy"><span
-                                    class="filter-color-swatch color-navy"></span><span>Navy</span></label>
-
-                            <label><input type="checkbox" name="color" value="white"><span
-                                    class="filter-color-swatch color-white"></span><span>White</span></label>
-
-                            <label><input type="checkbox" name="color" value="brown"><span
-                                    class="filter-color-swatch color-brown"></span><span>Brown</span></label>
-
-                            <label><input type="checkbox" name="color" value="green"><span
-                                    class="filter-color-swatch color-green"></span><span>Green</span></label>
-
-                            <label><input type="checkbox" name="color" value="yellow"><span
-                                    class="filter-color-swatch color-yellow"></span><span>Yellow</span></label>
-
-                            <label><input type="checkbox" name="color" value="grey"><span
-                                    class="filter-color-swatch color-grey"></span><span>Grey</span></label>
-
-                            <label><input type="checkbox" name="color" value="pink"><span
-                                    class="filter-color-swatch color-pink"></span><span>Pink</span></label>
-
-                            <label><input type="checkbox" name="color" value="blue"><span
-                                    class="filter-color-swatch color-blue"></span><span>Blue</span></label>
-
+                            @foreach($variantColor as $filterColor)
+                                <label>
+                                    <input type="checkbox" name="variantValuesColor[]"
+                                        value="{{ $filterColor->id }}"
+                                        {{ in_array((int) $filterColor->id, $selectedColorIds, true) ? 'checked' : '' }}>
+                                    <span class="filter-color-swatch"
+                                        style="background-color: {{ $filterColor->color_code ?: '#ddd' }}"></span>
+                                    <span>{{ $filterColor->name }}</span>
+                                </label>
+                            @endforeach
                         </div>
                     </details>
 
@@ -156,37 +137,42 @@
 
                         <div class="filter-options filter-size-options">
 
-                            <label><input type="checkbox" name="size" value="xs"> XS</label>
-                            <label><input type="checkbox" name="size" value="s"> S</label>
-                            <label><input type="checkbox" name="size" value="m"> M</label>
-                            <label><input type="checkbox" name="size" value="l"> L</label>
-                            <label><input type="checkbox" name="size" value="xl"> XL</label>
-                            <label><input type="checkbox" name="size" value="xxl"> XXL</label>
-
+                            @foreach($variantSize as $filterSize)
+                                <label>
+                                    <input type="checkbox" name="variantValuesSize[]"
+                                        value="{{ $filterSize->id }}"
+                                        {{ in_array((int) $filterSize->id, $selectedSizeIds, true) ? 'checked' : '' }}>
+                                    {{ $filterSize->name }}
+                                </label>
+                            @endforeach
                         </div>
                     </details>
 
                     {{-- FABRIC FILTER --}}
                     <details class="filter-group">
-                        <summary>Fabric material</summary>
+                        <summary>Product attributes</summary>
 
                         <div class="filter-options filter-fabric-options">
-
-                            <label><input type="checkbox" name="fabric" value="cotton"> Cotton</label>
-                            <label><input type="checkbox" name="fabric" value="chanderi"> Chanderi</label>
-                            <label><input type="checkbox" name="fabric" value="chiffon"> Chiffon</label>
-                            <label><input type="checkbox" name="fabric" value="georgette"> Georgette</label>
-                            <label><input type="checkbox" name="fabric" value="rayon"> Rayon</label>
-                            <label><input type="checkbox" name="fabric" value="tissue"> Tissue</label>
-                            <label><input type="checkbox" name="fabric" value="silk"> Silk</label>
-
+                            @foreach($attributes as $filterAttribute)
+                                @if($filterAttribute->attribute_values->isNotEmpty())
+                                    <strong>{{ $filterAttribute->name }}</strong>
+                                @endif
+                                @foreach($filterAttribute->attribute_values as $filterAttributeValue)
+                                    <label>
+                                        <input type="checkbox" name="attribute_value_id[]"
+                                            value="{{ $filterAttributeValue->id }}"
+                                            {{ in_array((int) $filterAttributeValue->id, $selectedAttributeValueIds, true) ? 'checked' : '' }}>
+                                        {{ $filterAttributeValue->name }}
+                                    </label>
+                                @endforeach
+                            @endforeach
                         </div>
                     </details>
 
                 </form>
 
                 <div class="filter-drawer-footer">
-                    <button class="filter-apply-button" type="button">
+                    <button class="filter-apply-button" type="submit" form="productFilters">
                         Show results
                     </button>
                 </div>
@@ -248,11 +234,12 @@
 
                             <span class="visually-hidden">Sort products</span>
 
-                            <select aria-label="Sort products">
-                                <option value="">Sort By</option>
-                                <option value="low-high">Price: low to high</option>
-                                <option value="high-low">Price: high to low</option>
-                                <option value="newest">Newest arrivals</option>
+                            <select name="sortBy" form="productFilters" aria-label="Sort products"
+                                class="product-sort-select">
+                                <option value="" {{ request('sortBy') ? '' : 'selected' }}>Sort By</option>
+                                <option value="low_high" {{ request('sortBy') === 'low_high' ? 'selected' : '' }}>Price: low to high</option>
+                                <option value="high_low" {{ request('sortBy') === 'high_low' ? 'selected' : '' }}>Price: high to low</option>
+                                <option value="newest" {{ request('sortBy') === 'newest' ? 'selected' : '' }}>Newest arrivals</option>
                             </select>
 
                         </label>
@@ -353,8 +340,8 @@
                                 </p>
 
 
-                                {{-- PRODUCT VARIANTS --}}
-                                <div class="listing-product-variants">
+                             
+                                {{-- <div class="listing-product-variants">
 
                                     @foreach($product->productVariants as $productVariant)
 
@@ -364,7 +351,7 @@
                                         @endphp
 
 
-                                        {{-- TYPE 1: COLOR --}}
+                                     
                                         @if($type == 1)
 
                                             <div class="product_colors variant-round">
@@ -380,7 +367,7 @@
                                             </div>
 
 
-                                            {{-- TYPE 2: SIZE --}}
+                                          
                                         @elseif($type == 2)
 
                                             <div class="product_sizes variant-box">
@@ -396,7 +383,7 @@
                                             </div>
 
 
-                                            {{-- TYPE 3: IMAGE VARIANT --}}
+                                          
                                         @elseif($type == 3)
 
                                             <div class="product_colors variant-round variant-with-image">
@@ -426,7 +413,7 @@
                                             </div>
 
 
-                                            {{-- TYPE 4: COLOR CODE --}}
+                                          
                                         @elseif($type == 4)
 
                                             <div class="product_colors variant-round">
@@ -447,7 +434,7 @@
                                             </div>
 
 
-                                            {{-- TYPE 5: SIZE WITH COLOR --}}
+                                           
                                         @elseif($type == 5)
 
                                             <div class="product_sizes variant-box-color">
@@ -471,7 +458,7 @@
                                             </div>
 
 
-                                            {{-- TYPE 6: SIZE WITH IMAGE --}}
+                                            
                                         @elseif($type == 6)
 
                                             <div class="product_sizes variant-box-image">
@@ -507,7 +494,7 @@
                                             </div>
 
 
-                                            {{-- TYPE 7: RECTANGLE SIZE --}}
+                                          
                                         @elseif($type == 7)
 
                                             <div class="product_sizes variant-rectangle">
@@ -523,7 +510,7 @@
                                             </div>
 
 
-                                            {{-- TYPE 8: RECTANGLE IMAGE --}}
+                                            
                                         @elseif($type == 8)
 
                                             <div class="product_sizes variant-rectangle-image">
@@ -559,7 +546,7 @@
                                             </div>
 
 
-                                            {{-- TYPE 9: RECTANGLE COLOR --}}
+                                            
                                         @elseif($type == 9)
 
                                             <div class="product_sizes variant-rectangle-color">
@@ -586,13 +573,17 @@
 
                                     @endforeach
 
-                                </div>
+                                </div> --}}
 
 
-                                {{-- ADD TO CART --}}
-                                <a href="{{ $productUrl }}" class="add-to-cart">
-                                    Add to cart
-                                </a>
+                            
+                                @if($product->isOutOfStock)
+                                    <span class="add-to-cart is-out-of-stock" aria-disabled="true">Out of stock</span>
+                                @else
+                                    <a href="{{ $productUrl }}" class="add-to-cart">
+                                        Add to cart
+                                    </a>
+                                @endif
 
                             </div>
 
@@ -607,11 +598,4 @@
         </div>
 
     </section>
-        @include('front.includes.footer')
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-        <script src="{{asset('assets/js/custom.js')}}"></script>
-
-
-
 @endsection

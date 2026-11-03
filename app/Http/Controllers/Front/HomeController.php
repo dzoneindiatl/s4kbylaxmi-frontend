@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\PriceDrop; 
 use App\Models\Variant; 
 use App\Models\VariantValue; 
+use App\Models\AttributeValue;
 use App\Models\ProductGraphics; 
 use App\Models\Attribute; 
 Use App\Models\CategoryAttribute; 
@@ -25,6 +26,8 @@ use App\Models\CategoryTax;
 use App\Models\Country;
 use App\Models\State;
 use App\Models\City;
+use Illuminate\Support\Facades\DB;
+
 class HomeController extends Controller
 {
     public function index(){
@@ -96,96 +99,206 @@ class HomeController extends Controller
         $today = now()->toDateString();
         $priceDrop = PriceDrop::whereDate('start_date', '<=', $today)->whereDate('end_date', '>=', $today)->where('is_deleted',0)->latest()->first();
         
-        $DB = Product::select('id','name','slug','buying_price','selling_price','discount','discount_type','sku')->where('is_deleted', 0)
-            ->where('is_active', "1")->orderBy('id','DESC'); 
+        $DB = Product::select('id','name','slug','buying_price','selling_price','discount','discount_type','sku','product_type','qty','min_selling_units','max_selling_units')->where('is_deleted', 0)
+            ->where('is_active', "1");
 
-        $hasCategoryFilter = $request->filled('category_id') || $request->filled('sub_category_id') ||  $request->filled('sub_child_category_id');
-        
-        if (!$hasCategoryFilter) {
-            if (count($segments) === 1) {
-                $DB->where('main_category_id', $category->id)->orWhere('main_collection_id',$category->id);
-                $categoriesData = Category::where('is_active', 1)
-                    ->where('is_deleted', 0)
-                    ->where('parent_id', $category->id)
-                    ->get();
-            }
-            elseif (count($segments) === 2) {
+        $categorySelectionProvided = $request->has('category_id')
+            || $request->has('sub_category_id')
+            || $request->has('sub_child_category_id');
+        $selectedCategoryId = $categorySelectionProvided
+            ? (int) $request->input('category_id', 0)
+            : (int) $category->id;
+        $selectedSubCategoryId = $categorySelectionProvided
+            ? (int) $request->input('sub_category_id', 0)
+            : (int) ($subCategory->id ?? 0);
+        $selectedChildCategoryId = $categorySelectionProvided
+            ? (int) $request->input('sub_child_category_id', 0)
+            : (int) ($subChildCategory->id ?? 0);
 
-                $DB->where(function ($q) use ($subCategory) {
-                    $q->where('main_sub_category_id', $subCategory->id)
-                        ->orWhere(function ($query) use ($subCategory) {
-                            $query->whereNotNull('sub_category_id')
-                                ->whereRaw('JSON_VALID(sub_category_id)')
-                                ->whereJsonContains('sub_category_id', (string) $subCategory->id);
-                        });
-                });
+        $filterCategories = Category::whereNull('parent_id')
+            ->where('is_active', 1)
+            ->where('is_deleted', 0)
+            ->orderBy('category_order')
+            ->get(['id', 'parent_id', 'name', 'slug']);
+        $allSubCategory = Category::whereIn('parent_id', $filterCategories->pluck('id'))
+            ->where('is_active', 1)
+            ->where('is_deleted', 0)
+            ->orderBy('category_order')
+            ->get(['id', 'parent_id', 'name', 'slug']);
+        $allChildCategory = Category::whereIn('parent_id', $allSubCategory->pluck('id'))
+            ->where('is_active', 1)
+            ->where('is_deleted', 0)
+            ->orderBy('category_order')
+            ->get(['id', 'parent_id', 'name', 'slug']);
 
-                $categoriesData = Category::where('is_active', 1)
-                    ->where('is_deleted', 0)
-                    ->where('parent_id', $subCategory->id)
-                    ->get();
-            }
-            elseif (count($segments) === 3) {
-                $DB->where(function ($q) use ($subChildCategory) {
-                    $q->where('main_child_category_id', $subChildCategory->id)
-                        ->orWhere(function ($query) use ($subChildCategory) {
-                            $query->whereNotNull('child_category_id')
-                                ->whereRaw('JSON_VALID(child_category_id)')
-                                ->whereJsonContains('child_category_id', (string) $subChildCategory->id);
-                        });
-                });
-                 $categoriesData = collect();
-            }
-        } else {
-            $categoriesData = collect();
-        } 
-        $categoryIds = (array) $request->input('category_id', []);
-        if (!empty($categoryIds)) {
-            $DB->whereIn('main_category_id', $categoryIds);
+        if ($selectedSubCategoryId
+            && !$allSubCategory->contains(function ($item) use ($selectedSubCategoryId, $selectedCategoryId) {
+                return (int) $item->id === $selectedSubCategoryId
+                    && (int) $item->parent_id === $selectedCategoryId;
+            })) {
+            $selectedSubCategoryId = 0;
+        }
+        if ($selectedChildCategoryId
+            && !$allChildCategory->contains(function ($item) use ($selectedChildCategoryId, $selectedSubCategoryId) {
+                return (int) $item->id === $selectedChildCategoryId
+                    && (int) $item->parent_id === $selectedSubCategoryId;
+            })) {
+            $selectedChildCategoryId = 0;
+        }
+        if (!$selectedCategoryId || !$filterCategories->contains('id', $selectedCategoryId)) {
+            $selectedCategoryId = 0;
+            $selectedSubCategoryId = 0;
+            $selectedChildCategoryId = 0;
         }
 
-        $subCategoryIds = (array) $request->input('sub_category_id', []);
-        if (!empty($subCategoryIds)) {
-            $DB->where(function ($q) use ($subCategoryIds) {
-                $q->whereIn('main_sub_category_id',$subCategoryIds);
-                foreach ($subCategoryIds as $id) {
-                    $q->orWhereJsonContains('sub_category_id',(string) $id);
-                }
+        $categoriesData = $selectedSubCategoryId
+            ? $allChildCategory->where('parent_id', $selectedSubCategoryId)->values()
+            : $allSubCategory->where('parent_id', $selectedCategoryId)->values();
+
+        if ($selectedCategoryId) {
+            $DB->where(function ($query) use ($selectedCategoryId) {
+                $query->where('main_category_id', $selectedCategoryId)
+                    ->orWhere('main_collection_id', $selectedCategoryId);
+            });
+        }
+        if ($selectedSubCategoryId) {
+            $DB->where(function ($query) use ($selectedSubCategoryId) {
+                $query->where('main_sub_category_id', $selectedSubCategoryId)
+                    ->orWhere(function ($jsonQuery) use ($selectedSubCategoryId) {
+                        $jsonQuery->whereNotNull('sub_category_id')
+                            ->whereRaw('JSON_VALID(sub_category_id)')
+                        ->where(function ($valueQuery) use ($selectedSubCategoryId) {
+                            $valueQuery->whereJsonContains('sub_category_id', $selectedSubCategoryId)
+                                ->orWhereJsonContains('sub_category_id', (string) $selectedSubCategoryId);
+                        });
+                    });
+            });
+        }
+        if ($selectedChildCategoryId) {
+            $DB->where(function ($query) use ($selectedChildCategoryId) {
+                $query->where('main_child_category_id', $selectedChildCategoryId)
+                    ->orWhere(function ($jsonQuery) use ($selectedChildCategoryId) {
+                        $jsonQuery->whereNotNull('child_category_id')
+                            ->whereRaw('JSON_VALID(child_category_id)')
+                        ->where(function ($valueQuery) use ($selectedChildCategoryId) {
+                            $valueQuery->whereJsonContains('child_category_id', $selectedChildCategoryId)
+                                ->orWhereJsonContains('child_category_id', (string) $selectedChildCategoryId);
+                        });
+                    });
             });
         }
 
-        $subChildCategoryIds = (array) $request->input('sub_child_category_id',[]);
-        if (!empty($subChildCategoryIds)) {
-            $DB->where(function ($q) use ($subChildCategoryIds) {
-                $q->whereIn('main_child_category_id',$subChildCategoryIds);
-                foreach ($subChildCategoryIds as $id) {
-                    $q->orWhereJsonContains('child_category_id',(string) $id);
-                }
+        $priceFloor = 0;
+        $priceCeiling = max(0, (int) ceil((float) Product::where('is_deleted', 0)
+            ->where('is_active', '1')
+            ->max('selling_price')));
+        $selectedMinPrice = max($priceFloor, min($priceCeiling, (int) $request->input('price_min', $priceFloor)));
+        $selectedMaxPrice = max($priceFloor, min($priceCeiling, (int) $request->input('price_max', $priceCeiling)));
+        if ($selectedMinPrice > $selectedMaxPrice) {
+            $selectedMinPrice = $selectedMaxPrice;
+        }
+
+        $requestedColorIds = array_values(array_filter(array_map('intval', (array) $request->input('variantValuesColor', [])), function ($id) {
+            return $id > 0;
+        }));
+        $requestedSizeIds = array_values(array_filter(array_map('intval', (array) $request->input('variantValuesSize', [])), function ($id) {
+            return $id > 0;
+        }));
+        $colorVariantIds = Variant::where('is_active', 1)
+            ->where('is_deleted', 0)
+            ->whereIn(DB::raw('LOWER(name)'), ['color', 'colour'])
+            ->pluck('id');
+        $sizeVariantIds = Variant::where('is_active', 1)
+            ->where('is_deleted', 0)
+            ->whereRaw('LOWER(name) = ?', ['size'])
+            ->pluck('id');
+        $usedVariantValueIds = DB::table('product_variant_values')
+            ->join('products', 'products.id', '=', 'product_variant_values.product_id')
+            ->where('products.is_deleted', 0)
+            ->where('products.is_active', '1')
+            ->distinct()
+            ->pluck('product_variant_values.variant_value_id')
+            ->map(function ($id) {
+                return (int) $id;
+            });
+        $variantColor = VariantValue::whereIn('variant_id', $colorVariantIds)
+            ->whereIn('id', $usedVariantValueIds)
+            ->orderBy('name')
+            ->get();
+        $variantSize = VariantValue::whereIn('variant_id', $sizeVariantIds)
+            ->whereIn('id', $usedVariantValueIds)
+            ->orderBy('name')
+            ->get();
+        $selectedColorIds = array_values(array_intersect(
+            $requestedColorIds,
+            $variantColor->pluck('id')->map(function ($id) {
+                return (int) $id;
+            })->all()
+        ));
+        $selectedSizeIds = array_values(array_intersect(
+            $requestedSizeIds,
+            $variantSize->pluck('id')->map(function ($id) {
+                return (int) $id;
+            })->all()
+        ));
+        if ($selectedColorIds) {
+            $DB->whereHas('getProductVariantValue', function ($query) use ($selectedColorIds) {
+                $query->whereIn('variant_value_id', $selectedColorIds);
+            });
+        }
+        if ($selectedSizeIds) {
+            $DB->whereHas('getProductVariantValue', function ($query) use ($selectedSizeIds) {
+                $query->whereIn('variant_value_id', $selectedSizeIds);
             });
         }
 
-        $selectedVariantValuesColor = (array) $request->input('variantValuesColor',[]);
-        if (!empty($selectedVariantValuesColor)) {
-            $DB->whereHas('getProductVariantValue',function ($query) use ($selectedVariantValuesColor) {
-                    $query->whereIn('variant_value_id',$selectedVariantValuesColor);
-                }
-            );
+        $requestedAttributeValueIds = array_values(array_filter(array_map('intval', (array) $request->input('attribute_value_id', [])), function ($id) {
+            return $id > 0;
+        }));
+        $usedAttributeValueIds = DB::table('product_attributes')
+            ->join('products', 'products.id', '=', 'product_attributes.product_id')
+            ->where('products.is_deleted', 0)
+            ->where('products.is_active', '1')
+            ->distinct()
+            ->pluck('product_attributes.attribute_value_id');
+        $usedAttributeValueIds = AttributeValue::whereIn('id', $usedAttributeValueIds)
+            ->where('is_active', 1)
+            ->where('is_deleted', 0)
+            ->pluck('id')
+            ->map(function ($id) {
+                return (int) $id;
+            });
+        $selectedAttributeValueIds = array_values(array_intersect(
+            $requestedAttributeValueIds,
+            $usedAttributeValueIds->all()
+        ));
+        $selectedAttributeValues = AttributeValue::whereIn('id', $selectedAttributeValueIds)
+            ->get(['id', 'attribute_id'])
+            ->groupBy('attribute_id');
+        foreach ($selectedAttributeValues as $attributeValues) {
+            $attributeValueIds = $attributeValues->pluck('id')->all();
+            $DB->whereHas('productAttributes', function ($query) use ($attributeValueIds) {
+                $query->whereIn('attribute_value_id', $attributeValueIds);
+            });
         }
 
-        if ($request->filled('price_range')) {
-            $range = explode('-',$request->input('price_range'));
-            if (count($range) === 2) {
-                $min = (int) $range[0];
-                $max = (int) $range[1];
-                if ($min <= $max) {
-                    $DB->whereBetween('selling_price',[$min, $max]);
-                }
+        if ($request->has('price_min') || $request->has('price_max')) {
+            $DB->whereBetween('selling_price', [$selectedMinPrice, $selectedMaxPrice]);
+        } elseif ($request->filled('price_range')) {
+            $range = explode('-', $request->input('price_range'));
+            if (count($range) === 2 && is_numeric($range[0]) && is_numeric($range[1]) && (int) $range[0] <= (int) $range[1]) {
+                $DB->whereBetween('selling_price', [(int) $range[0], (int) $range[1]]);
             }
         }
 
         switch ($request->input('sortBy')) {
             case 'new_arrivals':
                 $DB->where('is_new_arrivals', 1);
+                $DB->orderByDesc('created_at');
+                break;
+
+            case 'newest':
+                $DB->orderByDesc('created_at');
                 break;
 
             case 'best_seller':
@@ -211,33 +324,58 @@ class HomeController extends Controller
                 $DB->orderBy('product_order','asc');
                 break;
         }
+        $DB->orderByDesc('id');
 
         $offset = (int) $request->input('offset', 0);
         $limit = (int) $request->input('limit',config('Reading.records_per_page'));
         $totalResults = (clone $DB)->count();
         $results = $DB->offset($offset)->limit($limit)->get();
-        $hasMore = ($offset + $results->count()) < $totalResults;       
-        if ($category->parent_id !== null) {
-            $parent = Category::find($category->parent_id);
-            $grandParent = $parent ? Category::find($parent->parent_id): null;
-            $catAttributeIds = CategoryAttribute::where( 'category_id', $category->parent_id);
-            if ($grandParent) {
-                $catAttributeIds->orWhere('category_id',$grandParent->id);
-            }
-            $catAttributeIds = $catAttributeIds->pluck('attribute_id');
-        } else {
-            $catAttributeIds = CategoryAttribute::where('category_id',$category->id)->pluck('attribute_id');
-        }
+        $variantProductIds = $results
+            ->filter(function ($product) {
+                return (int) $product->product_type !== 1;
+            })
+            ->pluck('id');
+        $availableVariantStocks = $variantProductIds->isNotEmpty()
+            ? ProductVariantCombination::whereIn('product_id', $variantProductIds)
+                ->where('qty', '>', 0)
+                ->where(function ($query) {
+                    $query->whereNull('is_out_of_stock')
+                        ->orWhere('is_out_of_stock', '!=', 1);
+                })
+                ->get(['product_id', 'qty'])
+                ->groupBy('product_id')
+            : collect();
+        $results->each(function ($product) use ($availableVariantStocks) {
+            $minimum = max((int) ($product->min_selling_units ?? 1), 1);
+            $configuredMaximum = max((int) ($product->max_selling_units ?? 0), 0);
+            $canSellMinimum = $configuredMaximum === 0 || $configuredMaximum >= $minimum;
 
-        $attributes = Attribute::whereIn('id',$catAttributeIds)->where('is_active', 1)->where('is_deleted', 0)->get();
-        $AllMainCategory = Category::select('id','name','slug','parent_id')->whereNull('parent_id')->where('is_active', 1)->where('is_deleted', 0)->get();
-        $allSubCategory = Category::select('id','name','slug','parent_id')->where('is_active', 1)->where('is_deleted', 0)->whereIn('parent_id',$AllMainCategory->pluck('id'))->get();
-        $allChildCategory = Category::select('id','name','slug','parent_id')->where('is_active',1)->where('is_deleted',0)->whereIn('parent_id',$allSubCategory->pluck('id'))->get(); 
-    
+            if ((int) $product->product_type === 1) {
+                $product->isOutOfStock = !$canSellMinimum || (int) $product->qty < $minimum;
+                return;
+            }
+
+            $product->isOutOfStock = !$canSellMinimum
+                || !$availableVariantStocks->get($product->id, collect())->contains(function ($combination) use ($minimum) {
+                    return (int) $combination->qty >= $minimum;
+                });
+        });
+        $hasMore = ($offset + $results->count()) < $totalResults;       
+        $parent = $subCategory ?: '';
+        $grandParent = $category;
+        $attributes = Attribute::with(['attribute_values' => function ($query) use ($usedAttributeValueIds) {
+            $query->whereIn('id', $usedAttributeValueIds)
+                ->where('is_active', 1)
+                ->where('is_deleted', 0)
+                ->orderBy('name');
+        }])
+            ->where('is_active', 1)
+            ->where('is_deleted', 0)
+            ->orderBy('name')
+            ->get();
         $variants = Variant::where('is_active', 1)
             ->where('is_deleted', 0)
             ->get();
-        $variantColor = VariantValue::whereIn('variant_id',$variants->pluck('id'))->get();
         $results->each(function ($product) {
 
             $product->primary_variant_value = null;
@@ -272,13 +410,13 @@ class HomeController extends Controller
         }
         if ($request->ajax()) {
             return response()->json([
-                'html' => view('front.home.product_list',compact('results','isWishlisteddata','totalResults','category','grandParent','parent','categoriesData','variants','attributes','limit','allSubCategory','AllMainCategory','variantColor','path','priceDrop'))->render(),
+                'html' => view('front.home.product_list',compact('results','isWishlisteddata','totalResults','category','grandParent','parent','categoriesData','variants','attributes','limit','filterCategories','allSubCategory','allChildCategory','variantColor','variantSize','path','priceDrop','priceFloor','priceCeiling','selectedMinPrice','selectedMaxPrice','selectedCategoryId','selectedSubCategoryId','selectedChildCategoryId','selectedColorIds','selectedSizeIds','selectedAttributeValueIds'))->render(),
                 'totalResults' => $totalResults,
                 'hasMore' => $hasMore,
                 'nextOffset' => $offset + $results->count(),
             ]);
         } 
-        return view('front.home.product_list',compact('results','categoriesData','totalResults','variants','attributes','limit','category','isWishlisteddata','parent','grandParent','AllMainCategory','allSubCategory','variantColor','hasMore','allChildCategory','path','priceDrop'));
+        return view('front.home.product_list',compact('results','categoriesData','totalResults','variants','attributes','limit','category','isWishlisteddata','parent','grandParent','filterCategories','allSubCategory','allChildCategory','variantColor','variantSize','hasMore','path','priceDrop','priceFloor','priceCeiling','selectedMinPrice','selectedMaxPrice','selectedCategoryId','selectedSubCategoryId','selectedChildCategoryId','selectedColorIds','selectedSizeIds','selectedAttributeValueIds'));
     }
 
     public function productDetail(Request $request, $product, $title, $sku){
@@ -380,27 +518,33 @@ class HomeController extends Controller
                 ];
             })->toArray();
         // @dd($productvariants);
-        $related_product_ids = Product::where('id', $product->id)->value('related_products');
-        $related_ids_array = array_filter(explode(',', $related_product_ids));
-        $related_products = Product::leftJoin('product_graphics', 'products.id', '=', 'product_graphics.product_id')
-            ->whereIn('products.id', $related_ids_array)
-            ->select(
-                'products.id',
-                'products.selling_price',
-                'products.discount_type',
-                'products.discount',
-                'products.buying_price',
-                'products.name',
-                'products.sku',
-                'products.short_description',
-                'product_graphics.graphic as image'
-            )
-            ->groupBy('products.id')
-            ->get();
+        $relatedProductIds = json_decode((string) $product->related_products, true);
+        if (!is_array($relatedProductIds)) {
+            $relatedProductIds = explode(',', (string) $product->related_products);
+        }
+        $relatedProductIds = collect($relatedProductIds)
+            ->map(fn ($id) => is_numeric($id) ? (int) $id : null)
+            ->filter(fn ($id) => $id && $id !== (int) $product->id)
+            ->unique()
+            ->values();
+        $relatedProductsById = Product::with(['product_main_images' => function ($query) {
+            $query->where('status', 1)
+                ->where('graphic_type', 'image')
+                ->orderByDesc('is_front')
+                ->orderBy('id');
+        }])
+            ->whereIn('id', $relatedProductIds)
+            ->where('is_active', '1')
+            ->where('is_deleted', 0)
+            ->get(['id', 'name', 'slug', 'sku', 'selling_price'])
+            ->keyBy('id');
+        $relatedProducts = $relatedProductIds
+            ->map(fn ($id) => $relatedProductsById->get($id))
+            ->filter()
+            ->values();
 
         $productVarientCom = ProductVariantCombination::where('product_id', $product->id)->get();
         $bestproduct = Product::where('best_seller', 1)->where('is_active', "1")->where("is_deleted",  0)->where(['best_seller' => true, 'draf' => false])->orderBy('id', 'desc')->get();
-        $releatedProduct = Product::with(['productVariants.variantValues.first_image'])->where('is_active', "1")->whereIn('id', [$product->related_products])->get();
         
         $returnexchangeProduct = Setting::where('id', 28)->first();
         $contactDetails = Setting::whereIn('key', ['Contact.contact_email', 'Contact.contact_number', 'Contact.whatsapp_number'])->get();
@@ -457,7 +601,7 @@ class HomeController extends Controller
         // return $product; 
         // 'reviews', 'productreview',
 
-        return view('front.home.product_detail', compact('product','productChildCat', 'productcat', 'productSubCat', 'productvariants', 'related_products', 'bestproduct', 'releatedProduct', 'returnexchangeProduct', 'contactDetails', 'productVarientCom', 'isWishlisted', 'isWishlisteddata', 'categoryTaxes',  'recentlyViewedProducts','facebook','instagram','pinterst','youtube','twitter','productDetailManager', 'best_seller_products','priceDrop','couponOnDetail','sizeChartData'));
+        return view('front.home.product_detail', compact('product','productChildCat', 'productcat', 'productSubCat', 'productvariants', 'relatedProducts', 'bestproduct', 'returnexchangeProduct', 'contactDetails', 'productVarientCom', 'isWishlisted', 'isWishlisteddata', 'categoryTaxes',  'recentlyViewedProducts','facebook','instagram','pinterst','youtube','twitter','productDetailManager', 'best_seller_products','priceDrop','couponOnDetail','sizeChartData'));
 
     }
 
@@ -498,7 +642,7 @@ class HomeController extends Controller
             $requestedIds = $skuIds;
             sort($requestedIds, SORT_NUMERIC);
             $combination = $combinationsQuery
-                ->get(['combination_id', 'price', 'selling_price', 'sku', 'discount', 'discount_type', 'qty'])
+                ->get(['combination_id', 'price', 'selling_price', 'sku', 'discount', 'discount_type', 'qty', 'is_out_of_stock'])
                 ->first(function ($candidate) use ($requestedIds) {
                     $combinationIds = is_array($candidate->combination_id)
                         ? $candidate->combination_id

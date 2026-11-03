@@ -289,3 +289,5 @@ $('.has-submenu > a').click(function (e) {
         parent.find('.submenu').slideDown();
     }
 });
+
+

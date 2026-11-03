@@ -392,6 +392,9 @@ class AuthController extends Controller
                     if (!$combination) {
                         throw new \RuntimeException('A selected product combination is no longer available.');
                     }
+                    if ($combination && (int) ($combination->is_out_of_stock ?? 0) === 1) {
+                        throw new \RuntimeException('The selected product option is out of stock.');
+                    }
                 }
 
                 $stock = max((int) ($combination->qty ?? $product->qty ?? 0), 0);

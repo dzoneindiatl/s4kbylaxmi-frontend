@@ -49,7 +49,7 @@ function getSelectedVariantIds() {
 $(document).on('click', '.addToCartBtn', function() {
 
     let button = $(this);
-    if (button.text() === 'Go To Cart') {
+    if (button.find('.addToCartText').text().trim() === 'Go To Cart') {
         window.location.href = viewCartUrl;
         return;
     }
@@ -133,7 +133,7 @@ $(document).on('click', '.addToCartBtn', function() {
 
     updateHeaderCart();
     openCartDropdown();
-    $('.addToCartText').html("Go To Cart");
+    button.find('.addToCartText').text("Go To Cart");
     showFlashMessage("Product added to cart successfully");
 });
 
@@ -833,11 +833,11 @@ function isLoginUser(productId, quantity, selectedVariants, type = null, cartId 
                 return;
             }
             if (type === 'remove') {
-                $('.addToCartText').html("Add To Cart");
+                $('.addToCartBtn[data-id="' + productId + '"] .addToCartText').text("Add to cart");
                 showFlashMessage("Product removed from cart","warning");
                 return;
             }
-            $('.addToCartText').html("Go To Cart");
+            $('.addToCartBtn[data-id="' + productId + '"] .addToCartText').text("Go To Cart");
             showFlashMessage("Product added to cart successfully");
             openCartDropdown();
         },

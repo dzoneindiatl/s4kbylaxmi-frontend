@@ -264,8 +264,13 @@ class CheckoutController extends Controller
             $minimum = max((int) ($product->min_selling_units ?? 1), 1);
             $productMaximum = max((int) ($product->max_selling_units ?? 0), 0);
             $maximum = $productMaximum > 0 ? min($stock, $productMaximum) : $stock;
-            if ($quantity < $minimum || $quantity > $maximum || $maximum < $minimum) {
-                $validationErrors[] = $product->name . " quantity must be between {$minimum} and {$maximum} based on current stock.";
+            if (($combination && (int) ($combination->is_out_of_stock ?? 0) === 1)
+                || $quantity < $minimum
+                || $quantity > $maximum
+                || $maximum < $minimum) {
+                $validationErrors[] = ($combination && (int) ($combination->is_out_of_stock ?? 0) === 1)
+                    ? $product->name . ' is out of stock for the selected option.'
+                    : $product->name . " quantity must be between {$minimum} and {$maximum} based on current stock.";
                 continue;
             }
 

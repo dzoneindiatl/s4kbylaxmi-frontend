@@ -1,3 +1,67 @@
+  
+    <div class="footer-features-bar">
+          <div class="footer-feature-item">
+            <div class="footer-feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 5l4.5 11 12 1.4-8.8 8.2 2.4 11.9-10.1-6-10.1 6 2.4-11.9-8.8-8.2 12-1.4z"/>
+              </svg>
+            </div>
+            <span class="footer-feature-title">BEST QUALITY</span>
+          </div>
+
+          <div class="footer-feature-item">
+            <div class="footer-feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="0" y="0" width="10" height="4" rx="2" transform="translate(7.5, 38.5) rotate(-45)"/>
+                <path d="M14 33c3.5-3.5 7.5-5 11.5-3.5l5.5 2c2 .8 4-.3 4.5-2 .5-1.5-.3-3-2-3.8l-8.5-3.2"/>
+                <path d="M15.5 35c3.5 3.5 7.5 7 13.5 7 4 0 8.5-3.5 12.5-7"/>
+                <circle cx="28.5" cy="20.5" r="7.5"/>
+                <path d="M26.5 17h4.5M26.5 19.3h4M26.5 17c1.8 0 2.8 1.1 2.8 2.3s-1 2.2-2.8 2.2l3 3.5" stroke-width="1.8"/>
+                <path d="M36 22.5c1.2-1.8 1.8-4 1.2-6.5-1.2-4.5-5.5-8-10.2-7.5-3.8.4-7 2.8-8.2 6.5"/>
+                <path d="M14 11l3.5 4-5 1.5"/>
+              </svg>
+            </div>
+            <span class="footer-feature-title">100% Wallet Refund</span>
+          </div>
+
+          <div class="footer-feature-item">
+            <div class="footer-feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="7" y="14" width="30" height="19" rx="3.5"/>
+                <circle cx="14" cy="23.5" r="2.2" fill="currentColor" stroke="none"/>
+                <circle cx="30" cy="23.5" r="2.2" fill="currentColor" stroke="none"/>
+                <path d="M20 18.5h4.5M20 21h4M20 18.5c1.8 0 2.7 1.1 2.7 2.3 0 1.2-.9 2.2-2.7 2.2l3 3.5" stroke-width="2"/>
+                <path d="M7 36c0 2.2 1.8 4 4 4h22c2.2 0 4-1.8 4-4"/>
+              </svg>
+            </div>
+            <span class="footer-feature-title">CASH ON DELIVERY</span>
+          </div>
+
+          <div class="footer-feature-item">
+            <div class="footer-feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 7.5l6.5 3-3.2 6.5"/>
+                <path d="M21.5 10.5c6 .5 11 5 11 11.5 0 2.5-.7 4.5-2 6.5"/>
+                <path d="M29 36.5l-6.5-3 3.2-6.5"/>
+                <path d="M22.5 33.5c-6-.5-11-5-11-11.5 0-2.5.7-4.5 2-6.5"/>
+              </svg>
+            </div>
+            <span class="footer-feature-title">EASY RETURN</span>
+          </div>
+
+          <div class="footer-feature-item">
+            <div class="footer-feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 33V14c0-1.7 1.3-3 3-3h18c1.3 0 2.5.8 3 2l6.5 9c.7 1 1 2.2 1 3.5v7.5"/>
+                <path d="M27.5 15.5v9h8v-1.2l-6-7.8h-2z"/>
+                <path d="M4 33h5.5M18.5 33h9M37.5 33h4.5"/>
+                <circle cx="14" cy="33" r="4.5"/>
+                <circle cx="33" cy="33" r="4.5"/>
+              </svg>
+            </div>
+            <span class="footer-feature-title">FREE DELIVERY</span>
+          </div>
+        </div>
   <footer class="site-footer">
     <div class="newsletter-banner">
       <div class="page-container newsletter-wrapper">
@@ -86,7 +150,8 @@
         <div class="footer-nav-grid">
           <div class="footer-column">
             <h3>Company</h3>
-            <a href="#">About Us</a>
+            <a href="about.html">About Us</a>
+            <a href="career.html">Careers</a>
             <a href="#">Store Locator</a>
           </div>
 
@@ -97,24 +162,24 @@
             <a href="product-list.html">Kurtas</a>
             <a href="product-list.html">Kurta Sets</a>
             <a href="product-list.html">Suit sets</a>
-            <a href="#">Blogs</a>
+            <a href="blog.html">Blogs</a>
           </div>
 
           <div class="footer-column">
             <h3>Get Help</h3>
-            <a href="#">Track Order</a>
-            <a href="#">Return/Exchange</a>
-            <a href="#faqTitle">FAQs</a>
+            <a href="track-order.html">Track Order</a>
+            <a href="return-exchange.html">Return/Exchange</a>
+            <a href="faqs.html">FAQs</a>
             <a href="tel:+917728090144">Call Customer Care</a>
-            <a href="mailto:dzoneindiajp@gmail.com">Contact us</a>
+            <a href="contact.html">Contact us</a>
           </div>
 
           <div class="footer-column">
             <h3>Policy Information</h3>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms Of Service</a>
-            <a href="#">Shipping Policy</a>
-            <a href="#">Return/Refund</a>
+            <a href="privacy-policy.html">Privacy Policy</a>
+            <a href="terms-of-use.html">Terms Of Service</a>
+            <a href="shipping-policy.html">Shipping Policy</a>
+            <a href="return-exchange.html">Return/Refund</a>
           </div>
 
           <div class="footer-column footer-contact-col">
@@ -135,70 +200,7 @@
         </div>
 
         <!-- 2. Guarantees Bar (5 Features) -->
-        <div class="footer-features-bar">
-          <div class="footer-feature-item">
-            <div class="footer-feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 5l4.5 11 12 1.4-8.8 8.2 2.4 11.9-10.1-6-10.1 6 2.4-11.9-8.8-8.2 12-1.4z"/>
-              </svg>
-            </div>
-            <span class="footer-feature-title">BEST QUALITY</span>
-          </div>
-
-          <div class="footer-feature-item">
-            <div class="footer-feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="0" y="0" width="10" height="4" rx="2" transform="translate(7.5, 38.5) rotate(-45)"/>
-                <path d="M14 33c3.5-3.5 7.5-5 11.5-3.5l5.5 2c2 .8 4-.3 4.5-2 .5-1.5-.3-3-2-3.8l-8.5-3.2"/>
-                <path d="M15.5 35c3.5 3.5 7.5 7 13.5 7 4 0 8.5-3.5 12.5-7"/>
-                <circle cx="28.5" cy="20.5" r="7.5"/>
-                <path d="M26.5 17h4.5M26.5 19.3h4M26.5 17c1.8 0 2.8 1.1 2.8 2.3s-1 2.2-2.8 2.2l3 3.5" stroke-width="1.8"/>
-                <path d="M36 22.5c1.2-1.8 1.8-4 1.2-6.5-1.2-4.5-5.5-8-10.2-7.5-3.8.4-7 2.8-8.2 6.5"/>
-                <path d="M14 11l3.5 4-5 1.5"/>
-              </svg>
-            </div>
-            <span class="footer-feature-title">100% Wallet Refund</span>
-          </div>
-
-          <div class="footer-feature-item">
-            <div class="footer-feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="7" y="14" width="30" height="19" rx="3.5"/>
-                <circle cx="14" cy="23.5" r="2.2" fill="currentColor" stroke="none"/>
-                <circle cx="30" cy="23.5" r="2.2" fill="currentColor" stroke="none"/>
-                <path d="M20 18.5h4.5M20 21h4M20 18.5c1.8 0 2.7 1.1 2.7 2.3 0 1.2-.9 2.2-2.7 2.2l3 3.5" stroke-width="2"/>
-                <path d="M7 36c0 2.2 1.8 4 4 4h22c2.2 0 4-1.8 4-4"/>
-              </svg>
-            </div>
-            <span class="footer-feature-title">CASH ON DELIVERY</span>
-          </div>
-
-          <div class="footer-feature-item">
-            <div class="footer-feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M15 7.5l6.5 3-3.2 6.5"/>
-                <path d="M21.5 10.5c6 .5 11 5 11 11.5 0 2.5-.7 4.5-2 6.5"/>
-                <path d="M29 36.5l-6.5-3 3.2-6.5"/>
-                <path d="M22.5 33.5c-6-.5-11-5-11-11.5 0-2.5.7-4.5 2-6.5"/>
-              </svg>
-            </div>
-            <span class="footer-feature-title">EASY RETURN</span>
-          </div>
-
-          <div class="footer-feature-item">
-            <div class="footer-feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 33V14c0-1.7 1.3-3 3-3h18c1.3 0 2.5.8 3 2l6.5 9c.7 1 1 2.2 1 3.5v7.5"/>
-                <path d="M27.5 15.5v9h8v-1.2l-6-7.8h-2z"/>
-                <path d="M4 33h5.5M18.5 33h9M37.5 33h4.5"/>
-                <circle cx="14" cy="33" r="4.5"/>
-                <circle cx="33" cy="33" r="4.5"/>
-              </svg>
-            </div>
-            <span class="footer-feature-title">FREE DELIVERY</span>
-          </div>
-        </div>
-
+       
         <!-- 3. SEO Content Section -->
         <div class="footer-content-wrapper">
           <div class="footer-content">
@@ -281,7 +283,7 @@
         <!-- 4. Footer Bottom Bar -->
         <div class="footer-bottom">
           <div class="footer-bottom-left">
-            <span class="footer-copyright">© 2026 S4K Fashion. Made with care.</span>
+            <span class="footer-copyright">&copy; 2026 S4K Fashion. Made with care.</span>
            
           </div>
           
@@ -293,8 +295,3 @@
       </div>
     </div>
   </footer>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-    {{-- <script src="{{ asset('assets/js/custom.js') }}"></script> --}}
-      <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ asset('assets/js/main.js') }}?v={{ filemtime(public_path('assets/js/main.js')) }}"></script>
